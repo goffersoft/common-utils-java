@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+       <param name="Threshold" value="DEBUG"/>         
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="[common-utils] %p [%t] %d{DATE} %c{2}.%M(%L) | %m%n"/>
+        </layout>
+    </appender>
+    
+    <appender name="INFO_LOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="Threshold" value="INFO"/>
+        <param name="File" value="./logs/common_utils_java.log"/>
+        <param name="MaxFileSize" value="25MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="[common-utils] %-5p %d{DATE} [%t] (%c{4}:%L) | %m%n"/>
+        </layout>
+    </appender> 
+    
+    <appender name="DEBUG_LOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="Threshold" value="DEBUG"/>
+        <param name="File" value="./logs/common_utils_java.log"/>
+        <param name="MaxFileSize" value="25MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="[common-utils] %-5p %d{DATE} [%t] (%c{4}:%L) | %m%n"/>
+        </layout>
+    </appender> 
+    
+    <!-- App loggers -->
+    <logger name="com.goffersoft">
+        <appender-ref ref="INFO_LOG"/>
+    </logger>
+   
+     <logger name="com.goffersoft">
+        <appender-ref ref="DEBUG_LOG"/>
+    </logger> 
+    <root>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</log4j:configuration>
