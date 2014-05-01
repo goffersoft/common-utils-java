@@ -15,10 +15,10 @@ import org.apache.log4j.Logger;
 public class BitUtils {
 	private static final Logger log = Logger.getLogger(BitUtils.class);
 	
-	public static final int BITUTILS_NUM_BITS_IN_LONG = 64;
-	public static final int BITUTILS_NUM_BITS_IN_INT = 32;
-	public static final int BITUTILS_NUM_BITS_IN_SHORT = 16;
-	public static final int BITUTILS_NUM_BITS_IN_BYTE = 8;
+	public static final int BITUTILS_NUM_BITS_IN_LONG = Long.SIZE;
+	public static final int BITUTILS_NUM_BITS_IN_INT = Integer.SIZE;
+	public static final int BITUTILS_NUM_BITS_IN_SHORT = Short.SIZE;
+	public static final int BITUTILS_NUM_BITS_IN_BYTE = Byte.SIZE;
 	
 	public static interface BitmapIterator {
 		public void executeIfBitIsSet(int bitpos, Object var);
@@ -268,7 +268,7 @@ public class BitUtils {
 	}
 	
 	private static boolean isBitSetInternal(long bitmap, int bitpos) {
-		return ( (bitmap & (1 << bitpos)) == (1 << bitpos));
+		return ( (bitmap & (1L << bitpos)) == (1 << bitpos));
 	}
 	
 	public static boolean isBitSet(long bitmap, int bitpos) {
@@ -340,11 +340,11 @@ public class BitUtils {
 	}
 	
 	private static long setBitInternal(long bitmap, int bitpos) {
-		return (bitmap &= (1<<bitpos));
+		return (bitmap |= (1L<<bitpos));
 	}
 	
 	public static long setBit(long bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_LONG) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_LONG) {
 			return bitmap;
 		}
 		
@@ -352,7 +352,7 @@ public class BitUtils {
 	}
 	
 	public static int setBit(int bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_INT) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_INT) {
 			return bitmap;
 		}
 		
@@ -360,7 +360,7 @@ public class BitUtils {
 	}
 	
 	public static short setBit(short bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_SHORT) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_SHORT) {
 			return bitmap;
 		}
 		
@@ -368,7 +368,7 @@ public class BitUtils {
 	}
 	
 	public static byte setBit(byte bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_BYTE) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_BYTE) {
 			return bitmap;
 		}
 		
@@ -376,11 +376,11 @@ public class BitUtils {
 	}
 	
 	private static long clearBitInternal(long bitmap, int bitpos) {
-		return (bitmap &= ~(1<<bitpos));
+		return (bitmap &= ~(1L<<bitpos));
 	}
 	
 	public static long clearBit(long bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_LONG) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_LONG) {
 			return bitmap;
 		}
 		
@@ -388,7 +388,7 @@ public class BitUtils {
 	}
 	
 	public static int clearBit(int bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_INT) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_INT) {
 			return bitmap;
 		}
 		
@@ -396,7 +396,7 @@ public class BitUtils {
 	}
 	
 	public static short clearBit(short bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_SHORT) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_SHORT) {
 			return bitmap;
 		}
 		
@@ -404,7 +404,7 @@ public class BitUtils {
 	}
 	
 	public static byte clearBit(byte bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_BYTE) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_BYTE) {
 			return bitmap;
 		}
 		
@@ -412,11 +412,11 @@ public class BitUtils {
 	}
 	
 	private static long flipBitInternal(long bitmap, int bitpos) {
-		return (bitmap ^= (1<<bitpos));
+		return (bitmap ^= (1L<<bitpos));
 	}
 	
 	public static long flipBit(long bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_LONG) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_LONG) {
 			return bitmap;
 		}
 		
@@ -424,7 +424,7 @@ public class BitUtils {
 	}
 	
 	public static int flipBit(int bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_INT) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_INT) {
 			return bitmap;
 		}
 		
@@ -432,7 +432,7 @@ public class BitUtils {
 	}
 	
 	public static short flipBit(short bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_SHORT) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_SHORT) {
 			return bitmap;
 		}
 		
@@ -440,7 +440,7 @@ public class BitUtils {
 	}
 	
 	public static byte flipBit(byte bitmap, int bitpos) {
-		if(bitpos < 0 || bitpos > BITUTILS_NUM_BITS_IN_BYTE) {
+		if(bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_BYTE) {
 			return bitmap;
 		}
 		
@@ -449,7 +449,7 @@ public class BitUtils {
 	
 	private static int getBitPosInternal(long bitmask, int maxbits) {
 		for(int i = 0; i < maxbits; i++) {
-			if( (bitmask & (1 << i))  == bitmask) {
+			if( (bitmask & (1L << i))  == bitmask) {
 				return i;
 			}
 		}
