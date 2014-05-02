@@ -10,31 +10,32 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class EndianConversionTest {
-	
-	private static final Logger log = Logger.getLogger(EndianConversionTest.class);
-	
-	@BeforeClass
-	static public void setUpClass() {
-		
-	}
-	
-	@AfterClass
-	static public void tearDownClass() {
-		
-	}
-	
-	@Before
-	public void setUp() {
-		
-	}
-	
-	@After
-	public void tearDown() {
-		
-	}
-	
-	@Test
-	public void tesIntToByteArray() {
-		assertTrue(true);
-	}
+
+    private static final Logger log = Logger
+            .getLogger(EndianConversionTest.class);
+
+    @BeforeClass
+    static public void setUpClass() {
+
+    }
+
+    @AfterClass
+    static public void tearDownClass() {
+
+    }
+
+    @Before
+    public void setUp() {
+
+    }
+
+    @After
+    public void tearDown() {
+
+    }
+
+    @Test
+    public void tesIntToByteArray() {
+        assertTrue(true);
+    }
 }
