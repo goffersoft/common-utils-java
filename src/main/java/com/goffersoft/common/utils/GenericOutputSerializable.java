@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public interface GenericOutputSerializable {
-	public byte[] toByteArray();
-	
-	public byte[] toByteArray(byte[] ba);
-	
-	public byte[] toByteArray(byte[] ba, int offset);
-	
-	public OutputStream toOutputStream(OutputStream os) throws IOException;
+    public byte[] toByteArray();
+
+    public byte[] toByteArray(byte[] data);
+
+    public byte[] toByteArray(byte[] data, int offset);
+
+    public OutputStream toOutputStream(OutputStream os) throws IOException;
 }
