@@ -158,38 +158,31 @@ public class MacAddress implements GenericSerializable<MacAddress> {
         return false;
     }
 
-    @Override
     public MacAddress fromInputStream(InputStream is) throws IOException {
         return getMacAddress(is);
     }
 
-    @Override
     public MacAddress fromByteArray(byte[] ba) {
         return new MacAddress(ba);
     }
 
-    @Override
     public MacAddress fromByteArray(byte[] ba, int offset) {
         return new MacAddress(ba, offset);
     }
 
-    @Override
     public byte[] toByteArray() {
         return macaddr;
     }
 
-    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         os.write(macaddr);
         return os;
     }
 
-    @Override
     public byte[] toByteArray(byte[] ba) {
         return toByteArray(ba, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] ba, int offset) {
         System.arraycopy(macaddr, 0, ba, offset, macaddr.length);
         return ba;

@@ -486,18 +486,15 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         getStateBitmap().clearBit(pfbit.getBitPos());
     }
 
-    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[getLength()];
         return toByteArray(hdr, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writePortNum(data, offset);
         writeLength(data, offset);
@@ -508,7 +505,6 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         return writePropertyList(data, offset + OFP_PORT_LEN);
     }
 
-    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writePortNum(os);
         writeLength(os);
@@ -519,17 +515,14 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         return writePropertyList(os);
     }
 
-    @Override
     public OfpPort fromInputStream(InputStream is) throws IOException {
         return readFromInputStream(is);
     }
 
-    @Override
     public OfpPort fromByteArray(byte[] data) {
         return new OfpPort(data);
     }
 
-    @Override
     public OfpPort fromByteArray(byte[] data, int offset) {
         return new OfpPort(data, offset);
     }

@@ -215,18 +215,15 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
         this.portNum = portNum;
     }
 
-    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[getLength()];
         return toByteArray(hdr, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writePortNum(data, offset);
         writeQueueId(data, offset);
@@ -234,7 +231,6 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
         return writePropertyList(data, offset + OFP_QUEUE_DESC_HDR_LEN);
     }
 
-    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writePortNum(os);
         writeQueueId(os);
@@ -242,17 +238,14 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
         return writePropertyList(os);
     }
 
-    @Override
     public OfpQueueDesc fromInputStream(InputStream is) throws IOException {
         return readFromInputStream(is);
     }
 
-    @Override
     public OfpQueueDesc fromByteArray(byte[] data) {
         return new OfpQueueDesc(data);
     }
 
-    @Override
     public OfpQueueDesc fromByteArray(byte[] data, int offset) {
         return new OfpQueueDesc(data, offset);
     }

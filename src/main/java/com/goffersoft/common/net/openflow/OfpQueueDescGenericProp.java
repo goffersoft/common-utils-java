@@ -186,41 +186,34 @@ public class OfpQueueDescGenericProp implements
         this.length = length;
     }
 
-    @Override
     public OfpQueueDescGenericProp fromInputStream(InputStream is)
             throws IOException {
         return readFromInputStream(is);
     }
 
-    @Override
     public OfpQueueDescGenericProp fromByteArray(byte[] data) {
         return new OfpQueueDescGenericProp(data, 0);
     }
 
-    @Override
     public OfpQueueDescGenericProp fromByteArray(byte[] data, int offset) {
         return new OfpQueueDescGenericProp(data, offset);
     }
 
-    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[OFP_QUEUE_DESC_PROP_BASE_LEN];
         return toByteArray(hdr, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writeType(data, offset);
         writeLength(data, offset);
         return data;
     }
 
-    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writeType(os);
         writeLength(os);

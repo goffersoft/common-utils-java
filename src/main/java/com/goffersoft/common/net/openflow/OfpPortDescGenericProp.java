@@ -186,34 +186,28 @@ public class OfpPortDescGenericProp implements
         this.length = length;
     }
 
-    @Override
     public OfpPortDescGenericProp fromInputStream(InputStream is)
             throws IOException {
         return readFromInputStream(is);
     }
 
-    @Override
     public OfpPortDescGenericProp fromByteArray(byte[] data) {
         return new OfpPortDescGenericProp(data);
     }
 
-    @Override
     public OfpPortDescGenericProp fromByteArray(byte[] data, int offset) {
         return new OfpPortDescGenericProp(data, offset);
     }
 
-    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[OFP_PORT_DESC_PROP_BASE_LEN];
         return toByteArray(hdr, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writeType(data, offset);
         writeLength(data, offset);
@@ -221,7 +215,6 @@ public class OfpPortDescGenericProp implements
         return data;
     }
 
-    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writeType(os);
         writeLength(os);

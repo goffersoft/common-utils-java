@@ -46,16 +46,5 @@
     <id>java.net</id>
     <url>http://download.java.net/maven/2</url>
 </repository>
-<repository>
-	<id>internal.repo</id>
-	<name>Artifactory Repository</name>
-	<url>http://10.253.28.47:8081/artifactory/libs-releases-local</url>
-</repository>
-<repository>
-	<snapshots />
-	<id>snapshots</id>
-	<name>libs-snapshots</name>
-	<url>http://10.253.28.47:8081/artifactory/libs-snapshots</url>
-</repository>
 </repositories>
 </project>

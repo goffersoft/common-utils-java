@@ -179,34 +179,28 @@ public class OfpHelloGenericElement implements
         this.length = length;
     }
 
-    @Override
     public OfpHelloGenericElement fromInputStream(InputStream is)
             throws IOException {
         return readFromInputStream(is);
     }
 
-    @Override
     public OfpHelloGenericElement fromByteArray(byte[] data) {
         return new OfpHelloGenericElement(data, 0);
     }
 
-    @Override
     public OfpHelloGenericElement fromByteArray(byte[] data, int offset) {
         return new OfpHelloGenericElement(data, offset);
     }
 
-    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[OFP_HELLO_ELEMENT_BASE_LEN];
         return toByteArray(hdr, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
-    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writeType(data, offset);
         writeLength(data, offset);
@@ -214,7 +208,6 @@ public class OfpHelloGenericElement implements
         return data;
     }
 
-    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writeType(os);
         writeLength(os);
