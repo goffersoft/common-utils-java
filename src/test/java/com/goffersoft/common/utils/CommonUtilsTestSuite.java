@@ -1,3 +1,11 @@
+/**
+ ** File: CommonUtilsTestSuite.java
+ **
+ ** Description : Entry For all Tests associated with the common.utils package
+ **
+ ** Date           Author                          Comments
+ ** 02/12/2014     Prakash Easwar                  Created  
+ */
 package com.goffersoft.common.utils;
 
 import org.apache.log4j.Logger;
