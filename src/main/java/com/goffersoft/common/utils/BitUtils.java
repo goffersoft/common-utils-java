@@ -49,6 +49,16 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
+        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
+        }
+
+        public void iterate(int startbitpos, int endbitpos,
+                BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), startbitpos, endbitpos, it,
+                    var);
+        }
+
         public boolean isBitSet(int bitpos) {
             return BitUtils.isBitSet(getBitmap(), bitpos);
         }
@@ -173,6 +183,16 @@ public class BitUtils {
 
         public void iterate(BitUtils.BitmapIterator it, Object var) {
             BitUtils.bitmapIterator(getBitmap(), it, var);
+        }
+
+        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
+        }
+
+        public void iterate(int startbitpos, int endbitpos,
+                BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), startbitpos, endbitpos, it,
+                    var);
         }
 
         public boolean isBitSet(int bitpos) {
@@ -301,6 +321,16 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
+        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
+        }
+
+        public void iterate(int startbitpos, int endbitpos,
+                BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), startbitpos, endbitpos, it,
+                    var);
+        }
+
         public boolean isBitSet(int bitpos) {
             return BitUtils.isBitSet(getBitmap(), bitpos);
         }
@@ -427,6 +457,16 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
+        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
+        }
+
+        public void iterate(int startbitpos, int endbitpos,
+                BitUtils.BitmapIterator it, Object var) {
+            BitUtils.bitmapIterator(getBitmap(), startbitpos, endbitpos, it,
+                    var);
+        }
+
         public boolean isBitSet(int bitpos) {
             return BitUtils.isBitSet(getBitmap(), bitpos);
         }
@@ -529,78 +569,6 @@ public class BitUtils {
         }
     }
 
-    private static boolean isBitSetInternal(long bitmap, int bitpos) {
-        return ((bitmap & (1L << bitpos)) == (1 << bitpos));
-    }
-
-    public static boolean isBitSet(long bitmap, int bitpos) {
-        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_LONG) {
-            return false;
-        }
-
-        return isBitSetInternal(bitmap, bitpos);
-    }
-
-    public static boolean isBitSet(int bitmap, int bitpos) {
-        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_INT) {
-            return false;
-        }
-
-        return isBitSetInternal(bitmap, bitpos);
-    }
-
-    public static boolean isBitSet(short bitmap, int bitpos) {
-        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_SHORT) {
-            return false;
-        }
-
-        return isBitSetInternal(bitmap, bitpos);
-    }
-
-    public static boolean isBitSet(byte bitmap, int bitpos) {
-        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_BYTE) {
-            return false;
-        }
-
-        return isBitSetInternal(bitmap, bitpos);
-    }
-
-    private static int getNumBitsSetInternal(long bitmap, int maxbits) {
-        int numbits = 0;
-
-        for (int i = 0; i < maxbits; i++) {
-            if (isBitSetInternal(bitmap, i)) {
-                numbits++;
-            }
-        }
-
-        return numbits;
-    }
-
-    public static int getNumBitsSet(long bitmap, int maxbits) {
-        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
-            maxbits = BITUTILS_NUM_BITS_IN_LONG;
-        }
-
-        return getNumBitsSetInternal(bitmap, maxbits);
-    }
-
-    public static int getNumBitsSet(long bitmap) {
-        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_LONG);
-    }
-
-    public static int getNumBitsSet(int bitmap) {
-        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_INT);
-    }
-
-    public static int getNumBitsSet(short bitmap) {
-        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_SHORT);
-    }
-
-    public static int getNumBitsSet(byte bitmap) {
-        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_BYTE);
-    }
-
     private static long setBitInternal(long bitmap, int bitpos) {
         return (bitmap |= (1L << bitpos));
     }
@@ -649,7 +617,7 @@ public class BitUtils {
         return (byte) setBitInternal(bitmap, bitpos);
     }
 
-    public static short setAllBits(byte bitmap) {
+    public static byte setAllBits(byte bitmap) {
         return (byte) 0xff;
     }
 
@@ -710,13 +678,14 @@ public class BitUtils {
     }
 
     private static long flipAllBitsInternal(long bitmap, int maxbits) {
-        long tmpBitmap = bitmap;
-
-        for (int i = 0; i < maxbits; i++) {
-            tmpBitmap = flipBit(tmpBitmap, i);
+        long tmpBitmap = ~bitmap;
+        long mask;
+        if (maxbits == BITUTILS_NUM_BITS_IN_LONG) {
+            mask = 0xffffffffffffffffL;
+        } else {
+            mask = (1L << maxbits) - 1;
         }
-
-        return tmpBitmap;
+        return (tmpBitmap & mask);
     }
 
     public static long flipBit(long bitmap, int bitpos) {
@@ -767,9 +736,81 @@ public class BitUtils {
         return (byte) flipAllBitsInternal(bitmap, BITUTILS_NUM_BITS_IN_BYTE);
     }
 
+    private static int getNumBitsSetInternal(long bitmap, int maxbits) {
+        int numbits = 0;
+
+        for (int i = 0; i < maxbits; i++) {
+            if (isBitSetInternal(bitmap, i)) {
+                numbits++;
+            }
+        }
+
+        return numbits;
+    }
+
+    private static boolean isBitSetInternal(long bitmap, int bitpos) {
+        return ((bitmap & (1L << bitpos)) == (1L << bitpos));
+    }
+
+    public static boolean isBitSet(long bitmap, int bitpos) {
+        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_LONG) {
+            return false;
+        }
+
+        return isBitSetInternal(bitmap, bitpos);
+    }
+
+    public static boolean isBitSet(int bitmap, int bitpos) {
+        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_INT) {
+            return false;
+        }
+
+        return isBitSetInternal(bitmap, bitpos);
+    }
+
+    public static boolean isBitSet(short bitmap, int bitpos) {
+        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_SHORT) {
+            return false;
+        }
+
+        return isBitSetInternal(bitmap, bitpos);
+    }
+
+    public static boolean isBitSet(byte bitmap, int bitpos) {
+        if (bitpos < 0 || bitpos >= BITUTILS_NUM_BITS_IN_BYTE) {
+            return false;
+        }
+
+        return isBitSetInternal(bitmap, bitpos);
+    }
+
+    public static int getNumBitsSet(long bitmap, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
+            maxbits = BITUTILS_NUM_BITS_IN_LONG;
+        }
+
+        return getNumBitsSetInternal(bitmap, maxbits);
+    }
+
+    public static int getNumBitsSet(long bitmap) {
+        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_LONG);
+    }
+
+    public static int getNumBitsSet(int bitmap) {
+        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_INT);
+    }
+
+    public static int getNumBitsSet(short bitmap) {
+        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_SHORT);
+    }
+
+    public static int getNumBitsSet(byte bitmap) {
+        return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_BYTE);
+    }
+
     private static int getBitPosInternal(long bitmask, int maxbits) {
         for (int i = 0; i < maxbits; i++) {
-            if ((bitmask & (1L << i)) == bitmask) {
+            if (isBitSetInternal(bitmask, i)) {
                 return i;
             }
         }
@@ -799,10 +840,9 @@ public class BitUtils {
         return getBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_BYTE);
     }
 
-    private static void bitmapIteratorInternal(long bitmap, int maxbits,
-            BitmapIterator it, Object var) {
-
-        for (int i = 0; i < maxbits; i++) {
+    private static void bitmapIteratorInternal(long bitmap, int startbitpos,
+            int maxbits, BitmapIterator it, Object var) {
+        for (int i = startbitpos; i < (startbitpos + maxbits); i++) {
             if (isBitSetInternal(bitmap, i)) {
                 it.executeIfBitIsSet(i, var);
             } else {
@@ -814,38 +854,178 @@ public class BitUtils {
     public static void bitmapIterator(long bitmap, int maxbits,
             BitmapIterator it, Object var) {
         if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
-            maxbits = BITUTILS_NUM_BITS_IN_LONG;
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_LONG);
         }
-        bitmapIteratorInternal(bitmap, maxbits, it, var);
+        bitmapIteratorInternal(bitmap, 0, maxbits, it, var);
+    }
+
+    public static void bitmapIterator(long bitmap, int startbitpos,
+            int endbitpos, BitmapIterator it, Object var) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG + " || startbitpos > endbitpos");
+        }
+
+        bitmapIteratorInternal(bitmap, startbitpos,
+                endbitpos - startbitpos + 1, it, var);
     }
 
     public static void bitmapIterator(long bitmap, BitmapIterator it, Object var) {
-        bitmapIteratorInternal(bitmap, BITUTILS_NUM_BITS_IN_LONG, it, var);
+        bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_LONG, it, var);
+    }
+
+    public static void bitmapIterator(int bitmap, int maxbits,
+            BitmapIterator it, Object var) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_INT);
+        }
+        bitmapIteratorInternal(bitmap, 0, maxbits, it, var);
+    }
+
+    public static void bitmapIterator(int bitmap, int startbitpos,
+            int endbitpos, BitmapIterator it, Object var) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT + " || startbitpos > endbitpos");
+        }
+
+        bitmapIteratorInternal(bitmap, startbitpos,
+                endbitpos - startbitpos + 1, it, var);
     }
 
     public static void bitmapIterator(int bitmap, BitmapIterator it, Object var) {
-        bitmapIteratorInternal(bitmap, BITUTILS_NUM_BITS_IN_INT, it, var);
+        bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_INT, it, var);
+    }
+
+    public static void bitmapIterator(short bitmap, int maxbits,
+            BitmapIterator it, Object var) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_SHORT);
+        }
+        bitmapIteratorInternal(bitmap, 0, maxbits, it, var);
+    }
+
+    public static void bitmapIterator(short bitmap, int startbitpos,
+            int endbitpos, BitmapIterator it, Object var) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || startbitpos > endbitpos");
+        }
+
+        bitmapIteratorInternal(bitmap, startbitpos,
+                endbitpos - startbitpos + 1, it, var);
     }
 
     public static void bitmapIterator(short bitmap, BitmapIterator it,
             Object var) {
-        bitmapIteratorInternal(bitmap, BITUTILS_NUM_BITS_IN_SHORT, it, var);
+        bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_SHORT, it, var);
+    }
+
+    public static void bitmapIterator(byte bitmap, int maxbits,
+            BitmapIterator it, Object var) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_BYTE);
+        }
+        bitmapIteratorInternal(bitmap, 0, maxbits, it, var);
+    }
+
+    public static void bitmapIterator(byte bitmap, int startbitpos,
+            int endbitpos, BitmapIterator it, Object var) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE + " || startbitpos > endbitpos");
+        }
+
+        bitmapIteratorInternal(bitmap, startbitpos,
+                endbitpos - startbitpos + 1, it, var);
     }
 
     public static void bitmapIterator(byte bitmap, BitmapIterator it, Object var) {
-        bitmapIteratorInternal(bitmap, BITUTILS_NUM_BITS_IN_BYTE, it, var);
+        bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_BYTE, it, var);
+    }
+
+    public static long bitwiseAndInternal(long bitmap1, long bitmap2,
+            int maxbits) {
+        long mask = (1L << maxbits) - 1L;
+        long bitmap = (bitmap1 & bitmap2) & mask;
+
+        return ((bitmap1 & ~mask) | bitmap);
+    }
+
+    public static long bitwiseAndInternal(long bitmap1, long bitmap2,
+            int startbitpos, int endbitpos) {
+        long bitmap;
+        int maxbits = endbitpos - startbitpos + 1;
+        long mask1 = (1L << (startbitpos)) - 1L;
+        long mask2 = ((1L << maxbits) - 1L) << (startbitpos);
+        long mask3 = ~(mask1 | mask2);
+
+        bitmap = (bitmap1 & bitmap2) & mask2;
+
+        return (((bitmap1 & (mask1 | mask3))) | bitmap);
+    }
+
+    public static int bitwiseAndInternal(int bitmap1, int bitmap2, int maxbits) {
+        int mask = (1 << maxbits) - 1;
+        int bitmap = (bitmap1 & bitmap2) & mask;
+
+        return ((bitmap1 & ~mask) | bitmap);
+    }
+
+    public static int bitwiseAndInternal(int bitmap1, int bitmap2,
+            int startbitpos, int endbitpos) {
+        int bitmap;
+        int maxbits = endbitpos - startbitpos + 1;
+        int mask1 = (1 << (startbitpos)) - 1;
+        int mask2 = ((1 << maxbits) - 1) << (startbitpos);
+        int mask3 = ~(mask1 | mask2);
+
+        bitmap = (bitmap1 & bitmap2) & mask2;
+
+        return (((bitmap1 & (mask1 | mask3))) | bitmap);
     }
 
     public static long bitwiseAnd(long bitmap1, long bitmap2, int maxbits) {
         if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
             throw new IllegalArgumentException("maxbits:" + maxbits
-                    + " : maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG");
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_LONG);
         }
 
-        long mask = (1L << maxbits) - 1L;
-        long bitmap = (bitmap1 & bitmap2) & mask;
-
-        return ((bitmap1 & ~mask) | bitmap);
+        return bitwiseAndInternal(bitmap1, bitmap2, maxbits);
     }
 
     public static long bitwiseAnd(long bitmap1, long bitmap2, int startbitpos,
@@ -853,53 +1033,161 @@ public class BitUtils {
         if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG
                 || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG
                 || startbitpos > endbitpos) {
-            throw new IllegalArgumentException(
-                    "startbitpos : "
-                            + startbitpos
-                            + "endbitpos: "
-                            + endbitpos
-                            + " : startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "startbitpos > endbitpos");
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG + " || startbitpos > endbitpos");
         }
 
-        long bitmap;
-        int maxbits = endbitpos - startbitpos + 1;
-        long mask1 = (1L << (startbitpos + 1)) - 1L;
-        long mask2 = ((1L << maxbits) - 1L) << startbitpos;
-        long mask3 = ~(mask1 | mask2);
-
-        bitmap = (bitmap1 & bitmap2) & mask2;
-
-        return ((bitmap1 & (mask1 | mask3)) | bitmap);
+        return bitwiseAndInternal(bitmap1, bitmap2, startbitpos, endbitpos);
     }
 
     public static long bitwiseAnd(long bitmap1, long bitmap2) {
         return (bitmap1 & bitmap2);
     }
 
+    public static int bitwiseAnd(int bitmap1, int bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_INT);
+        }
+
+        return bitwiseAndInternal(bitmap1, bitmap2, maxbits);
+    }
+
+    public static int bitwiseAnd(int bitmap1, int bitmap2, int startbitpos,
+            int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT + " || startbitpos > endbitpos");
+        }
+
+        return bitwiseAndInternal(bitmap1, bitmap2, startbitpos, endbitpos);
+    }
+
     public static int bitwiseAnd(int bitmap1, int bitmap2) {
         return (bitmap1 & bitmap2);
     }
 
+    public static short bitwiseAnd(short bitmap1, short bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_SHORT);
+        }
+        return (short) (bitwiseAndInternal((int) bitmap1, (int) bitmap2,
+                maxbits) & 0xffff);
+    }
+
+    public static short bitwiseAnd(short bitmap1, short bitmap2,
+            int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || startbitpos > endbitpos");
+        }
+
+        return (short) (bitwiseAndInternal((int) bitmap1, (int) bitmap2,
+                startbitpos, endbitpos) & 0xffff);
+    }
+
     public static short bitwiseAnd(short bitmap1, short bitmap2) {
-        return (short) (bitmap1 & bitmap2);
+        return (short) ((bitmap1 & bitmap2) & 0xffff);
+    }
+
+    public static byte bitwiseAnd(byte bitmap1, byte bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_BYTE);
+        }
+        return (byte) (bitwiseAndInternal((int) bitmap1, (int) bitmap2, maxbits) & 0xff);
+    }
+
+    public static byte bitwiseAnd(byte bitmap1, byte bitmap2, int startbitpos,
+            int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE + " || startbitpos > endbitpos");
+        }
+
+        return (byte) (bitwiseAndInternal((int) bitmap1, (int) bitmap2,
+                startbitpos, endbitpos) & 0xff);
     }
 
     public static byte bitwiseAnd(byte bitmap1, byte bitmap2) {
-        return (byte) (bitmap1 & bitmap2);
+        return (byte) ((bitmap1 & bitmap2) & 0xff);
+    }
+
+    public static long bitwiseOrInternal(long bitmap1, long bitmap2, int maxbits) {
+        long mask = (1L << maxbits) - 1L;
+        long bitmap = (bitmap1 | bitmap2) & mask;
+
+        return ((bitmap1 & ~mask) | bitmap);
+    }
+
+    public static long bitwiseOrInternal(long bitmap1, long bitmap2,
+            int startbitpos, int endbitpos) {
+        long bitmap;
+        int maxbits = endbitpos - startbitpos + 1;
+        long mask1 = (1L << (startbitpos)) - 1L;
+        long mask2 = ((1L << maxbits) - 1L) << (startbitpos);
+        long mask3 = ~(mask1 | mask2);
+
+        bitmap = (bitmap1 | bitmap2) & mask2;
+
+        return (((bitmap1 & (mask1 | mask3))) | bitmap);
+    }
+
+    public static int bitwiseOrInternal(int bitmap1, int bitmap2, int maxbits) {
+        int mask = (1 << maxbits) - 1;
+        int bitmap = (bitmap1 | bitmap2) & mask;
+
+        return ((bitmap1 & ~mask) | bitmap);
+    }
+
+    public static int bitwiseOrInternal(int bitmap1, int bitmap2,
+            int startbitpos, int endbitpos) {
+        int bitmap;
+        int maxbits = endbitpos - startbitpos + 1;
+        int mask1 = (1 << (startbitpos)) - 1;
+        int mask2 = ((1 << maxbits) - 1) << (startbitpos);
+        int mask3 = ~(mask1 | mask2);
+
+        bitmap = (bitmap1 | bitmap2) & mask2;
+
+        return (((bitmap1 & (mask1 | mask3))) | bitmap);
     }
 
     public static long bitwiseOr(long bitmap1, long bitmap2, int maxbits) {
         if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
             throw new IllegalArgumentException("maxbits:" + maxbits
-                    + " : maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG");
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_LONG);
         }
 
-        long mask = (1L << maxbits) - 1L;
-        long bitmap = (bitmap1 | bitmap2) & mask;
-
-        return ((bitmap1 & ~mask) | bitmap);
+        return bitwiseOrInternal(bitmap1, bitmap2, maxbits);
     }
 
     public static long bitwiseOr(long bitmap1, long bitmap2, int startbitpos,
@@ -907,53 +1195,163 @@ public class BitUtils {
         if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG
                 || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG
                 || startbitpos > endbitpos) {
-            throw new IllegalArgumentException(
-                    "startbitpos : "
-                            + startbitpos
-                            + "endbitpos: "
-                            + endbitpos
-                            + " : startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "startbitpos > endbitpos");
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG + " || startbitpos > endbitpos");
         }
 
-        long bitmap;
-        int maxbits = endbitpos - startbitpos + 1;
-        long mask1 = (1L << (startbitpos + 1)) - 1L;
-        long mask2 = ((1L << maxbits) - 1L) << startbitpos;
-        long mask3 = ~(mask1 | mask2);
-
-        bitmap = (bitmap1 | bitmap2) & mask2;
-
-        return ((bitmap1 & (mask1 | mask3)) | bitmap);
+        return bitwiseOrInternal(bitmap1, bitmap2, startbitpos, endbitpos);
     }
 
     public static long bitwiseOr(long bitmap1, long bitmap2) {
         return (bitmap1 | bitmap2);
     }
 
+    public static int bitwiseOr(int bitmap1, int bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_INT);
+        }
+
+        return bitwiseOrInternal(bitmap1, bitmap2, maxbits);
+    }
+
+    public static int bitwiseOr(int bitmap1, int bitmap2, int startbitpos,
+            int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT + " || startbitpos > endbitpos");
+        }
+
+        return bitwiseOrInternal(bitmap1, bitmap2, startbitpos, endbitpos);
+    }
+
     public static int bitwiseOr(int bitmap1, int bitmap2) {
         return (bitmap1 | bitmap2);
     }
 
+    public static short bitwiseOr(short bitmap1, short bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_SHORT);
+        }
+
+        return (short) (bitwiseOrInternal(bitmap1, bitmap2, maxbits) & 0xffff);
+    }
+
+    public static short bitwiseOr(short bitmap1, short bitmap2,
+            int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || startbitpos > endbitpos");
+        }
+
+        return (short) (bitwiseOrInternal(bitmap1, bitmap2, startbitpos,
+                endbitpos) & 0xffff);
+    }
+
     public static short bitwiseOr(short bitmap1, short bitmap2) {
-        return (short) (bitmap1 | bitmap2);
+        return (short) ((bitmap1 | bitmap2) & 0xffff);
+    }
+
+    public static byte bitwiseOr(byte bitmap1, byte bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_BYTE);
+        }
+
+        return (byte) (bitwiseOrInternal(bitmap1, bitmap2, maxbits) & 0xff);
+    }
+
+    public static byte bitwiseOr(byte bitmap1, byte bitmap2, int startbitpos,
+            int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE + " || startbitpos > endbitpos");
+        }
+
+        return (byte) (bitwiseOrInternal(bitmap1, bitmap2, startbitpos,
+                endbitpos) & 0xff);
     }
 
     public static byte bitwiseOr(byte bitmap1, byte bitmap2) {
-        return (byte) (bitmap1 | bitmap2);
+        return (byte) ((bitmap1 | bitmap2) & 0xff);
+    }
+
+    public static long bitwiseXorInternal(long bitmap1, long bitmap2,
+            int maxbits) {
+        long mask = (1L << maxbits) - 1L;
+        long bitmap = (bitmap1 ^ bitmap2) & mask;
+
+        return ((bitmap1 & ~mask) | bitmap);
+    }
+
+    public static long bitwiseXorInternal(long bitmap1, long bitmap2,
+            int startbitpos, int endbitpos) {
+        long bitmap;
+        int maxbits = endbitpos - startbitpos + 1;
+        long mask1 = (1L << (startbitpos)) - 1L;
+        long mask2 = ((1L << maxbits) - 1L) << (startbitpos);
+        long mask3 = ~(mask1 | mask2);
+
+        bitmap = (bitmap1 ^ bitmap2) & mask2;
+
+        return (((bitmap1 & (mask1 | mask3))) | bitmap);
+    }
+
+    public static int bitwiseXorInternal(int bitmap1, int bitmap2, int maxbits) {
+        int mask = (1 << maxbits) - 1;
+        int bitmap = (bitmap1 ^ bitmap2) & mask;
+
+        return ((bitmap1 & ~mask) | bitmap);
+    }
+
+    public static int bitwiseXorInternal(int bitmap1, int bitmap2,
+            int startbitpos, int endbitpos) {
+        int bitmap;
+        int maxbits = endbitpos - startbitpos + 1;
+        int mask1 = (1 << (startbitpos)) - 1;
+        int mask2 = ((1 << maxbits) - 1) << (startbitpos);
+        int mask3 = ~(mask1 | mask2);
+
+        bitmap = (bitmap1 ^ bitmap2) & mask2;
+
+        return (((bitmap1 & (mask1 | mask3))) | bitmap);
     }
 
     public static long bitwiseXor(long bitmap1, long bitmap2, int maxbits) {
         if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
             throw new IllegalArgumentException("maxbits:" + maxbits
-                    + " : maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG");
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_LONG);
         }
 
-        long mask = (1L << maxbits) - 1L;
-        long bitmap = (bitmap1 ^ bitmap2) & mask;
-
-        return ((bitmap1 & ~mask) | bitmap);
+        return bitwiseXorInternal(bitmap1, bitmap2, maxbits);
     }
 
     public static long bitwiseXor(long bitmap1, long bitmap2, int startbitpos,
@@ -961,71 +1359,125 @@ public class BitUtils {
         if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG
                 || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG
                 || startbitpos > endbitpos) {
-            throw new IllegalArgumentException(
-                    "startbitpos : "
-                            + startbitpos
-                            + "endbitpos: "
-                            + endbitpos
-                            + " : startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "startbitpos > endbitpos");
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG + " || startbitpos > endbitpos");
         }
 
-        long bitmap;
-        int maxbits = endbitpos - startbitpos + 1;
-        long mask1 = (1L << (startbitpos + 1)) - 1L;
-        long mask2 = ((1L << maxbits) - 1L) << startbitpos;
-        long mask3 = ~(mask1 | mask2);
-
-        bitmap = (bitmap1 ^ bitmap2) & mask2;
-
-        return ((bitmap1 & (mask1 | mask3)) | bitmap);
+        return bitwiseXorInternal(bitmap1, bitmap2, startbitpos, endbitpos);
     }
 
     public static long bitwiseXor(long bitmap1, long bitmap2) {
         return (bitmap1 ^ bitmap2);
     }
 
+    public static int bitwiseXor(int bitmap1, int bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_INT);
+        }
+
+        return bitwiseXorInternal(bitmap1, bitmap2, maxbits);
+    }
+
+    public static int bitwiseXor(int bitmap1, int bitmap2, int startbitpos,
+            int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT + " || startbitpos > endbitpos");
+        }
+
+        return bitwiseXorInternal(bitmap1, bitmap2, startbitpos, endbitpos);
+    }
+
     public static int bitwiseXor(int bitmap1, int bitmap2) {
         return (bitmap1 ^ bitmap2);
     }
 
+    public static short bitwiseXor(short bitmap1, short bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_SHORT);
+        }
+
+        return (short) (bitwiseXorInternal(bitmap1, bitmap2, maxbits) & 0xffff);
+    }
+
+    public static short bitwiseXor(short bitmap1, short bitmap2,
+            int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || startbitpos > endbitpos");
+        }
+
+        return (short) (bitwiseXorInternal(bitmap1, bitmap2, startbitpos,
+                endbitpos) & 0xffff);
+    }
+
     public static short bitwiseXor(short bitmap1, short bitmap2) {
-        return (short) (bitmap1 ^ bitmap2);
+        return (short) ((bitmap1 ^ bitmap2) & 0xffff);
+    }
+
+    public static byte bitwiseXor(byte bitmap1, byte bitmap2, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_BYTE);
+        }
+
+        return (byte) (bitwiseXorInternal(bitmap1, bitmap2, maxbits) & 0xff);
+    }
+
+    public static byte bitwiseXor(byte bitmap1, byte bitmap2, int startbitpos,
+            int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE + " || startbitpos > endbitpos");
+        }
+
+        return (byte) (bitwiseXorInternal(bitmap1, bitmap2, startbitpos,
+                endbitpos) & 0xff);
     }
 
     public static byte bitwiseXor(byte bitmap1, byte bitmap2) {
-        return (byte) (bitmap1 ^ bitmap2);
+        return (byte) ((bitmap1 ^ bitmap2) & 0xff);
     }
 
-    public static long bitwiseNot(long bitmap, int maxbits) {
-        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
-            throw new IllegalArgumentException("maxbits:" + maxbits
-                    + " : maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG");
-        }
-
+    public static long bitwiseNotInternal(long bitmap, int maxbits) {
         long mask = (1L << maxbits) - 1L;
         long tmpBitmap = (~bitmap) & mask;
 
         return ((bitmap & ~mask) | tmpBitmap);
     }
 
-    public static long bitwiseNot(long bitmap, int startbitpos, int endbitpos) {
-        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG
-                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG
-                || startbitpos > endbitpos) {
-            throw new IllegalArgumentException(
-                    "startbitpos : "
-                            + startbitpos
-                            + "endbitpos: "
-                            + endbitpos
-                            + " : startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG ||"
-                            + "startbitpos > endbitpos");
-        }
-
+    public static long bitwiseNotInternal(long bitmap, int startbitpos,
+            int endbitpos) {
         int maxbits = endbitpos - startbitpos + 1;
-        long mask1 = (1L << (startbitpos + 1)) - 1L;
+        long mask1 = (1L << (startbitpos)) - 1L;
         long mask2 = ((1L << maxbits) - 1L) << startbitpos;
         long mask3 = ~(mask1 | mask2);
 
@@ -1034,19 +1486,143 @@ public class BitUtils {
         return ((bitmap & (mask1 | mask3)) | tmpBitmap);
     }
 
+    public static int bitwiseNotInternal(int bitmap, int maxbits) {
+        int mask = (1 << maxbits) - 1;
+        int tmpBitmap = (~bitmap) & mask;
+
+        return ((bitmap & ~mask) | tmpBitmap);
+    }
+
+    public static int bitwiseNotInternal(int bitmap, int startbitpos,
+            int endbitpos) {
+        int maxbits = endbitpos - startbitpos + 1;
+        int mask1 = (1 << (startbitpos)) - 1;
+        int mask2 = ((1 << maxbits) - 1) << startbitpos;
+        int mask3 = ~(mask1 | mask2);
+
+        int tmpBitmap = (~bitmap) & mask2;
+
+        return ((bitmap & (mask1 | mask3)) | tmpBitmap);
+    }
+
+    public static long bitwiseNot(long bitmap, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_LONG);
+        }
+
+        return bitwiseNotInternal(bitmap, maxbits);
+
+    }
+
+    public static long bitwiseNot(long bitmap, int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_LONG
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_LONG
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_LONG + " || startbitpos > endbitpos");
+        }
+
+        return bitwiseNotInternal(bitmap, startbitpos, endbitpos);
+    }
+
     public static long bitwiseNot(long bitmap) {
         return (~bitmap);
+    }
+
+    public static int bitwiseNot(int bitmap, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_INT);
+        }
+
+        return bitwiseNotInternal(bitmap, maxbits);
+
+    }
+
+    public static int bitwiseNot(int bitmap, int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_INT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_INT + " || startbitpos > endbitpos");
+        }
+
+        return bitwiseNotInternal(bitmap, startbitpos, endbitpos);
     }
 
     public static int bitwiseNot(int bitmap) {
         return (~bitmap);
     }
 
+    public static short bitwiseNot(short bitmap, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_SHORT);
+        }
+
+        return (short) (bitwiseNotInternal((int) bitmap, maxbits) & 0xffff);
+
+    }
+
+    public static short bitwiseNot(short bitmap, int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_SHORT
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_SHORT
+                    + " || startbitpos > endbitpos");
+        }
+
+        return (short) (bitwiseNotInternal((int) bitmap, startbitpos, endbitpos) & 0xffff);
+    }
+
     public static short bitwiseNot(short bitmap) {
-        return (short) (~bitmap);
+        return (short) ((~bitmap) & 0xffff);
+    }
+
+    public static byte bitwiseNot(byte bitmap, int maxbits) {
+        if (maxbits <= 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            throw new IllegalArgumentException("maxbits:" + maxbits
+                    + " : maxbits <= 0 || maxbits > "
+                    + BITUTILS_NUM_BITS_IN_BYTE);
+        }
+
+        return (byte) (bitwiseNotInternal((int) bitmap, maxbits) & 0xffff);
+
+    }
+
+    public static byte bitwiseNot(byte bitmap, int startbitpos, int endbitpos) {
+        if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_BYTE
+                || startbitpos > endbitpos) {
+            throw new IllegalArgumentException("startbitpos : " + startbitpos
+                    + " : endbitpos: " + endbitpos
+                    + " : startbitpos < 0 || startbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE
+                    + " || endbitpos < 0 || endbitpos >= "
+                    + BITUTILS_NUM_BITS_IN_BYTE + " || startbitpos > endbitpos");
+        }
+
+        return (byte) (bitwiseNotInternal((int) bitmap, startbitpos, endbitpos) & 0xffff);
     }
 
     public static byte bitwiseNot(byte bitmap) {
-        return (byte) (~bitmap);
+        return (byte) ((~bitmap) & 0xff);
     }
 }
