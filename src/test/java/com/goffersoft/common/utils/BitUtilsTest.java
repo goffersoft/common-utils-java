@@ -1181,5 +1181,4 @@ public class BitUtilsTest {
         thrown.expect(IllegalArgumentException.class);
         BitUtils.bitwiseNot(byteBitmap, 0, 8);
     }
-
 }
