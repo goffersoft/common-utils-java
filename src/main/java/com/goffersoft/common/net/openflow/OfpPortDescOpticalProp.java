@@ -26,16 +26,27 @@ public class OfpPortDescOpticalProp extends OfpPortDescGenericProp {
             .getLogger(OfpPortDescOpticalProp.class);
 
     static public enum OfpPortFeatures {
-        OFPOPF_RX_TUNE(0), OFPOPF_TX_TUNE(1), OFPOPF_TX_PWR(2), OFPOPF_USE_FREQ(
-                3), OFPOPF_UNK(0), ;
+        OFPOPF_RX_TUNE(0),
+        OFPOPF_TX_TUNE(1),
+        OFPOPF_TX_PWR(2),
+        OFPOPF_USE_FREQ(3),
+        OFPOPF_UNK(0), ;
 
-        public static final OfpPortFeatures pfBit[] = { OFPOPF_RX_TUNE,
-                OFPOPF_TX_TUNE, OFPOPF_TX_PWR, OFPOPF_USE_FREQ, OFPOPF_UNK, };
+        public static final OfpPortFeatures pfBit[] = {
+                OFPOPF_RX_TUNE,
+                OFPOPF_TX_TUNE,
+                OFPOPF_TX_PWR,
+                OFPOPF_USE_FREQ,
+                OFPOPF_UNK,
+        };
 
-        public static final String pfDescr[] = { "Receiver is tunable",
-                "Transmit is tunable", "Power is configurable",
+        public static final String pfDescr[] = {
+                "Receiver is tunable",
+                "Transmit is tunable",
+                "Power is configurable",
                 "Use Frequency, not wavelength",
-                "Unknown Value - User defined", };
+                "Unknown Value - User defined",
+        };
 
         private int pfBitPos;
 

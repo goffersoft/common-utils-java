@@ -25,17 +25,43 @@ public class OfpPortDescEthernetProp extends OfpPortDescGenericProp {
             .getLogger(OfpPortDescEthernetProp.class);
 
     static public enum OfpPortFeatures {
-        OFPPF_10MB_HD(0), OFPPF_10MB_FD(1), OFPPF_100MB_HD(2), OFPPF_100MB_FD(3), OFPPF_1GB_HD(
-                4), OFPPF_1GB_FD(5), OFPPF_10GB_FD(6), OFPPF_40GB_FD(7), OFPPF_100GB_FD(
-                8), OFPPF_1TB_FD(9), OFPPF_OTHER(10), OFPPF_COPPER(11), OFPPF_FIBER(
-                12), OFPPF_AUTONEG(13), OFPPF_PAUSE(14), OFPPF_PAUSE_ASYM(15), OFPPF_UNK(
-                0), ;
+        OFPPF_10MB_HD(0),
+        OFPPF_10MB_FD(1),
+        OFPPF_100MB_HD(2),
+        OFPPF_100MB_FD(3),
+        OFPPF_1GB_HD(4),
+        OFPPF_1GB_FD(5),
+        OFPPF_10GB_FD(6),
+        OFPPF_40GB_FD(7),
+        OFPPF_100GB_FD(8),
+        OFPPF_1TB_FD(9),
+        OFPPF_OTHER(10),
+        OFPPF_COPPER(11),
+        OFPPF_FIBER(12),
+        OFPPF_AUTONEG(13),
+        OFPPF_PAUSE(14),
+        OFPPF_PAUSE_ASYM(15),
+        OFPPF_UNK(0), ;
 
-        public static final OfpPortFeatures pfBit[] = { OFPPF_10MB_HD,
-                OFPPF_10MB_FD, OFPPF_100MB_HD, OFPPF_100MB_FD, OFPPF_1GB_HD,
-                OFPPF_1GB_FD, OFPPF_10GB_FD, OFPPF_40GB_FD, OFPPF_100GB_FD,
-                OFPPF_1TB_FD, OFPPF_OTHER, OFPPF_COPPER, OFPPF_FIBER,
-                OFPPF_AUTONEG, OFPPF_PAUSE, OFPPF_PAUSE_ASYM, OFPPF_UNK, };
+        public static final OfpPortFeatures pfBit[] = {
+                OFPPF_10MB_HD,
+                OFPPF_10MB_FD,
+                OFPPF_100MB_HD,
+                OFPPF_100MB_FD,
+                OFPPF_1GB_HD,
+                OFPPF_1GB_FD,
+                OFPPF_10GB_FD,
+                OFPPF_40GB_FD,
+                OFPPF_100GB_FD,
+                OFPPF_1TB_FD,
+                OFPPF_OTHER,
+                OFPPF_COPPER,
+                OFPPF_FIBER,
+                OFPPF_AUTONEG,
+                OFPPF_PAUSE,
+                OFPPF_PAUSE_ASYM,
+                OFPPF_UNK,
+        };
 
         public static final String pfDescr[] = {
                 "10 Mb half-duplex rate support",
@@ -47,9 +73,15 @@ public class OfpPortDescEthernetProp extends OfpPortDescGenericProp {
                 "10 Gb full-duplex rate support",
                 "40 Gb full-duplex rate support",
                 "100 Gb full-duplex rate support",
-                "1 Tb full-duplex rate support", "Other rate, not in the list",
-                "Copper medium", "Fiber medium", "Auto-negotiation", "Pause",
-                "Asymmetric pause", "Unknown Value - User defined", };
+                "1 Tb full-duplex rate support",
+                "Other rate, not in the list",
+                "Copper medium",
+                "Fiber medium",
+                "Auto-negotiation",
+                "Pause",
+                "Asymmetric pause",
+                "Unknown Value - User defined",
+        };
 
         private int pfBitPos;
 

@@ -26,12 +26,16 @@ public class OfpQueueDescGenericProp implements
             .getLogger(OfpQueueDescGenericProp.class);
 
     public static enum OfpQueueDescPropType {
-        OFPQDPT_MIN_RATE(1), OFPQDPT_MAX_RATE(2), OFPQDPT_EXPERIMENTER(0xffff), OFPQDPT_UNK(
-                2), ;
+        OFPQDPT_MIN_RATE(1),
+        OFPQDPT_MAX_RATE(2),
+        OFPQDPT_EXPERIMENTER(0xffff),
+        OFPQDPT_UNK(2), ;
 
         public static final String propDescr[] = {
                 "No Property defined for queue (default)",
-                "Minimum datarate guaranteed", "Unknown property type", };
+                "Minimum datarate guaranteed",
+                "Unknown property type",
+        };
 
         private short type;
 

@@ -17,16 +17,31 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.EndianConversion;
 
 public enum OfpPortNum {
-    OFPP_SWITCH_PORT(getNextPortNum()), OFPP_IN_PORT(0xfffffff8), OFPP_TABLE(
-            0xfffffff9), OFPP_NORMAL(0xfffffffa), OFPP_FLOOD(0xfffffffb), OFPP_ALL(
-            0xfffffffc), OFPP_CONTROLLER(0xfffffffd), OFPP_LOCAL(0xfffffffe), OFPP_ANY(
-            0xffffffff), OFPP_MAX(0xffffff00), ;
+    OFPP_SWITCH_PORT(getNextPortNum()),
+    OFPP_IN_PORT(0xfffffff8),
+    OFPP_TABLE(0xfffffff9),
+    OFPP_NORMAL(0xfffffffa),
+    OFPP_FLOOD(0xfffffffb),
+    OFPP_ALL(0xfffffffc),
+    OFPP_CONTROLLER(0xfffffffd),
+    OFPP_LOCAL(0xfffffffe),
+    OFPP_ANY(0xffffffff),
+    OFPP_MAX(0xffffff00), ;
 
     private static final Logger log = Logger.getLogger(OfpPortNum.class);
 
-    public static final OfpPortNum portNum[] = { OFPP_SWITCH_PORT,
-            OFPP_IN_PORT, OFPP_TABLE, OFPP_NORMAL, OFPP_FLOOD, OFPP_ALL,
-            OFPP_CONTROLLER, OFPP_LOCAL, OFPP_ANY, OFPP_MAX, };
+    public static final OfpPortNum portNum[] = {
+            OFPP_SWITCH_PORT,
+            OFPP_IN_PORT,
+            OFPP_TABLE,
+            OFPP_NORMAL,
+            OFPP_FLOOD,
+            OFPP_ALL,
+            OFPP_CONTROLLER,
+            OFPP_LOCAL,
+            OFPP_ANY,
+            OFPP_MAX,
+    };
 
     public static final String portName[] = {
             "Switch Port (Port Range : 1 - 0xFFFFFF00)",
@@ -38,11 +53,21 @@ public enum OfpPortNum {
             "Reserved OpenFlow Port(fake output port) - CONTROLLER - 0xfffffffd",
             "Reserved OpenFlow Port(fake output port) - LOCAL      - 0xfffffffe",
             "Reserved OpenFlow Port(fake output port) - ANY        - 0xffffffff",
-            "Maximum Port Number" };
+            "Maximum Port Number"
+    };
 
-    private static final int portId[] = { 0, 0xfffffff8, 0xfffffff9,
-            0xfffffffa, 0xfffffffb, 0xfffffffc, 0xfffffffd, 0xfffffffe,
-            0xffffffff, 0xffffff00, };
+    private static final int portId[] = {
+            0,
+            0xfffffff8,
+            0xfffffff9,
+            0xfffffffa,
+            0xfffffffb,
+            0xfffffffc,
+            0xfffffffd,
+            0xfffffffe,
+            0xffffffff,
+            0xffffff00,
+    };
 
     public static final String portDescr[] = {
             "Pysical/Logical Switch Port Number",
@@ -63,7 +88,8 @@ public enum OfpPortNum {
                     + "regardless of output port (including flows with "
                     + "no output port).",
             "Maximum Number of physical and/or logical switch ports "
-                    + "- MAX - 0xffffff00", };
+                    + "- MAX - 0xffffff00",
+    };
 
     static public final int OFPP_MAX_PORTNUM = 0xffffff00;
 

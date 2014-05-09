@@ -28,14 +28,24 @@ public class OfpPort implements OfpSerializable<OfpPort> {
     private static final Logger log = Logger.getLogger(OfpPort.class);
 
     static public enum OfpPortState {
-        OFPPS_LINK_DOWN(0), OFPPS_BLOCKED(1), OFPPS_LIVE(2), OFPPS_UNK(0), ;
+        OFPPS_LINK_DOWN(0),
+        OFPPS_BLOCKED(1),
+        OFPPS_LIVE(2),
+        OFPPS_UNK(0), ;
 
-        static final OfpPortState psBit[] = { OFPPS_LINK_DOWN, OFPPS_BLOCKED,
-                OFPPS_LIVE, OFPPS_UNK, };
+        static final OfpPortState psBit[] = {
+                OFPPS_LINK_DOWN,
+                OFPPS_BLOCKED,
+                OFPPS_LIVE,
+                OFPPS_UNK,
+        };
 
-        static final String psDescr[] = { "No physical link present",
-                "Port is blocked", "Live for Fast Failover Group",
-                "Unknown State - User Defined", };
+        static final String psDescr[] = {
+                "No physical link present",
+                "Port is blocked",
+                "Live for Fast Failover Group",
+                "Unknown State - User Defined",
+        };
 
         private int psBitPos;
 
@@ -99,17 +109,27 @@ public class OfpPort implements OfpSerializable<OfpPort> {
     };
 
     static public enum OfpPortConfig {
-        OFPPC_PORT_DOWN(0), OFPPC_NO_RECV(1), OFPPC_NO_FWD(2), OFPPC_NO_PACKET_IN(
-                3), OFPPC_UNK(0), ;
+        OFPPC_PORT_DOWN(0),
+        OFPPC_NO_RECV(1),
+        OFPPC_NO_FWD(2),
+        OFPPC_NO_PACKET_IN(3),
+        OFPPC_UNK(0), ;
 
-        static final OfpPortConfig pcBit[] = { OFPPC_PORT_DOWN, OFPPC_NO_RECV,
-                OFPPC_NO_FWD, OFPPC_NO_PACKET_IN, OFPPC_UNK, };
+        static final OfpPortConfig pcBit[] = {
+                OFPPC_PORT_DOWN,
+                OFPPC_NO_RECV,
+                OFPPC_NO_FWD,
+                OFPPC_NO_PACKET_IN,
+                OFPPC_UNK,
+        };
 
-        static final String pcDescr[] = { "Port is administratively down",
+        static final String pcDescr[] = {
+                "Port is administratively down",
                 "Drop all packets received by the port",
                 "Drop packets forwarded to port",
                 "Do not send packet-in msgs for port",
-                "Unknown State - User Defined", };
+                "Unknown State - User Defined",
+        };
 
         private int pcBitPos;
 
@@ -486,15 +506,18 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         getStateBitmap().clearBit(pfbit.getBitPos());
     }
 
+    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[getLength()];
         return toByteArray(hdr, 0);
     }
 
+    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
+    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writePortNum(data, offset);
         writeLength(data, offset);
@@ -505,6 +528,7 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         return writePropertyList(data, offset + OFP_PORT_LEN);
     }
 
+    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writePortNum(os);
         writeLength(os);
@@ -515,14 +539,17 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         return writePropertyList(os);
     }
 
+    @Override
     public OfpPort fromInputStream(InputStream is) throws IOException {
         return readFromInputStream(is);
     }
 
+    @Override
     public OfpPort fromByteArray(byte[] data) {
         return new OfpPort(data);
     }
 
+    @Override
     public OfpPort fromByteArray(byte[] data, int offset) {
         return new OfpPort(data, offset);
     }

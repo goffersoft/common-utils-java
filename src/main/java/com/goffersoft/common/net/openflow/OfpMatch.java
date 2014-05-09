@@ -20,11 +20,15 @@ public class OfpMatch implements OfpSerializable<OfpMatch> {
     private static final Logger log = Logger.getLogger(OfpMatch.class);
 
     static public enum OfpMatchType {
-        OFPMT_STANDARD(0), OFPMT_OXM(1), OFPMT_UNK(0), ;
+        OFPMT_STANDARD(0),
+        OFPMT_OXM(1),
+        OFPMT_UNK(0), ;
 
         static final String mdescr[] = {
                 "Openflow Standard Match - Deprecated",
-                "Openflow Extensible Match", "Unknown Match Type," };
+                "Openflow Extensible Match",
+                "Unknown Match Type,"
+        };
 
         private short mtype;
 
@@ -100,36 +104,43 @@ public class OfpMatch implements OfpSerializable<OfpMatch> {
         this.length = length;
     }
 
+    @Override
     public OfpMatch fromInputStream(InputStream is) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public OfpMatch fromByteArray(byte[] ba) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public OfpMatch fromByteArray(byte[] ba, int offset) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public byte[] toByteArray() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public byte[] toByteArray(byte[] ba) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public byte[] toByteArray(byte[] ba, int offset) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         // TODO Auto-generated method stub
         return null;

@@ -28,8 +28,12 @@ public class OfpHeader implements OfpSerializable<OfpHeader> {
     private int xid;
 
     /**
-     * Version Number Non-Experimental Versions Released 0x01 = 1.0 0x02 = 1.1
-     * 0x03 = 1.2 0x04 = 1.3.X 0x05 = 1.4.X
+     * Version Number Non-Experimental Versions Released
+     * 0x01 = 1.0
+     * 0x02 = 1.1
+     * 0x03 = 1.2
+     * 0x04 = 1.3.X
+     * 0x05 = 1.4.X
      **/
     public static final int OFP_VERSION = 0x05;
     public static final int OFP_HDR_LEN = 8;
@@ -141,15 +145,18 @@ public class OfpHeader implements OfpSerializable<OfpHeader> {
         this.xid = xid;
     }
 
+    @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[OFP_HDR_LEN];
         return toByteArray(hdr, 0);
     }
 
+    @Override
     public byte[] toByteArray(byte[] data) {
         return toByteArray(data, 0);
     }
 
+    @Override
     public byte[] toByteArray(byte[] data, int offset) {
         writeVersion(data, offset);
         writeType(data, offset);
@@ -159,6 +166,7 @@ public class OfpHeader implements OfpSerializable<OfpHeader> {
         return data;
     }
 
+    @Override
     public OutputStream toOutputStream(OutputStream os) throws IOException {
         writeVersion(os);
         writeType(os);
@@ -168,14 +176,17 @@ public class OfpHeader implements OfpSerializable<OfpHeader> {
         return os;
     }
 
+    @Override
     public OfpHeader fromInputStream(InputStream is) throws IOException {
         return readFromInputStream(is);
     }
 
+    @Override
     public OfpHeader fromByteArray(byte[] data) {
         return new OfpHeader(data);
     }
 
+    @Override
     public OfpHeader fromByteArray(byte[] data, int offset) {
         return new OfpHeader(data, offset);
     }
