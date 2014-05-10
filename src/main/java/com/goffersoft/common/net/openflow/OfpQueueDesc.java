@@ -72,13 +72,13 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
 
             if (proptype == OfpQueueDescGenericProp.OfpQueueDescPropType.OFPQDPT_MIN_RATE) {
                 if (proplen == OfpQueueDescGenericProp.OFP_QUEUE_DESC_PROP_BASE_LEN
-                        + OfpQueueDescMinRateProp.OFP_MIN_RATE_HDR_LEN) {
+                        + OfpQueueDescMinRateProp.OFP_QUEUE_DESC_MIN_RATE_HDR_LEN) {
                     tmp = new OfpQueueDescMinRateProp(data, start);
                     addProperty(tmp);
                 }
             } else if (proptype == OfpQueueDescGenericProp.OfpQueueDescPropType.OFPQDPT_MAX_RATE) {
                 if (proplen == OfpQueueDescGenericProp.OFP_QUEUE_DESC_PROP_BASE_LEN
-                        + OfpQueueDescMaxRateProp.OFP_MAX_RATE_HDR_LEN) {
+                        + OfpQueueDescMaxRateProp.OFP_QUEUE_DESC_MAX_RATE_HDR_LEN) {
                     tmp = new OfpQueueDescMaxRateProp(data, start);
                     addProperty(tmp);
                 }
@@ -110,7 +110,7 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
 
             if (tmp.getType() == OfpQueueDescGenericProp.OfpQueueDescPropType.OFPQDPT_MIN_RATE) {
                 if (tmp.getLength() == OfpQueueDescGenericProp.OFP_QUEUE_DESC_PROP_BASE_LEN
-                        + OfpQueueDescMinRateProp.OFP_MIN_RATE_HDR_LEN) {
+                        + OfpQueueDescMinRateProp.OFP_QUEUE_DESC_MIN_RATE_HDR_LEN) {
                     tmp = new OfpQueueDescMinRateProp(tmp, is);
                     addProperty(tmp);
                 } else {
@@ -118,7 +118,7 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
                 }
             } else if (tmp.getType() == OfpQueueDescGenericProp.OfpQueueDescPropType.OFPQDPT_MAX_RATE) {
                 if (tmp.getLength() == OfpQueueDescGenericProp.OFP_QUEUE_DESC_PROP_BASE_LEN
-                        + OfpQueueDescMaxRateProp.OFP_MAX_RATE_HDR_LEN) {
+                        + OfpQueueDescMaxRateProp.OFP_QUEUE_DESC_MAX_RATE_HDR_LEN) {
                     tmp = new OfpQueueDescMaxRateProp(tmp, is);
                     addProperty(tmp);
                 } else {
@@ -288,8 +288,9 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
         EndianConversion.shortToByteArrayBE(data, offset
                 + OFP_QUEUE_DESC_LENGTH_OFFSET, getLength());
 
-        for (int i = 0; i < OFP_QUEUE_DESC_PAD_LEN; i++) {
-            data[offset + OFP_QUEUE_DESC_LENGTH_OFFSET + 2 + i] = 0X00;
+        for (int i = offset + OFP_QUEUE_DESC_PAD_OFFSET; i < offset
+                + OFP_QUEUE_DESC_PAD_OFFSET + OFP_QUEUE_DESC_PAD_LEN; i++) {
+            data[i] = 0x00;
         }
         return data;
     }

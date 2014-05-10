@@ -27,17 +27,21 @@ public class OfpQueueDescMinRateProp extends OfpQueueDescGenericProp {
     // 2 bytes of padding
 
     public static final int OFP_QUEUE_DESC_MIN_RATE_PROP_RATE_OFFSET = 0;
-    public static final int OFP_MIN_RATE_HDR_LEN = 2;
+    public static final int OFP_QUEUE_DESC_MIN_RATE_PROP_PAD_OFFSET = 2;
+    public static final int OFP_QUEUE_DESC_MIN_RATE_HDR_LEN = 2;
+    public static final int OFP_QUEUE_DESC_MIN_RATE_PAD_LEN = 2;
 
     public OfpQueueDescMinRateProp() {
-        super(OfpQueueDescPropType.OFPQDPT_MIN_RATE,
-                (short) (OFP_QUEUE_DESC_PROP_BASE_LEN + OFP_MIN_RATE_HDR_LEN));
+        super(
+                OfpQueueDescPropType.OFPQDPT_MIN_RATE,
+                (short) (OFP_QUEUE_DESC_PROP_BASE_LEN + OFP_QUEUE_DESC_MIN_RATE_HDR_LEN));
         setRate((short) 0);
     }
 
     public OfpQueueDescMinRateProp(short maxrate) {
-        super(OfpQueueDescPropType.OFPQDPT_MIN_RATE,
-                (short) (OFP_QUEUE_DESC_PROP_BASE_LEN + OFP_MIN_RATE_HDR_LEN));
+        super(
+                OfpQueueDescPropType.OFPQDPT_MIN_RATE,
+                (short) (OFP_QUEUE_DESC_PROP_BASE_LEN + OFP_QUEUE_DESC_MIN_RATE_HDR_LEN));
         setRate(maxrate);
     }
 
@@ -106,7 +110,7 @@ public class OfpQueueDescMinRateProp extends OfpQueueDescGenericProp {
     @Override
     public byte[] toByteArray() {
         byte[] hdr = new byte[OFP_QUEUE_DESC_PROP_BASE_LEN
-                + OFP_MIN_RATE_HDR_LEN];
+                + OFP_QUEUE_DESC_MIN_RATE_HDR_LEN];
         return toByteArray(hdr, 0);
     }
 
@@ -134,14 +138,26 @@ public class OfpQueueDescMinRateProp extends OfpQueueDescGenericProp {
     }
 
     public byte[] writeRate(byte[] data, int offset) {
-        EndianConversion.intToByteArrayBE(data, offset
+        EndianConversion.shortToByteArrayBE(data, offset
                 + OFP_QUEUE_DESC_PROP_BASE_LEN
                 + OFP_QUEUE_DESC_MIN_RATE_PROP_RATE_OFFSET, getRate());
+
+        for (int i = offset + OFP_QUEUE_DESC_PROP_BASE_LEN
+                + OFP_QUEUE_DESC_MIN_RATE_PROP_PAD_OFFSET; i < offset
+                + OFP_QUEUE_DESC_PROP_BASE_LEN
+                + OFP_QUEUE_DESC_MIN_RATE_PROP_PAD_OFFSET
+                + OFP_QUEUE_DESC_MIN_RATE_PAD_LEN; i++) {
+            data[i] = 0x00;
+        }
+
         return data;
     }
 
     public OutputStream writeRate(OutputStream os) throws IOException {
-        EndianConversion.intToOutputStreamBE(os, getRate());
+        EndianConversion.shortToOutputStreamBE(os, getRate());
+        for (int i = 0; i < OFP_QUEUE_DESC_MIN_RATE_PAD_LEN; i++) {
+            os.write(0x00);
+        }
         return os;
     }
 

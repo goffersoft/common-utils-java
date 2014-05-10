@@ -574,12 +574,19 @@ public class OfpPort implements OfpSerializable<OfpPort> {
     }
 
     public byte[] writeLength(byte[] data, int offset) {
-        EndianConversion.intToByteArrayBE(data, offset, (getLength() & 0xFFFF));
+        EndianConversion.shortToByteArrayBE(data, offset, getLength());
+        for (int i = offset + OFP_PORT_PADDING1_OFFSET; i < offset
+                + OFP_PORT_PADDING1_OFFSET + OFP_PORT_PADDING1_LEN; i++) {
+            data[i] = 0x00;
+        }
         return data;
     }
 
     public OutputStream writeLength(OutputStream os) throws IOException {
-        EndianConversion.intToOutputStreamBE(os, (getLength() & 0xFFFF));
+        EndianConversion.intToOutputStreamBE(os, getLength());
+        for (int i = 0; i < OFP_PORT_PADDING1_LEN; i++) {
+            os.write(0x00);
+        }
         return os;
     }
 
@@ -589,15 +596,18 @@ public class OfpPort implements OfpSerializable<OfpPort> {
 
     public byte[] writeHwAddr(byte[] data, int offset) {
         getHwAddr().toByteArray(data, offset + OFP_PORT_HWADDR_OFFSET);
-        data[offset + OFP_PORT_HWADDR_OFFSET + 0] = 0x0; // padding
-        data[offset + OFP_PORT_HWADDR_OFFSET + 1] = 0x0; // padding
+        for (int i = offset + OFP_PORT_PADDING2_OFFSET; i < offset
+                + OFP_PORT_PADDING2_OFFSET + OFP_PORT_PADDING2_LEN; i++) {
+            data[i] = 0x00;
+        }
         return data;
     }
 
     public OutputStream writeHwAddr(OutputStream os) throws IOException {
         getHwAddr().toOutputStream(os);
-        os.write(0x0); // padding
-        os.write(0x0); // padding
+        for (int i = 0; i < OFP_PORT_PADDING2_LEN; i++) {
+            os.write(0x00);
+        }
         return os;
     }
 
