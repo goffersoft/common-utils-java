@@ -285,15 +285,21 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
     }
 
     public byte[] writeLength(byte[] data, int offset) {
-        EndianConversion.longToByteArrayBE(data, offset
-                + OFP_QUEUE_DESC_LENGTH_OFFSET, getLength(),
-                2 + OFP_QUEUE_DESC_PAD_LEN);
+        EndianConversion.shortToByteArrayBE(data, offset
+                + OFP_QUEUE_DESC_LENGTH_OFFSET, getLength());
+
+        for (int i = 0; i < OFP_QUEUE_DESC_PAD_LEN; i++) {
+            data[offset + OFP_QUEUE_DESC_LENGTH_OFFSET + 2 + i] = 0X00;
+        }
         return data;
     }
 
     public OutputStream writeLength(OutputStream os) throws IOException {
-        EndianConversion.longToOutputStreamBE(os, getLength(),
-                2 + OFP_QUEUE_DESC_PAD_LEN);
+        EndianConversion.shortToOutputStreamBE(os, getLength());
+
+        for (int i = 0; i < OFP_QUEUE_DESC_PAD_LEN; i++) {
+            os.write(0x00);
+        }
         return os;
     }
 
