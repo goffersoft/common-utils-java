@@ -1,3 +1,11 @@
+/**
+ ** File: GenericTcpServer.java
+ **
+ ** Description : GenericTcpServer class - code common to all TCP Server types
+ **
+ ** Date           Author                          Comments
+ ** 08/31/2013     Prakash Easwar                  Created  
+ **/
 package com.goffersoft.common.net;
 
 import java.io.IOException;

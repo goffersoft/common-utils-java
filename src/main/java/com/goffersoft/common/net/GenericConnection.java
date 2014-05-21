@@ -15,6 +15,15 @@ import org.apache.log4j.Logger;
 
 import com.goffersoft.common.utils.PrintUtils;
 
+/**
+ ** File: GenericConnection.java
+ ** 
+ ** Description : GenericConnection class - code common to all TCP/UDP/IP
+ * connection types
+ ** 
+ ** Date Author Comments
+ ** 08/31/2013 Prakash Easwar Created
+ **/
 abstract public class GenericConnection<SocketType, ListenerType extends GenericConnectionListener>
         extends
         GenericConnectionMap<ListenerType>
