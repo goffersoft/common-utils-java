@@ -16,7 +16,10 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.PrintUtils;
 
 abstract public class GenericConnection<SocketType, ListenerType extends GenericConnectionListener>
-        extends GenericConnectionMap<ListenerType> implements Runnable {
+        extends
+        GenericConnectionMap<ListenerType>
+        implements
+        Runnable {
 
     private static final Logger log = Logger.getLogger(GenericConnection.class);
 
@@ -227,19 +230,22 @@ abstract public class GenericConnection<SocketType, ListenerType extends Generic
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
-        Iterator<ListenerInfo> it = getConnectionMapListIterator();
+        Iterator<ListenerInfo<ListenerType>> it =
+                getConnectionMapListIterator();
 
-        ListenerInfo info;
+        ListenerInfo<ListenerType> info;
         int i = 1;
         while ((info = getNextConnectionMapListEntry(it)) != null) {
             str.append("["
                     + i
                     + "]"
                     + "Pattern: "
-                    + PrintUtils.byteArrayToHexString(info.getPattern(), 0,
-                            info.getPattern().length, 16) + " SearchType: "
-                    + info.getType().toString() + " Listener: "
-                    + info.getListener().toString() + "\n");
+                    + PrintUtils.byteArrayToHexString(
+                            info.getPattern(),
+                            0,
+                            info.getPattern().length,
+                            16) + " SearchType: " + info.getType().toString()
+                    + " Listener: " + info.getListener().toString() + "\n");
             i++;
         }
 
