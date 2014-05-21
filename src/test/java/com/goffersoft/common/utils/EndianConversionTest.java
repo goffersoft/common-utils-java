@@ -86,5 +86,13 @@ public class EndianConversionTest {
 
         assertTrue(byteArray4Bytes[0] == 0x11 && byteArray4Bytes[1] == 0x02
                 && byteArray4Bytes[2] == 0x03 && byteArray4Bytes[3] == 0x04);
+
+        short y = 0xfff;
+        short z = (short) (0x8000);
+        long x = y & 0xffff;
+
+        log.debug(Long.toHexString(x));
+        x = z & 0xffff;
+        log.debug(Long.toHexString(x));
     }
 }
