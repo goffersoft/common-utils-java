@@ -39,16 +39,12 @@ public class SocketContext<ListenerType extends GenericConnectionListener> {
     static {
         PROVIDER_LIST_PROP_KEY = "com.goffersoft.common.net.socketProviderList";
         contextProviderList = new LinkedList<String>();
-        contextProviderList
-                .add("com.goffersoft.common.net.TcpConnectionSocketContext");
-        contextProviderList
-                .add("com.goffersoft.common.net.TcpSSLConnectionSocketContext");
-        contextProviderList
-                .add("com.goffersoft.common.net.UdpConnectionSocketContext");
-        contextProviderList
-                .add("com.goffersoft.common.net.TcpServerSocketContext");
-        contextProviderList
-                .add("com.goffersoft.common.net.TcpSSLServerSocketContext");
+        contextProviderList.add(TcpConnectionSocketContext.class.getName());
+        contextProviderList.add(TcpSSLConnectionSocketContext.class.getName());
+        contextProviderList.add(UdpConnectionSocketContext.class.getName());
+        contextProviderList.add(TcpServerSocketContext.class.getName());
+        contextProviderList.add(TcpSSLServerSocketContext.class.getName());
+
         String props;
         String[] propsList = null;
         if ((props = System.getProperty(PROVIDER_LIST_PROP_KEY)) != null) {
@@ -363,7 +359,6 @@ public class SocketContext<ListenerType extends GenericConnectionListener> {
         Iterator<String> it = contextProviderList.iterator();
 
         String tmpProvider;
-        int i = 1;
         while (it.hasNext()) {
             tmpProvider = it.next();
             if (provider.equals(tmpProvider) == true) {
