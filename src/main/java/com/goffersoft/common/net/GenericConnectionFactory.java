@@ -22,22 +22,22 @@ public abstract class GenericConnectionFactory <
 //@formatter:on
 {
 
-    private SocketContext<ListenerType> socketContext;
+    private GenericConnectionContext<ListenerType> socketContext;
 
     protected GenericConnectionFactory(
-            SocketContext<ListenerType> socketContext) {
+            GenericConnectionContext<ListenerType> socketContext) {
         this.socketContext =
                 socketContext;
     }
 
-    public SocketContext<ListenerType>
+    public GenericConnectionContext<ListenerType>
             getSocketContext() {
         return socketContext;
     }
 
     public void
             setSocketContext(
-                    SocketContext<ListenerType> socketContext) {
+                    GenericConnectionContext<ListenerType> socketContext) {
         this.socketContext =
                 socketContext;
     }

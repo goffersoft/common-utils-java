@@ -19,8 +19,9 @@ import com.goffersoft.common.net.GenericConnectionMap.SearchType;
 import com.goffersoft.common.utils.PatternUtils;
 import com.goffersoft.common.utils.PrintUtils;
 
-public class SocketContext<ListenerType extends GenericConnectionListener> {
-    private static final Logger log = Logger.getLogger(SocketContext.class);
+public class GenericConnectionContext< ListenerType extends GenericConnectionListener > {
+    private static final Logger log = Logger
+            .getLogger(GenericConnectionContext.class);
 
     private int rxBufferSize = GenericConnection.DEFAULT_RX_BUFFER_SIZE;
     private long inactivityTimeout =
@@ -105,8 +106,7 @@ public class SocketContext<ListenerType extends GenericConnectionListener> {
         this.defaultListener = defaultListener;
     }
 
-    public
-            LinkedList<GenericConnectionMap.ListenerInfo<ListenerType>>
+    public LinkedList<GenericConnectionMap.ListenerInfo<ListenerType>>
             getListOfListeners() {
         return listOfListeners;
     }
@@ -329,7 +329,7 @@ public class SocketContext<ListenerType extends GenericConnectionListener> {
         return str.toString();
     }
 
-    public boolean equals(SocketContext<ListenerType> ctxt) {
+    public boolean equals(GenericConnectionContext<ListenerType> ctxt) {
         return (getDefaultListener() == ctxt.getDefaultListener()
                 && getInactivityTimeout() == ctxt.getInactivityTimeout()
                 && getListOfListeners() == ctxt.getListOfListeners()
@@ -344,13 +344,13 @@ public class SocketContext<ListenerType extends GenericConnectionListener> {
         if (this == o) {
             return true;
         }
-        if (o instanceof SocketContext<?>) {
-            return equals((SocketContext<?>) o);
+        if (o instanceof GenericConnectionContext<?>) {
+            return equals((GenericConnectionContext<?>) o);
         }
         return false;
     }
 
-    public static SocketContext<?> getSocketContext(String provider)
+    public static GenericConnectionContext<?> getSocketContext(String provider)
             throws ClassNotFoundException,
             NoSuchMethodException,
             InvocationTargetException,
@@ -363,7 +363,9 @@ public class SocketContext<ListenerType extends GenericConnectionListener> {
             tmpProvider = it.next();
             if (provider.equals(tmpProvider) == true) {
                 Class<?> clazz = Class.forName(provider);
-                return (SocketContext<?>) clazz.getConstructor().newInstance();
+                return (GenericConnectionContext<?>) clazz
+                        .getConstructor()
+                        .newInstance();
             }
         }
 

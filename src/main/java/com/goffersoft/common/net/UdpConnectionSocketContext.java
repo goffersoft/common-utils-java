@@ -11,7 +11,7 @@ package com.goffersoft.common.net;
 
 public class UdpConnectionSocketContext
         extends
-        SocketContext<UdpConnectionListener> {
+        GenericConnectionContext<UdpConnectionListener> {
     public UdpConnectionSocketContext() {
 
     }
