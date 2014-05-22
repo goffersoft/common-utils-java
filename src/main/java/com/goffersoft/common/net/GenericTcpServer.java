@@ -17,8 +17,35 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketType, TcpServerType extends GenericTcpServer<TcpServerSocketType, TcpConnectionSocketType, TcpServerType, TcpServerListenerType, TcpConnectionType, TcpConnectionListenerType>, TcpServerListenerType extends GenericTcpServerListener<TcpServerType, TcpConnectionType>, TcpConnectionType extends GenericTcpConnection<TcpConnectionSocketType, TcpConnectionType, TcpConnectionListenerType>, TcpConnectionListenerType extends GenericTcpConnectionListener<TcpConnectionType>>
-
+// @formatter:off
+abstract public class GenericTcpServer < 
+                                    TcpServerSocketType, 
+                                    TcpConnectionSocketType, 
+                                    TcpServerType 
+                                        extends 
+                                        GenericTcpServer<
+                                             TcpServerSocketType, 
+                                             TcpConnectionSocketType, 
+                                             TcpServerType, 
+                                             TcpServerListenerType, 
+                                             TcpConnectionType, 
+                                             TcpConnectionListenerType>, 
+                                   TcpServerListenerType 
+                                       extends 
+                                       GenericTcpServerListener<
+                                             TcpServerType, 
+                                             TcpConnectionType>, 
+                                   TcpConnectionType 
+                                       extends 
+                                       GenericTcpConnection<
+                                             TcpConnectionSocketType, 
+                                             TcpConnectionType, 
+                                             TcpConnectionListenerType>, 
+                                   TcpConnectionListenerType 
+                                       extends 
+                                       GenericTcpConnectionListener<
+                                             TcpConnectionType> >                                
+// @formatter:on
         extends
         GenericConnection<TcpServerSocketType, TcpServerListenerType>
         implements
@@ -167,8 +194,7 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
     }
 
     public void setBacklog(int backlog) throws IOException {
-        setLocalSocketAddress(
-                new InetSocketAddress(local_addr, local_port),
+        setLocalSocketAddress(new InetSocketAddress(local_addr, local_port),
                 backlog);
     }
 
@@ -176,8 +202,7 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
             throws IOException {
         if (restart_flag == true)
             setLocalSocketAddress(
-                    new InetSocketAddress(local_addr, local_port),
-                    backlog);
+                    new InetSocketAddress(local_addr, local_port), backlog);
         else {
             setBacklogInternal(backlog);
             force_update = true;
@@ -195,25 +220,18 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
 
     public boolean setLocalSocketAddress(InetAddress ipaddr, int port)
             throws IOException {
-        return setLocalSocketAddress(
-                new InetSocketAddress(ipaddr, port),
+        return setLocalSocketAddress(new InetSocketAddress(ipaddr, port),
                 getBacklog());
     }
 
-    public boolean setLocalSocketAddress(
-            InetAddress ipaddr,
-            int port,
+    public boolean setLocalSocketAddress(InetAddress ipaddr, int port,
             int backlog) throws IOException {
-        return setLocalSocketAddress(
-                new InetSocketAddress(ipaddr, port),
+        return setLocalSocketAddress(new InetSocketAddress(ipaddr, port),
                 backlog);
     }
 
     @Override
-    public void onReceivedData(
-            TcpConnectionType tcp,
-            byte[] data,
-            int offset,
+    public void onReceivedData(TcpConnectionType tcp, byte[] data, int offset,
             int length) {
     }
 
@@ -223,20 +241,14 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
     }
 
     @Override
-    public void onErrorReceivedSmallPacket(
-            TcpConnectionType tcp,
-            byte[] data,
-            int offset,
-            int length) {
+    public void onErrorReceivedSmallPacket(TcpConnectionType tcp, byte[] data,
+            int offset, int length) {
 
     }
 
     @Override
-    public void onErrorReceivedLargePacket(
-            TcpConnectionType tcp,
-            byte[] data,
-            int offset,
-            int length) {
+    public void onErrorReceivedLargePacket(TcpConnectionType tcp, byte[] data,
+            int offset, int length) {
 
     }
 
@@ -262,8 +274,7 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
     }
 
     @Override
-    public void onIncomingConnection(
-            TcpServerType tcp_server,
+    public void onIncomingConnection(TcpServerType tcp_server,
             TcpConnectionType tcp_conn) {
         Iterator<ListenerInfo<TcpServerListenerType>> it =
                 getConnectionMapListIterator();
@@ -275,8 +286,7 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
         getDefaultListener().onIncomingConnection(tcp_server, tcp_conn);
     }
 
-    abstract public boolean setLocalSocketAddress(
-            InetSocketAddress sa,
+    abstract public boolean setLocalSocketAddress(InetSocketAddress sa,
             int backlog) throws IOException;
 
     @Override
@@ -285,8 +295,7 @@ abstract public class GenericTcpServer<TcpServerSocketType, TcpConnectionSocketT
     @Override
     abstract protected void socketClose() throws IOException;
 
-    abstract protected void onIncomingConnection(
-            TcpServerType tcp_server,
+    abstract protected void onIncomingConnection(TcpServerType tcp_server,
             TcpConnectionSocketType socket);
 
     abstract public InetSocketAddress getLocalSocketAddress();

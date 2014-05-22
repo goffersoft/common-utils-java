@@ -22,13 +22,20 @@ import javax.net.ssl.SSLSocket;
 
 import org.apache.log4j.Logger;
 
+//@formatter:off
 public class TcpSSLServer
         extends
-        GenericTcpServer<SSLServerSocket, SSLSocket, TcpSSLServer, TcpSSLServerListener, TcpSSLConnection, TcpSSLConnectionListener>
+        GenericTcpServer<
+            SSLServerSocket, 
+            SSLSocket, 
+            TcpSSLServer, 
+            TcpSSLServerListener, 
+            TcpSSLConnection, 
+            TcpSSLConnectionListener>
         implements
         TcpSSLServerListener,
         TcpSSLConnectionListener {
-
+//@formatter:on
     private static final Logger log = Logger.getLogger(TcpSSLServer.class);
 
     /**

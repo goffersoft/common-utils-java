@@ -9,7 +9,8 @@
  **/
 package com.goffersoft.common.net;
 
-public interface TcpConnectionListener 
-					extends GenericTcpConnectionListener<TcpConnection>
+public interface TcpConnectionListener
+        extends
+        GenericTcpConnectionListener<TcpConnection>
 {
 }

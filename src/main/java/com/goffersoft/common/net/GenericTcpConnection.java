@@ -17,12 +17,25 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-abstract public class GenericTcpConnection<TcpConnectionSocketType, TcpConnectionType extends GenericTcpConnection<TcpConnectionSocketType, TcpConnectionType, TcpConnectionListenerType>, TcpConnectionListenerType extends GenericTcpConnectionListener<TcpConnectionType>>
+//@formatter:off
+abstract public class GenericTcpConnection<
+                                    TcpConnectionSocketType, 
+                                    TcpConnectionType 
+                                        extends 
+                                        GenericTcpConnection<
+                                            TcpConnectionSocketType, 
+                                            TcpConnectionType, 
+                                            TcpConnectionListenerType>, 
+                                    TcpConnectionListenerType 
+                                        extends 
+                                        GenericTcpConnectionListener<
+                                            TcpConnectionType> >
         extends
-        GenericConnection<TcpConnectionSocketType, TcpConnectionListenerType>
+        GenericConnection<
+            TcpConnectionSocketType, TcpConnectionListenerType>
         implements
         GenericTcpConnectionListener<TcpConnectionType> {
-
+  //@formatter:on
     private static final Logger log = Logger
             .getLogger(GenericTcpConnection.class);
 

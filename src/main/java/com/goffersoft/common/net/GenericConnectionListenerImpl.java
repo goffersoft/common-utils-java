@@ -9,6 +9,8 @@
  **/
 package com.goffersoft.common.net;
 
-public class GenericConnectionListenerImpl implements GenericConnectionListener{
+public class GenericConnectionListenerImpl
+        implements
+        GenericConnectionListener {
 
 }

@@ -22,10 +22,18 @@ import org.apache.log4j.Logger;
 /**
  * TcpServer implements a TCP server waiting for incoming connection.
  */
+//@formatter:off
 public class TcpServer
         extends
-        GenericTcpServer<ServerSocket, Socket, TcpServer, TcpServerListener, TcpConnection, TcpConnectionListener>
+        GenericTcpServer<
+            ServerSocket, 
+            Socket, 
+            TcpServer, 
+            TcpServerListener, 
+            TcpConnection, 
+            TcpConnectionListener>
         implements TcpConnectionListener {
+//@formatter:on
     private static final Logger log = Logger.getLogger(TcpServer.class);
 
     /**
@@ -373,7 +381,7 @@ public class TcpServer
                 SearchType.NONE,
                 getDefaultTcpConnectionListener(),
                 true // startOnInit
-        );
+                );
         getTcpConnectionList().add(tcpConn);
         tcpConn.addListener((new Integer(hashCode())).toString().getBytes(),
                 this, SearchType.NONE);

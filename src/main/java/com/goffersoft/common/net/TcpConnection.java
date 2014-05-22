@@ -18,9 +18,11 @@ import java.net.SocketTimeoutException;
 
 import org.apache.log4j.Logger;
 
-public class TcpConnection extends
+public class TcpConnection
+        extends
         GenericTcpConnection<Socket, TcpConnection, TcpConnectionListener>
-        implements TcpConnectionListener {
+        implements
+        TcpConnectionListener {
 
     private static final Logger log = Logger.getLogger(TcpConnection.class);
 
@@ -524,13 +526,14 @@ public class TcpConnection extends
                         remote_sa.getPort(), local_sa.getAddress(),
                         local_sa.getPort());
             } else if ((local_sa != null) && (remote_sa == null)) {
-                log.debug(String
-                        .format(
-                                "remote_ip=%s, remote_port=%d, local_ip=%s, local_port=%d",
-                                getRemoteAddressInternal().toString(),
-                                getRemotePortInternal(),
-                                local_sa.getAddress().toString(),
-                                local_sa.getPort()));
+                log
+                        .debug(String
+                                .format(
+                                        "remote_ip=%s, remote_port=%d, local_ip=%s, local_port=%d",
+                                        getRemoteAddressInternal().toString(),
+                                        getRemotePortInternal(),
+                                        local_sa.getAddress().toString(),
+                                        local_sa.getPort()));
                 tmpSocket = new Socket(getRemoteAddressInternal(),
                         getRemotePortInternal(), local_sa.getAddress(),
                         local_sa.getPort());

@@ -22,12 +22,17 @@ import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.log4j.Logger;
 
+//@formatter:off
 public class TcpSSLConnection
         extends
-        GenericTcpConnection<SSLSocket, TcpSSLConnection, TcpSSLConnectionListener>
+        GenericTcpConnection<
+                        SSLSocket,
+                        TcpSSLConnection,
+                        TcpSSLConnectionListener>
         implements
         TcpSSLConnectionListener,
         HandshakeCompletedListener {
+//@formatter:on
 
     private static final Logger log = Logger.getLogger(TcpSSLConnection.class);
 

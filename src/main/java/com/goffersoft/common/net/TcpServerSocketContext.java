@@ -11,7 +11,7 @@ package com.goffersoft.common.net;
 
 public class TcpServerSocketContext
         extends
-        SocketContext<TcpServerListener> {
+        SocketServerContext<TcpServerListener> {
     public TcpServerSocketContext() {
 
     }

@@ -19,7 +19,12 @@ import org.apache.log4j.Logger;
 
 import com.goffersoft.common.utils.PatternUtils;
 
-public class GenericConnectionMap<ListenerType extends GenericConnectionListener> {
+//@formatter:off
+public class GenericConnectionMap<
+                            ListenerType 
+                                extends 
+                                GenericConnectionListener> {
+//@formatter:on
     static public enum SearchType {
         CONTAINS,
         STARTSWITH,
@@ -27,7 +32,7 @@ public class GenericConnectionMap<ListenerType extends GenericConnectionListener
         NONE,
     }
 
-    public static class ListenerInfo<LisType extends GenericConnectionListener> {
+    public static class ListenerInfo < LisType extends GenericConnectionListener > {
         private byte[] pattern;
         private SearchType type;
         private LisType listener;
@@ -78,16 +83,14 @@ public class GenericConnectionMap<ListenerType extends GenericConnectionListener
 
     static private GenericConnectionListener factoryDefaultListener;
 
-    static protected
-            <ListenerType extends GenericConnectionListener>
+    static protected < ListenerType extends GenericConnectionListener >
             void
             setFactoryDefaultListener(ListenerType listener) {
         factoryDefaultListener = listener;
     }
 
     @SuppressWarnings("unchecked")
-    static protected
-            <ListenerType extends GenericConnectionListener>
+    static protected < ListenerType extends GenericConnectionListener >
             ListenerType
             getFactoryDefaultListener() {
         return (ListenerType) factoryDefaultListener;
@@ -148,20 +151,17 @@ public class GenericConnectionMap<ListenerType extends GenericConnectionListener
         return defaultListener;
     }
 
-    protected
-            Iterator<ListenerInfo<ListenerType>>
+    protected Iterator<ListenerInfo<ListenerType>>
             getConnectionMapListIterator() {
         return connectionMapList.iterator();
     }
 
-    protected
-            Iterator<Entry<byte[], ListenerInfo<ListenerType>>>
+    protected Iterator<Entry<byte[], ListenerInfo<ListenerType>>>
             getConnectionMapHashIterator() {
         return connectionMapHash.entrySet().iterator();
     }
 
-    protected
-            HashMap<byte[], ListenerInfo<ListenerType>>
+    protected HashMap<byte[], ListenerInfo<ListenerType>>
             getConnectionMapHash() {
         return connectionMapHash;
     }

@@ -11,7 +11,7 @@ package com.goffersoft.common.net;
 
 public class TcpSSLServerSocketContext
         extends
-        SocketContext<TcpSSLServerListener> {
+        SocketSSLServerContext<TcpSSLServerListener> {
     public TcpSSLServerSocketContext() {
 
     }

@@ -24,7 +24,13 @@ import com.goffersoft.common.utils.PrintUtils;
  ** Date Author Comments
  ** 08/31/2013 Prakash Easwar Created
  **/
-abstract public class GenericConnection<SocketType, ListenerType extends GenericConnectionListener>
+//@formatter:off
+abstract public class GenericConnection<
+                                SocketType, 
+                                ListenerType 
+                                    extends 
+                                    GenericConnectionListener>
+//@formatter:on
         extends
         GenericConnectionMap<ListenerType>
         implements
@@ -121,12 +127,18 @@ abstract public class GenericConnection<SocketType, ListenerType extends Generic
         socket_timeout = timeout;
     }
 
-    /** Gets Server Inactivity time in milliseconds before initiating a shutdown */
+    /**
+     * Gets Server Inactivity time in milliseconds before
+     ** initiating a shutdown
+     */
     public long getInactivityTime() {
         return inactivity_time;
     }
 
-    /** Sets Server Inactivity time in milliseconds before initiating a shutdown */
+    /**
+     * Sets Server Inactivity time in milliseconds before
+     ** initiating a shutdown
+     */
     public void setInactivityTime(long itimeinms) {
         inactivity_time = itimeinms;
     }

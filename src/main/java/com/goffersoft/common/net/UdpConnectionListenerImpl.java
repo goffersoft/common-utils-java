@@ -16,8 +16,11 @@ import org.apache.log4j.Logger;
 
 import com.goffersoft.common.utils.PrintUtils;
 
-public class UdpConnectionListenerImpl extends GenericConnectionListenerImpl
-        implements UdpConnectionListener {
+public class UdpConnectionListenerImpl
+        extends
+        GenericConnectionListenerImpl
+        implements
+        UdpConnectionListener {
 
     private static final Logger log = Logger
             .getLogger(UdpConnectionListenerImpl.class);
@@ -27,8 +30,9 @@ public class UdpConnectionListenerImpl extends GenericConnectionListenerImpl
         byte[] data = packet.getData();
         int len = packet.getLength();
 
-        log.info("Factory Default Listener Installed: Received UDP Packet: Length="
-                + len);
+        log
+                .info("Factory Default Listener Installed: Received UDP Packet: Length="
+                        + len);
 
         log.debug("Packet Details : \n"
                 + PrintUtils.byteArrayToHexString(data, 0, packet.getLength(),
@@ -49,8 +53,9 @@ public class UdpConnectionListenerImpl extends GenericConnectionListenerImpl
         byte[] data = packet.getData();
         int len = packet.getLength();
 
-        log.info("Factory Default Listener Installed: Received Small UDP Packet: Length="
-                + len);
+        log
+                .info("Factory Default Listener Installed: Received Small UDP Packet: Length="
+                        + len);
 
         log.debug("Packet Details : \n"
                 + PrintUtils.byteArrayToHexString(data, 0, packet.getLength(),
@@ -63,8 +68,9 @@ public class UdpConnectionListenerImpl extends GenericConnectionListenerImpl
         byte[] data = packet.getData();
         int len = packet.getLength();
 
-        log.info("Factory Default Listener Installed: Received Large UDP Packet: Length="
-                + len);
+        log
+                .info("Factory Default Listener Installed: Received Large UDP Packet: Length="
+                        + len);
 
         log.debug("Packet Details : \n"
                 + PrintUtils.byteArrayToHexString(data, 0, packet.getLength(),

@@ -11,27 +11,35 @@ package com.goffersoft.common.net;
 
 import java.net.DatagramPacket;
 
-public interface UdpConnectionListener  extends GenericConnectionListener
+public interface UdpConnectionListener
+        extends
+        GenericConnectionListener
 {
-	/** When a new UDP datagram is received. */
-	public void onReceivedPacket(UdpConnection udp, DatagramPacket packet);
-	
-	/** when the service is terminated */
-	public void onServiceTerminated(UdpConnection udp, Exception error);
-	
-	/** when a small packet is received 
-	 *  use the following methods to configure 
-	 *  minimum packet sizes. 
-	 *  setMinimumReceivePacketLength
-	 *  getMinimumReceivePacketLength   
-	 */
-	public void onErrorReceivedSmallPacket(UdpConnection udp, DatagramPacket packet);
-	
-	/** when a large packet is received 
-	 *  use the following methods to configure 
-	 *  maximum packet sizes. 
-	 *  setMaximumReceivePacketLength
-	 *  getMaximumReceivePacketLength   
-	 */
-	public void onErrorReceivedLargePacket(UdpConnection udp, DatagramPacket packet);
+    /** When a new UDP datagram is received. */
+    public void onReceivedPacket(UdpConnection udp, DatagramPacket packet);
+
+    /** when the service is terminated */
+    public void onServiceTerminated(UdpConnection udp, Exception error);
+
+    /**
+     * when a small packet is received
+     * use the following methods to configure
+     * minimum packet sizes.
+     * setMinimumReceivePacketLength
+     * getMinimumReceivePacketLength
+     */
+    public void onErrorReceivedSmallPacket(
+            UdpConnection udp,
+            DatagramPacket packet);
+
+    /**
+     * when a large packet is received
+     * use the following methods to configure
+     * maximum packet sizes.
+     * setMaximumReceivePacketLength
+     * getMaximumReceivePacketLength
+     */
+    public void onErrorReceivedLargePacket(
+            UdpConnection udp,
+            DatagramPacket packet);
 }
