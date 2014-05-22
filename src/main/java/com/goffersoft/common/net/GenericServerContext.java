@@ -8,9 +8,13 @@
  **/
 package com.goffersoft.common.net;
 
+import org.apache.log4j.Logger;
+
 public class GenericServerContext< ListenerType extends GenericConnectionListener >
         extends
         GenericConnectionContext<ListenerType> {
+    private static final Logger log = Logger
+            .getLogger(GenericServerContext.class);
     private int backlog;
 
     public int getBacklog() {

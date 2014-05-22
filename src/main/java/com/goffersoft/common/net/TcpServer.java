@@ -32,7 +32,7 @@ public class TcpServer
             TcpServerListener, 
             TcpConnection, 
             TcpConnectionListener>
-        implements TcpConnectionListener {
+         implements TcpConnectionListener {
 //@formatter:on
     private static final Logger log = Logger.getLogger(TcpServer.class);
 

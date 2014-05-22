@@ -9,9 +9,14 @@
  **/
 package com.goffersoft.common.net;
 
+import org.apache.log4j.Logger;
+
 public class TcpServerSocketContext
         extends
         GenericServerContext<TcpServerListener> {
+    private static final Logger log = Logger
+            .getLogger(TcpServerSocketContext.class);
+
     public TcpServerSocketContext() {
 
     }

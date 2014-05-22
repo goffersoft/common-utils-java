@@ -10,6 +10,8 @@ package com.goffersoft.common.net;
 
 import java.net.InetAddress;
 
+import org.apache.log4j.Logger;
+
 //@formatter:off
 public abstract class GenericConnectionFactory < 
                                        SocketType, 
@@ -18,28 +20,32 @@ public abstract class GenericConnectionFactory <
                                            GenericConnectionListener, 
                                        ConnectionType 
                                            extends 
-                                           GenericConnection<SocketType, ListenerType>>
+                                           GenericConnection<SocketType, ListenerType>,
+                                       SocketContextType 
+                                           extends 
+                                           GenericConnectionContext<ListenerType>> {
 //@formatter:on
-{
+    private static final Logger log = Logger
+            .getLogger(GenericConnectionFactory.class);
 
-    private GenericConnectionContext<ListenerType> socketContext;
+    private SocketContextType connectionContext;
 
     protected GenericConnectionFactory(
-            GenericConnectionContext<ListenerType> socketContext) {
-        this.socketContext =
+            SocketContextType socketContext) {
+        this.connectionContext =
                 socketContext;
     }
 
-    public GenericConnectionContext<ListenerType>
+    public SocketContextType
             getSocketContext() {
-        return socketContext;
+        return connectionContext;
     }
 
     public void
             setSocketContext(
-                    GenericConnectionContext<ListenerType> socketContext) {
-        this.socketContext =
-                socketContext;
+                    SocketContextType connectionContext) {
+        this.connectionContext =
+                connectionContext;
     }
 
     public abstract ConnectionType
@@ -52,8 +58,14 @@ public abstract class GenericConnectionFactory <
                     int remote_port);
 
     public abstract ConnectionType
-            createSocket(
+            createConnection(
+                    InetAddress remote_addr);
+
+    public abstract ConnectionType
+            createConnection(
                     int remote_port,
                     InetAddress remote_addr);
+
+    public abstract ConnectionType createConnection(SocketType socket);
 
 }
