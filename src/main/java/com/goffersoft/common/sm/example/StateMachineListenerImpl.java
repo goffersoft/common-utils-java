@@ -18,7 +18,9 @@ import com.goffersoft.common.net.UdpConnection;
 import com.goffersoft.common.net.UdpConnectionListenerImpl;
 import com.goffersoft.common.utils.PrintUtils;
 
-public class StateMachineListenerImpl extends UdpConnectionListenerImpl {
+public class StateMachineListenerImpl
+        extends
+        UdpConnectionListenerImpl {
 
     private ExampleStateMachine sm = new ExampleStateMachine();
     private static final Logger log = Logger
@@ -59,8 +61,9 @@ public class StateMachineListenerImpl extends UdpConnectionListenerImpl {
         String errStr = null;
         String cmdStr = null;
 
-        log.info("State Machine Listener Installed: Received UDP Packet: Length="
-                + len);
+        log
+                .info("State Machine Listener Installed: Received UDP Packet: Length="
+                        + len);
 
         log.debug("Packet Details : \n"
                 + PrintUtils.byteArrayToHexString(data, 0, packet.getLength(),
@@ -99,13 +102,15 @@ public class StateMachineListenerImpl extends UdpConnectionListenerImpl {
             }
         } else {
             if (cmd.contains("Help") == false) {
-                errStr = new String(
-                        "Invalid Command - cmd="
-                                + cmd
-                                + " Valid Commands are : Begin/End/Pause/Resume/Exit/Help");
+                errStr =
+                        new String(
+                                "Invalid Command - cmd="
+                                        + cmd
+                                        + " Valid Commands are : Begin/End/Pause/Resume/Exit/Help");
             } else {
-                errStr = new String(
-                        "Help : Valid Commands are : Begin/End/Pause/Resume/Exit/Help");
+                errStr =
+                        new String(
+                                "Help : Valid Commands are : Begin/End/Pause/Resume/Exit/Help");
             }
         }
 
@@ -138,6 +143,18 @@ public class StateMachineListenerImpl extends UdpConnectionListenerImpl {
         } else {
             if (cmd.contains("Help") == false) {
                 saveCmd = cmdStr;
+                try {
+                    String out =
+                            String
+                                    .format(
+                                            "Received Valid Inout \"Cmd:%s\" : Changed State to \"%s\"",
+                                            cmdStr,
+                                            cmdStr);
+                    udp.send(out.getBytes(), 0, out.length(),
+                            packet.getAddress(), 6666);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -156,8 +173,9 @@ public class StateMachineListenerImpl extends UdpConnectionListenerImpl {
         byte[] data = packet.getData();
         int len = packet.getLength();
 
-        log.info("State Machine Listener Installed: Received Small UDP Packet: Length="
-                + len);
+        log
+                .info("State Machine Listener Installed: Received Small UDP Packet: Length="
+                        + len);
 
         log.debug("Packet Details : \n"
                 + PrintUtils.byteArrayToHexString(data, 0, packet.getLength(),
@@ -170,8 +188,9 @@ public class StateMachineListenerImpl extends UdpConnectionListenerImpl {
         byte[] data = packet.getData();
         int len = packet.getLength();
 
-        log.info("State Machine Listener Installed: Received Large UDP Packet: Length="
-                + len);
+        log
+                .info("State Machine Listener Installed: Received Large UDP Packet: Length="
+                        + len);
 
         log.debug("Packet Details : \n"
                 + PrintUtils.byteArrayToHexString(data, 0, packet.getLength(),

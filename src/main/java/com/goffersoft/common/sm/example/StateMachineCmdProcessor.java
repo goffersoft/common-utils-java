@@ -13,21 +13,28 @@ import org.apache.log4j.Logger;
 
 import com.goffersoft.common.net.GenericConnection;
 import com.goffersoft.common.net.UdpConnection;
+import com.goffersoft.common.net.UdpConnectionContext;
+import com.goffersoft.common.net.UdpConnectionFactory;
 
 public class StateMachineCmdProcessor {
-	private static final Logger log = Logger.getLogger(StateMachineCmdProcessor.class);
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			UdpConnection udp = new UdpConnection(7777, null);
-			udp.addListener("Cmd".getBytes(), new StateMachineListenerImpl(), 
-							GenericConnection.SearchType.STARTSWITH);
-			udp.start();
-			log.info(udp.toString());
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+    private static final Logger log = Logger
+            .getLogger(StateMachineCmdProcessor.class);
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            UdpConnectionContext udpctxt = new UdpConnectionContext();
+            udpctxt.addListener(
+                    "Cmd".getBytes(),
+                    new StateMachineListenerImpl(),
+                    GenericConnection.SearchType.STARTSWITH);
+            UdpConnectionFactory udpfactory = new UdpConnectionFactory(udpctxt);
+            UdpConnection udp = udpfactory.createConnection(7777);
+            log.info(udp.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

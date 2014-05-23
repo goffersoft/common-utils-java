@@ -18,6 +18,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -41,477 +42,6 @@ public class UdpConnection
     }
 
     /** Creates a new UdpConnection */
-    public UdpConnection(int port, UdpConnectionListener defaultListener)
-            throws SocketException {
-        super(null, null);
-        init(port, // udp rx port number
-                null, // ip address , null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            UdpConnectionListener defaultListener,
-            long inactivity_time,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            long inactivity_time,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            UdpConnectionListener defaultListener) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            long inactivity_time,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                null, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            UdpConnectionListener defaultListener) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            long inactivity_time,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            long inactivity_time,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            UdpConnectionListener defaultListener) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
-    public UdpConnection(
-            int port,
-            InetAddress bind_ipaddr,
-            long inactivity_time,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
-            UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
-        init(port, // udp rx port number
-                bind_ipaddr, // ip address, null ==> INADDR_ANY
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Creates a new UdpConnection */
     public UdpConnection(
             int port,
             InetAddress bind_ipaddr,
@@ -520,9 +50,7 @@ public class UdpConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            byte[] pattern,
-            UdpConnectionListener listener,
-            SearchType stype,
+            List<GenericConnectionMap.ListenerInfo<UdpConnectionListener>> listOfListeners,
             UdpConnectionListener defaultListener,
             boolean startOnInit) throws SocketException {
         init(port, // udp rx port number
@@ -533,9 +61,32 @@ public class UdpConnection
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
+                listOfListeners,
+                defaultListener, // default listener in case no match or no
+                                 // listener installed
+                startOnInit // immediately start server after initialization
+        );
+    }
+
+    /** Creates a new UdpConnection */
+    public UdpConnection(
+            DatagramSocket sock,
+            int sotimeout,
+            int bufferSize,
+            long inactivity_time,
+            int minRxPacketLength,
+            int maxRxPacketLength,
+            List<GenericConnectionMap.ListenerInfo<UdpConnectionListener>> listOfListeners,
+            UdpConnectionListener defaultListener,
+            boolean startOnInit) throws SocketException {
+        init(sock,
+                sotimeout, // so timeout
+                bufferSize, // default rx buffer size
+                inactivity_time, // inactivity timeout value in milliseconds 0
+                                 // ==> disable
+                minRxPacketLength, // minimum receive packet length
+                maxRxPacketLength, // maximum receive packet length
+                listOfListeners,
                 defaultListener, // default listener in case no match or no
                                  // listener installed
                 startOnInit // immediately start server after initialization
@@ -543,6 +94,48 @@ public class UdpConnection
     }
 
     /** Inits the UdpConnection */
+
+    protected void init(
+            DatagramSocket sock,
+            int sotimeout,
+            int bufferSize,
+            long inactivity_time,
+            int minRxPacketLength,
+            int maxRxPacketLength,
+            List<GenericConnectionMap.ListenerInfo<UdpConnectionListener>>
+            listOfListeners,
+            UdpConnectionListener defaultListener,
+            boolean startOnInit) throws SocketException {
+        setSocket(sock);
+        local_addr = sock.getLocalAddress();
+        local_port = sock.getLocalPort();
+
+        setSoTimeout(sotimeout);
+        setReceiveBufferSize(bufferSize);
+        setMinimumReceivePacketLength(minRxPacketLength);
+        setMaximumReceivePacketLength(maxRxPacketLength);
+        setInactivityTime(inactivity_time);
+        setDefaultListener(defaultListener);
+
+        if (listOfListeners != null) {
+            Iterator<GenericConnectionMap.ListenerInfo<UdpConnectionListener>> it =
+                    listOfListeners.iterator();
+            while (it.hasNext()) {
+                GenericConnectionMap.ListenerInfo<UdpConnectionListener> info =
+                        it.next();
+                if ((info.getPattern() != null) && (info.getListener() != null))
+                    addListener(
+                            info.getPattern(),
+                            info.getListener(),
+                            info.getType());
+            }
+        }
+
+        if (startOnInit == true) {
+            start();
+        }
+    }
+
     protected void init(
             int port,
             InetAddress bind_ipaddr,
@@ -551,27 +144,29 @@ public class UdpConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            byte[] pattern,
-            SearchType stype,
-            UdpConnectionListener listener,
+            List<GenericConnectionMap.ListenerInfo<UdpConnectionListener>>
+            listOfListeners,
             UdpConnectionListener defaultListener,
             boolean startOnInit) throws SocketException {
-        local_addr = bind_ipaddr;
-        local_port = port;
-
-        setLocalSocketAddress(bind_ipaddr, port);
-        setSoTimeout(sotimeout);
-        setReceiveBufferSize(bufferSize);
-        setMinimumReceivePacketLength(minRxPacketLength);
-        setMaximumReceivePacketLength(maxRxPacketLength);
-        setInactivityTime(inactivity_time);
-        setDefaultListener(defaultListener);
-        if ((pattern != null) && (listener != null))
-            addListener(pattern, listener, stype);
-
-        if (startOnInit == true) {
-            start();
+        DatagramSocket sock;
+        if (bind_ipaddr == null || bind_ipaddr.getAddress() == null) {
+            sock = new DatagramSocket(port);
+        } else {
+            sock = new DatagramSocket(port, bind_ipaddr);
         }
+
+        init(sock,
+                sotimeout, // so timeout
+                bufferSize, // default rx buffer size
+                inactivity_time, // inactivity timeout value in milliseconds 0
+                                 // ==> disable
+                minRxPacketLength, // minimum receive packet length
+                maxRxPacketLength, // maximum receive packet length
+                listOfListeners,
+                defaultListener, // default listener in case no match or no
+                                 // listener installed
+                startOnInit // immediately start server after initialization
+        );
     }
 
     public InetSocketAddress getLocalSocketAddress() {

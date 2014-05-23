@@ -9,6 +9,7 @@
 package com.goffersoft.common.net;
 
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import org.apache.log4j.Logger;
 
@@ -21,51 +22,64 @@ public abstract class GenericConnectionFactory <
                                        ConnectionType 
                                            extends 
                                            GenericConnection<SocketType, ListenerType>,
-                                       SocketContextType 
+                                       ConnectionContextType 
                                            extends 
                                            GenericConnectionContext<ListenerType>> {
 //@formatter:on
     private static final Logger log = Logger
             .getLogger(GenericConnectionFactory.class);
 
-    private SocketContextType connectionContext;
+    private ConnectionContextType connectionContext;
 
     protected GenericConnectionFactory(
-            SocketContextType socketContext) {
+            ConnectionContextType socketContext) {
         this.connectionContext =
                 socketContext;
     }
 
-    public SocketContextType
-            getSocketContext() {
+    public ConnectionContextType
+            getContext() {
         return connectionContext;
     }
 
     public void
-            setSocketContext(
-                    SocketContextType connectionContext) {
+            setContext(
+                    ConnectionContextType connectionContext) {
         this.connectionContext =
                 connectionContext;
     }
 
     public abstract ConnectionType
             createConnection(
-                    int remote_port);
+                    int local_port) throws SocketException;
 
     public abstract ConnectionType
             createConnection(
                     int local_port,
-                    int remote_port);
+                    int remote_port) throws SocketException;
 
     public abstract ConnectionType
             createConnection(
-                    InetAddress remote_addr);
+                    InetAddress local_addr) throws SocketException;
 
     public abstract ConnectionType
             createConnection(
+                    InetAddress local_addr,
+                    InetAddress remote_addr) throws SocketException;
+
+    public abstract ConnectionType
+            createConnection(
+                    int local_port,
+                    InetAddress local_addr) throws SocketException;
+
+    public abstract ConnectionType
+            createConnection(
+                    int local_port,
+                    InetAddress local_addr,
                     int remote_port,
-                    InetAddress remote_addr);
+                    InetAddress remote_addr) throws SocketException;
 
-    public abstract ConnectionType createConnection(SocketType socket);
+    public abstract ConnectionType createConnection(SocketType socket)
+            throws SocketException;
 
 }

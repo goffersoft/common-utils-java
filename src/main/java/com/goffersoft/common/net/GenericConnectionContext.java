@@ -32,19 +32,20 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
     private int maxRxPktLength =
             GenericConnection.DEFAULT_MAXIMUM_RX_PACKET_LENGTH;
     private ListenerType defaultListener = null;
-    private LinkedList<GenericConnectionMap.ListenerInfo<ListenerType>> listOfListeners =
+    private LinkedList<ListenerInfo<ListenerType>> listOfListeners =
             null;
+    private boolean autoStart = true;
 
     private static LinkedList<String> contextProviderList;
     public static final String PROVIDER_LIST_PROP_KEY;
     static {
         PROVIDER_LIST_PROP_KEY = "com.goffersoft.common.net.socketProviderList";
         contextProviderList = new LinkedList<String>();
-        contextProviderList.add(TcpConnectionSocketContext.class.getName());
-        contextProviderList.add(TcpSSLConnectionSocketContext.class.getName());
-        contextProviderList.add(UdpConnectionSocketContext.class.getName());
-        contextProviderList.add(TcpServerSocketContext.class.getName());
-        contextProviderList.add(TcpSSLServerSocketContext.class.getName());
+        contextProviderList.add(TcpConnectionContext.class.getName());
+        contextProviderList.add(TcpSSLConnectionContext.class.getName());
+        contextProviderList.add(UdpConnectionContext.class.getName());
+        contextProviderList.add(TcpServerContext.class.getName());
+        contextProviderList.add(TcpSSLServerContext.class.getName());
 
         String props;
         String[] propsList = null;
@@ -106,20 +107,19 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         this.defaultListener = defaultListener;
     }
 
-    public LinkedList<GenericConnectionMap.ListenerInfo<ListenerType>>
+    public LinkedList<ListenerInfo<ListenerType>>
             getListOfListeners() {
         return listOfListeners;
     }
 
-    public
-            void
+    public void
             setListOfListeners(
-                    LinkedList<GenericConnectionMap.ListenerInfo<ListenerType>> listOfListeners) {
+                    LinkedList<ListenerInfo<ListenerType>> listOfListeners) {
         this.listOfListeners = listOfListeners;
     }
 
     public boolean addListener(
-            GenericConnectionMap.ListenerInfo<ListenerType> listenerInfo) {
+            ListenerInfo<ListenerType> listenerInfo) {
         if (listenerInfo == null || listenerInfo.getPattern() == null
                 || listenerInfo.getPattern().length == 0
                 || listenerInfo.getListener() == null) {
@@ -128,14 +128,14 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
 
         if (getListOfListeners() == null) {
             listOfListeners =
-                    new LinkedList<GenericConnectionMap.ListenerInfo<ListenerType>>();
+                    new LinkedList<ListenerInfo<ListenerType>>();
         }
 
-        Iterator<GenericConnectionMap.ListenerInfo<ListenerType>> it =
+        Iterator<ListenerInfo<ListenerType>> it =
                 listOfListeners.iterator();
         int i = 0;
         while (it.hasNext()) {
-            GenericConnectionMap.ListenerInfo<ListenerType> tmpListenerInfo =
+            ListenerInfo<ListenerType> tmpListenerInfo =
                     it.next();
             if (listenerInfo == tmpListenerInfo) {
                 return true;
@@ -161,9 +161,9 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
     public boolean addListener(
             byte[] pattern,
             ListenerType listener,
-            GenericConnectionMap.SearchType searchType) {
+            SearchType searchType) {
 
-        return addListener(new GenericConnectionMap.ListenerInfo<ListenerType>(
+        return addListener(new ListenerInfo<ListenerType>(
                 pattern,
                 listener,
                 searchType));
@@ -172,29 +172,29 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
     public boolean addListener(
             String pattern,
             ListenerType listener,
-            GenericConnectionMap.SearchType searchType) {
+            SearchType searchType) {
         if (pattern == null) {
             return false;
         }
-        return addListener(new GenericConnectionMap.ListenerInfo<ListenerType>(
+        return addListener(new ListenerInfo<ListenerType>(
                 pattern.getBytes(),
                 listener,
                 searchType));
     }
 
     public boolean removeListener(
-            GenericConnectionMap.ListenerInfo<ListenerType> listenerInfo) {
+            ListenerInfo<ListenerType> listenerInfo) {
         if (listenerInfo == null || listenerInfo.getPattern() == null
                 || listenerInfo.getPattern().length == 0) {
             return true;
         }
 
-        Iterator<GenericConnectionMap.ListenerInfo<ListenerType>> it =
+        Iterator<ListenerInfo<ListenerType>> it =
                 listOfListeners.iterator();
 
         int i = 0;
         while (it.hasNext()) {
-            GenericConnectionMap.ListenerInfo<ListenerType> tmpListenerInfo =
+            ListenerInfo<ListenerType> tmpListenerInfo =
                     it.next();
             if (listenerInfo == tmpListenerInfo) {
                 listOfListeners.remove(i);
@@ -220,7 +220,7 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
     }
 
     public boolean removeListener(byte[] pattern) {
-        return removeListener(new GenericConnectionMap.ListenerInfo<ListenerType>(
+        return removeListener(new ListenerInfo<ListenerType>(
                 pattern,
                 null,
                 SearchType.NONE));
@@ -230,25 +230,25 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         if (pattern == null) {
             return false;
         }
-        return removeListener(new GenericConnectionMap.ListenerInfo<ListenerType>(
+        return removeListener(new ListenerInfo<ListenerType>(
                 pattern.getBytes(),
                 null,
                 SearchType.NONE));
     }
 
     public boolean isListenerPresent(
-            GenericConnectionMap.ListenerInfo<ListenerType> listenerInfo) {
+            ListenerInfo<ListenerType> listenerInfo) {
         if (listenerInfo == null || listenerInfo.getPattern() == null
                 || listenerInfo.getPattern().length == 0) {
             return false;
         }
 
-        Iterator<GenericConnectionMap.ListenerInfo<ListenerType>> it =
+        Iterator<ListenerInfo<ListenerType>> it =
                 listOfListeners.iterator();
 
         int i = 0;
         while (it.hasNext()) {
-            GenericConnectionMap.ListenerInfo<ListenerType> tmpListenerInfo =
+            ListenerInfo<ListenerType> tmpListenerInfo =
                     it.next();
             if (listenerInfo == tmpListenerInfo) {
                 listOfListeners.remove(i);
@@ -272,7 +272,7 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
     }
 
     public boolean isListenerPresent(byte[] pattern) {
-        return isListenerPresent(new GenericConnectionMap.ListenerInfo<ListenerType>(
+        return isListenerPresent(new ListenerInfo<ListenerType>(
                 pattern,
                 null,
                 SearchType.NONE));
@@ -282,7 +282,7 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         if (pattern == null) {
             return false;
         }
-        return isListenerPresent(new GenericConnectionMap.ListenerInfo<ListenerType>(
+        return isListenerPresent(new ListenerInfo<ListenerType>(
                 pattern.getBytes(),
                 null,
                 SearchType.NONE));
@@ -294,12 +294,14 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         str
                 .append(String
                         .format(
-                                "RxBufferSize=%d, MinRxPktLength=%d, MaxRxPktLength=%d, SocketTimeout=%d, InactivityTimeout=%d\n",
+                                "RxBufferSize=%d, MinRxPktLength=%d, MaxRxPktLength=%d, "
+                                        + "SocketTimeout=%d, InactivityTimeout=%d, StartType=%s\n",
                                 getRxBufferSize(),
                                 getMinRxPktLength(),
                                 getMaxRxPktLength(),
                                 getSocketTimeout(),
-                                getInactivityTimeout()));
+                                getInactivityTimeout(),
+                                isAutoStart() ? "Auto Start" : "Manual Start"));
 
         Iterator<ListenerInfo<ListenerType>> it =
                 getListOfListeners().iterator();
@@ -329,14 +331,27 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         return str.toString();
     }
 
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public void setAutoStart() {
+        this.autoStart = true;
+    }
+
+    public void clearAutoStart() {
+        this.autoStart = false;
+    }
+
     public boolean equals(GenericConnectionContext<ListenerType> ctxt) {
         return (getDefaultListener() == ctxt.getDefaultListener()
                 && getInactivityTimeout() == ctxt.getInactivityTimeout()
                 && getListOfListeners() == ctxt.getListOfListeners()
                 && getMaxRxPktLength() == ctxt.getMaxRxPktLength()
                 && getMinRxPktLength() == ctxt.getMinRxPktLength()
-                && getRxBufferSize() == ctxt.getRxBufferSize() && getSocketTimeout() == ctxt
-                    .getSocketTimeout());
+                && isAutoStart() == ctxt.isAutoStart()
+                && getRxBufferSize() == ctxt.getRxBufferSize()
+                && getSocketTimeout() == ctxt.getSocketTimeout());
     }
 
     @Override
@@ -350,7 +365,8 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         return false;
     }
 
-    public static GenericConnectionContext<?> getSocketContext(String provider)
+    public static GenericConnectionContext<?> getConnectionContext(
+            String provider)
             throws ClassNotFoundException,
             NoSuchMethodException,
             InvocationTargetException,

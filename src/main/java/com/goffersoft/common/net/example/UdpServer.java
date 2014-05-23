@@ -10,7 +10,10 @@ package com.goffersoft.common.net.example;
 
 import org.apache.log4j.Logger;
 
+import com.goffersoft.common.net.GenericConnectionContext;
 import com.goffersoft.common.net.UdpConnection;
+import com.goffersoft.common.net.UdpConnectionContext;
+import com.goffersoft.common.net.UdpConnectionFactory;
 
 public class UdpServer {
     private static final Logger log = Logger.getLogger(UdpServer.class);
@@ -20,9 +23,17 @@ public class UdpServer {
      */
     public static void main(String[] args) {
         try {
-            UdpConnection udp = new UdpConnection(7777, null);
-            udp.setInactivityTime(60000);
-            udp.start();
+            UdpConnectionContext udpctxt =
+                    (UdpConnectionContext) GenericConnectionContext
+                            .getConnectionContext(UdpConnectionContext.class
+                                    .getName());
+            udpctxt.setInactivityTimeout(60000);
+            UdpConnectionFactory udpfactory = new UdpConnectionFactory(udpctxt);
+            UdpConnection udp = udpfactory.createConnection(7777);
+
+            // Thread.sleep(10000);
+
+            // udp.start();
 
             Thread.sleep(30000);
 

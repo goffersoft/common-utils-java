@@ -11,13 +11,13 @@ package com.goffersoft.common.net;
 
 import org.apache.log4j.Logger;
 
-public class TcpServerSocketContext
+public class TcpServerContext
         extends
         GenericServerContext<TcpServerListener> {
     private static final Logger log = Logger
-            .getLogger(TcpServerSocketContext.class);
+            .getLogger(TcpServerContext.class);
 
-    public TcpServerSocketContext() {
+    public TcpServerContext() {
 
     }
 }

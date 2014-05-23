@@ -9,10 +9,10 @@
  **/
 package com.goffersoft.common.net;
 
-public class TcpConnectionSocketContext
+public class TcpConnectionContext
         extends
         GenericConnectionContext<TcpConnectionListener> {
-    public TcpConnectionSocketContext() {
+    public TcpConnectionContext() {
 
     }
 }

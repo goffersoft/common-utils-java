@@ -11,13 +11,13 @@ package com.goffersoft.common.net;
 
 import org.apache.log4j.Logger;
 
-public class UdpConnectionSocketContext
+public class UdpConnectionContext
         extends
         GenericConnectionContext<UdpConnectionListener> {
     private static final Logger log = Logger
-            .getLogger(UdpConnectionSocketContext.class);
+            .getLogger(UdpConnectionContext.class);
 
-    public UdpConnectionSocketContext() {
+    public UdpConnectionContext() {
 
     }
 }
