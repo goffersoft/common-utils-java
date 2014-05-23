@@ -4,7 +4,10 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 
+import com.goffersoft.common.net.GenericConnectionContext;
 import com.goffersoft.common.net.TcpConnection;
+import com.goffersoft.common.net.TcpConnectionContext;
+import com.goffersoft.common.net.TcpConnectionFactory;
 
 public class TcpConnectionExample {
     private static final Logger log = Logger
@@ -15,17 +18,44 @@ public class TcpConnectionExample {
      */
     public static void main(String[] args) {
         try {
-            TcpConnection tcp = new TcpConnection(6666,
-                    InetAddress.getByName("127.0.0.1"), null);
-            tcp.setInactivityTime(60000);
-            tcp.start();
+            TcpConnectionContext tcpctxt =
+                    (TcpConnectionContext) GenericConnectionContext
+                            .getConnectionContext(TcpConnectionContext.class
+                                    .getName());
+            tcpctxt.setInactivityTimeout(60000);
+            TcpConnectionFactory tcpfactory = new TcpConnectionFactory(tcpctxt);
+            TcpConnection tcp =
+                    tcpfactory.createConnection(
+                            0,
+                            null,
+                            6666,
+                            InetAddress.getByName("127.0.0.1"));
 
+            int i = 0;
+            while (i < 10) {
+                tcp
+                        .send(("Hello World : " + i)
+                                .getBytes());
+                i++;
+            }
             Thread.sleep(30000);
 
             log.info("changing port number to 9998");
 
             // tcp.setLocalSocketAddress(InetAddress.getByName("127.0.0.1"),40000);
-            tcp.setRemoteSocketAddress(InetAddress.getByName("127.0.0.1"), 9998);
+            tcp.setRemoteSocketAddress(
+                    InetAddress.getByName("127.0.0.1"),
+                    9998);
+
+            Thread.sleep(1000);
+            log.debug("here-1");
+            while (i < 20) {
+                log.debug("here");
+                tcp
+                        .send(("Hello World : " + i)
+                                .getBytes());
+                i++;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -52,7 +52,7 @@ public class UdpConnection
             int maxRxPacketLength,
             List<GenericConnectionMap.ListenerInfo<UdpConnectionListener>> listOfListeners,
             UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
+            boolean startOnInit) throws IOException {
         init(port, // udp rx port number
                 bind_ipaddr, // ip address, null ==> INADDR_ANY
                 sotimeout, // so timeout
@@ -78,7 +78,7 @@ public class UdpConnection
             int maxRxPacketLength,
             List<GenericConnectionMap.ListenerInfo<UdpConnectionListener>> listOfListeners,
             UdpConnectionListener defaultListener,
-            boolean startOnInit) throws SocketException {
+            boolean startOnInit) throws IOException {
         init(sock,
                 sotimeout, // so timeout
                 bufferSize, // default rx buffer size
@@ -184,7 +184,6 @@ public class UdpConnection
 
     public boolean setLocalSocketAddress(InetSocketAddress sa)
             throws SocketException {
-        boolean restart = false;
         DatagramSocket tmpSocket = null;
 
         if (sa == null) {
@@ -214,8 +213,6 @@ public class UdpConnection
                             getSocket().getLocalAddress(),
                             getSocket().getLocalPort());
 
-            restart = true;
-
             stop();
         }
 
@@ -226,9 +223,7 @@ public class UdpConnection
                 tmpSocket = new DatagramSocket(sa.getPort(), sa.getAddress());
             }
             setSocket(tmpSocket);
-            if (restart == true) {
-                start();
-            }
+            start();
             local_port = sa.getPort();
             local_addr = sa.getAddress();
             return true;
@@ -243,9 +238,7 @@ public class UdpConnection
                                     old_sa.getAddress());
                 }
                 setSocket(tmpSocket);
-                if (restart == true) {
-                    start();
-                }
+                start();
             } else {
                 throw e;
             }

@@ -628,7 +628,6 @@ public class TcpSSLConnection
     public boolean setSocketAddress(
             InetSocketAddress local_sa,
             InetSocketAddress remote_sa) throws IOException {
-        boolean restart = false;
         SSLSocket tmpSocket;
 
         if ((local_sa == null) && (remote_sa == null)) {
@@ -682,8 +681,6 @@ public class TcpSSLConnection
                     new InetSocketAddress(
                             getSocket().getInetAddress(),
                             getSocket().getPort());
-            restart = true;
-
             stop();
         }
         SSLSocketFactory sslsocketfactory =
@@ -717,9 +714,7 @@ public class TcpSSLConnection
             setInputStream(new BufferedInputStream(getSocket().getInputStream()));
             setOutputStream(new BufferedOutputStream(getSocket()
                     .getOutputStream()));
-            if (restart == true) {
-                start();
-            }
+            start();
             if (local_sa != null) {
                 setLocalPortInternal(local_sa.getPort());
                 setLocalAddressInternal(local_sa.getAddress());
@@ -743,9 +738,7 @@ public class TcpSSLConnection
                         .getInputStream()));
                 setOutputStream(new BufferedOutputStream(getSocket()
                         .getOutputStream()));
-                if (restart == true) {
-                    start();
-                }
+                start();
             } else {
                 throw (IOException) e;
             }

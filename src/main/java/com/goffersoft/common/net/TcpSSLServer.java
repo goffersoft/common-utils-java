@@ -276,7 +276,6 @@ public class TcpSSLServer
     @Override
     public boolean setLocalSocketAddress(InetSocketAddress sa, int backlog)
             throws IOException {
-        boolean restart = false;
         SSLServerSocket tmpSocket;
 
         if (sa == null) {
@@ -311,9 +310,6 @@ public class TcpSSLServer
                     new InetSocketAddress(
                             getSocket().getInetAddress(),
                             getSocket().getLocalPort());
-
-            restart = true;
-
             stop();
         }
         SSLServerSocketFactory sslserversocketfactory =
@@ -326,9 +322,7 @@ public class TcpSSLServer
                                     getBacklog(),
                                     getLocalAddressInternal());
             setSocket(tmpSocket);
-            if (restart == true) {
-                start();
-            }
+            start();
             setLocalPortInternal(sa.getPort());
             setLocalAddressInternal(sa.getAddress());
             clearConfigChangedFlag();
@@ -342,9 +336,7 @@ public class TcpSSLServer
                                         getBacklog(),
                                         old_sa.getAddress());
                 setSocket(tmpSocket);
-                if (restart == true) {
-                    start();
-                }
+                start();
             } else {
                 throw e;
             }

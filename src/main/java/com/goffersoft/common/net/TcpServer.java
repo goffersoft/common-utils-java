@@ -35,6 +35,8 @@ public class TcpServer
          implements TcpConnectionListener {
 //@formatter:on
     private static final Logger log = Logger.getLogger(TcpServer.class);
+    private TcpConnectionContext connectionContext;
+    private TcpConnectionFactory connectionFactory;
 
     /**
      * if there are no listeners installed send all new connections to this
@@ -179,6 +181,17 @@ public class TcpServer
             int tcpConnDefault_minRxPacketLength,
             int tcpConnDefault_maxRxPacketLength, boolean startOnInit)
             throws IOException {
+        try {
+            connectionContext =
+                    (TcpConnectionContext) GenericConnectionContext
+                            .getConnectionContext(TcpConnectionContext.class
+                                    .getName());
+            connectionContext.clearAutoStart();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        connectionFactory = new TcpConnectionFactory(connectionContext);
+
         ServerSocket sock = new ServerSocket(local_port, backlog, local_addr);
         setSocket(sock);
 
@@ -206,6 +219,22 @@ public class TcpServer
         }
     }
 
+    public TcpConnectionContext getConnectionContext() {
+        return connectionContext;
+    }
+
+    public void setConnectionContext(TcpConnectionContext connectionContext) {
+        this.connectionContext = connectionContext;
+    }
+
+    public TcpConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    public void setConnectionFactory(TcpConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     @Override
     public InetSocketAddress getLocalSocketAddress() {
         return new InetSocketAddress(getSocket().getInetAddress(), getSocket()
@@ -224,7 +253,6 @@ public class TcpServer
 
     public boolean setLocalSocketAddress(InetSocketAddress sa, int backlog)
             throws IOException {
-        boolean restart = false;
         ServerSocket tmpSocket;
 
         if (sa == null) {
@@ -258,8 +286,6 @@ public class TcpServer
             old_sa = new InetSocketAddress(getSocket().getInetAddress(),
                     getSocket().getLocalPort());
 
-            restart = true;
-
             stop();
         }
 
@@ -268,9 +294,7 @@ public class TcpServer
             tmpSocket = new ServerSocket(sa.getPort(), getBacklog(),
                     sa.getAddress());
             setSocket(tmpSocket);
-            if (restart == true) {
-                start();
-            }
+            start();
             setLocalPortInternal(sa.getPort());
             setLocalAddressInternal(sa.getAddress());
             clearConfigChangedFlag();
@@ -280,9 +304,7 @@ public class TcpServer
                 tmpSocket = new ServerSocket(old_sa.getPort(), getBacklog(),
                         old_sa.getAddress());
                 setSocket(tmpSocket);
-                if (restart == true) {
-                    start();
-                }
+                start();
             } else {
                 throw e;
             }
@@ -308,7 +330,6 @@ public class TcpServer
         }
 
         setIsRunningFlag();
-
         try {
             // loop
             while (isStarted()) {
@@ -349,8 +370,8 @@ public class TcpServer
     @Override
     public synchronized String toString() {
         StringBuffer sb = new StringBuffer("TCP Server:"
-                + getSocket().getLocalSocketAddress().toString() + ":"
-                + getSocket().getLocalPort() + "\n" + super.toString());
+                + getSocket().getLocalSocketAddress().toString()
+                + "\n" + super.toString());
 
         if (recurse_flag == false) {
             Iterator<TcpConnection> it = getTcpConnectionListIterator();
@@ -369,23 +390,19 @@ public class TcpServer
 
     @Override
     protected void onIncomingConnection(TcpServer tcp_server, Socket socket) {
-        TcpConnection tcpConn = new TcpConnection(
-                socket,
-                getDefaultTcpConnectionSoTimeout(),
-                getDefaultTcpConnectionRxBufferSize(),
-                getDefaultTcpConnectionInactivityTime(),
-                getDefaultTcpConnectionMinRxPacketLength(),
-                getDefaultTcpConnectionMaxRxPacketLength(),
-                null, // pattern
-                null, // tcp connection listener
-                SearchType.NONE,
-                getDefaultTcpConnectionListener(),
-                true // startOnInit
-                );
-        getTcpConnectionList().add(tcpConn);
-        tcpConn.addListener((new Integer(hashCode())).toString().getBytes(),
-                this, SearchType.NONE);
-        onIncomingConnection(tcp_server, tcpConn);
+        try {
+            TcpConnection tcpConn =
+                    (TcpConnection) connectionFactory.createConnection(socket);
+            getTcpConnectionList().add(tcpConn);
+            tcpConn.addListener(
+                    (new Integer(hashCode())).toString().getBytes(),
+                    this,
+                    SearchType.NONE);
+            tcpConn.start();
+            onIncomingConnection(tcp_server, tcpConn);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -39,7 +39,8 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
     private static LinkedList<String> contextProviderList;
     public static final String PROVIDER_LIST_PROP_KEY;
     static {
-        PROVIDER_LIST_PROP_KEY = "com.goffersoft.common.net.socketProviderList";
+        PROVIDER_LIST_PROP_KEY =
+                "com.goffersoft.common.net.connectionProviderList";
         contextProviderList = new LinkedList<String>();
         contextProviderList.add(TcpConnectionContext.class.getName());
         contextProviderList.add(TcpSSLConnectionContext.class.getName());
@@ -288,6 +289,41 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
                 SearchType.NONE));
     }
 
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public void setAutoStart() {
+        this.autoStart = true;
+    }
+
+    public void clearAutoStart() {
+        this.autoStart = false;
+    }
+
+    public static GenericConnectionContext<?> getConnectionContext(
+            String provider)
+            throws ClassNotFoundException,
+            NoSuchMethodException,
+            InvocationTargetException,
+            IllegalAccessException,
+            InstantiationException {
+        Iterator<String> it = contextProviderList.iterator();
+
+        String tmpProvider;
+        while (it.hasNext()) {
+            tmpProvider = it.next();
+            if (provider.equals(tmpProvider) == true) {
+                Class<?> clazz = Class.forName(provider);
+                return (GenericConnectionContext<?>) clazz
+                        .getConstructor()
+                        .newInstance();
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
@@ -331,18 +367,6 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
         return str.toString();
     }
 
-    public boolean isAutoStart() {
-        return autoStart;
-    }
-
-    public void setAutoStart() {
-        this.autoStart = true;
-    }
-
-    public void clearAutoStart() {
-        this.autoStart = false;
-    }
-
     public boolean equals(GenericConnectionContext<ListenerType> ctxt) {
         return (getDefaultListener() == ctxt.getDefaultListener()
                 && getInactivityTimeout() == ctxt.getInactivityTimeout()
@@ -363,28 +387,5 @@ public class GenericConnectionContext< ListenerType extends GenericConnectionLis
             return equals((GenericConnectionContext<?>) o);
         }
         return false;
-    }
-
-    public static GenericConnectionContext<?> getConnectionContext(
-            String provider)
-            throws ClassNotFoundException,
-            NoSuchMethodException,
-            InvocationTargetException,
-            IllegalAccessException,
-            InstantiationException {
-        Iterator<String> it = contextProviderList.iterator();
-
-        String tmpProvider;
-        while (it.hasNext()) {
-            tmpProvider = it.next();
-            if (provider.equals(tmpProvider) == true) {
-                Class<?> clazz = Class.forName(provider);
-                return (GenericConnectionContext<?>) clazz
-                        .getConstructor()
-                        .newInstance();
-            }
-        }
-
-        return null;
     }
 }

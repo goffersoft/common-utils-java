@@ -8,8 +8,11 @@
  **/
 package com.goffersoft.common.net;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
-import java.net.SocketException;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
@@ -31,6 +34,26 @@ public abstract class GenericConnectionFactory <
 
     private ConnectionContextType connectionContext;
 
+    private static LinkedList<String> factoryProviderList;
+    public static final String FACTORY_LIST_PROP_KEY;
+    static {
+        FACTORY_LIST_PROP_KEY =
+                "com.goffersoft.common.net.connectionFactoryList";
+        factoryProviderList = new LinkedList<String>();
+        factoryProviderList.add(UdpConnectionFactory.class.getName());
+
+        String props;
+        String[] propsList = null;
+        if ((props = System.getProperty(FACTORY_LIST_PROP_KEY)) != null) {
+            propsList = props.split(",");
+            if (propsList != null) {
+                for (int i = 0; i < propsList.length; i++) {
+                    factoryProviderList.add(propsList[i]);
+                }
+            }
+        }
+    };
+
     protected GenericConnectionFactory(
             ConnectionContextType socketContext) {
         this.connectionContext =
@@ -51,35 +74,75 @@ public abstract class GenericConnectionFactory <
 
     public abstract ConnectionType
             createConnection(
-                    int local_port) throws SocketException;
+                    int local_port) throws IOException;
 
     public abstract ConnectionType
             createConnection(
                     int local_port,
-                    int remote_port) throws SocketException;
-
-    public abstract ConnectionType
-            createConnection(
-                    InetAddress local_addr) throws SocketException;
-
-    public abstract ConnectionType
-            createConnection(
-                    InetAddress local_addr,
-                    InetAddress remote_addr) throws SocketException;
-
-    public abstract ConnectionType
-            createConnection(
-                    int local_port,
-                    InetAddress local_addr) throws SocketException;
+                    InetAddress local_addr) throws IOException;
 
     public abstract ConnectionType
             createConnection(
                     int local_port,
                     InetAddress local_addr,
                     int remote_port,
-                    InetAddress remote_addr) throws SocketException;
+                    InetAddress remote_addr) throws IOException;
 
     public abstract ConnectionType createConnection(SocketType socket)
-            throws SocketException;
+            throws IOException;
 
+    public static GenericConnectionFactory<?, ?, ?, ?> getFactory(
+            String provider)
+            throws ClassNotFoundException,
+            NoSuchMethodException,
+            InvocationTargetException,
+            IllegalAccessException,
+            InstantiationException {
+        Iterator<String> it = factoryProviderList.iterator();
+
+        String tmpProvider;
+        while (it.hasNext()) {
+            tmpProvider = it.next();
+            if (provider.equals(tmpProvider) == true) {
+                Class<?> clazz = Class.forName(provider);
+                return (GenericConnectionFactory<?, ?, ?, ?>) clazz
+                        .getConstructor()
+                        .newInstance();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer();
+        str.append(getContext().toString());
+        str
+                .append("\n **** Use Property Key"
+                        + FACTORY_LIST_PROP_KEY
+                        + "(properties separated by a comma) to define additional factories ****");
+
+        return str.toString();
+    }
+
+    public boolean equals(
+            GenericConnectionFactory<
+            SocketType,
+            ListenerType,
+            ConnectionType,
+            ConnectionContextType> fac) {
+        return (getContext() == fac.getContext());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof GenericConnectionFactory<?, ?, ?, ?>) {
+            return equals((GenericConnectionFactory<?, ?, ?, ?>) o);
+        }
+        return false;
+    }
 }

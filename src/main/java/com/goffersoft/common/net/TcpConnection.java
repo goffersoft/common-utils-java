@@ -15,6 +15,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -35,280 +37,26 @@ public class TcpConnection
     }
 
     /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, TcpConnectionListener defaultListener) {
-        super(null, null);
-        init(
-                socket,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, long inactivity_time,
-            TcpConnectionListener defaultListener) {
-        super(null, null);
-        init(
-                socket,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, TcpConnectionListener defaultListener,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, long inactivity_time,
-            TcpConnectionListener defaultListener, boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    public TcpConnection(Socket socket, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    public TcpConnection(Socket socket, long inactivity_time, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, long inactivity_time, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
+    public TcpConnection(
+            Socket socket,
+            int sotimeout,
+            int rxBufferSize,
+            long inactivity_time,
+            int minRxPacketLength,
+            int maxRxPacketLength,
+            List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
+            listOfListeners,
+            TcpConnectionListener defaultListener,
             boolean startOnInit) {
         super(null, null);
         init(socket,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
-            TcpConnectionListener defaultListener) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, long inactivity_time, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
-            TcpConnectionListener defaultListener) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
-            TcpConnectionListener defaultListener, boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, long inactivity_time, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
-            TcpConnectionListener defaultListener, boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpConnection(Socket socket, int sotimeout, int rxBufferSize,
-            long inactivity_time, int minRxPacketLength, int maxRxPacketLength,
-            byte[] pattern, TcpConnectionListener listener, SearchType stype,
-            TcpConnectionListener defaultListener, boolean startOnInit) {
-        super(null, null);
-        init(socket, sotimeout, // so timeout
+                sotimeout, // so timeout
                 rxBufferSize, // default rx buffer size
                 inactivity_time, // inactivity timeout value in milliseconds 0
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
+                listOfListeners,
                 defaultListener, // default listener in case no match or no
                                  // listener installed
                 startOnInit // immediately start server after initialization
@@ -320,50 +68,32 @@ public class TcpConnection
      * 
      * @throws IOException
      */
-    public TcpConnection(int remote_port, InetAddress remote_addr,
-            TcpConnectionListener defaultListener) throws IOException {
-        super(null, null);
-        init(0, null, remote_port, remote_addr, DEFAULT_SOCKET_TIMEOUT, // so
-                                                                        // timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /**
-     * Costructs a new TcpConnection
-     * 
-     * @throws IOException
-     */
-    public TcpConnection(int remote_port, InetAddress remote_addr,
-            int local_port, InetAddress local_addr, int sotimeout,
-            int rxBufferSize, long inactivity_time, int minRxPacketLength,
-            int maxRxPacketLength, byte[] pattern,
-            TcpConnectionListener listener, SearchType stype,
-            TcpConnectionListener defaultListener, boolean startOnInit)
+    public TcpConnection(
+            int remote_port,
+            InetAddress remote_addr,
+            int local_port,
+            InetAddress local_addr,
+            int sotimeout,
+            int rxBufferSize,
+            long inactivity_time,
+            int minRxPacketLength,
+            int maxRxPacketLength,
+            List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>> listOfListeners,
+            TcpConnectionListener defaultListener,
+            boolean startOnInit)
             throws IOException {
         super(null, null);
-        init(local_port, local_addr, remote_port, remote_addr, sotimeout, // so
-                                                                          // timeout
+        init(local_port,
+                local_addr,
+                remote_port,
+                remote_addr,
+                sotimeout, // sotimeout
                 rxBufferSize, // default rx buffer size
                 inactivity_time, // inactivity timeout value in milliseconds 0
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
+                listOfListeners,
                 defaultListener, // default listener in case no match or no
                                  // listener installed
                 startOnInit // immediately start server after initialization
@@ -371,10 +101,17 @@ public class TcpConnection
     }
 
     /** Inits the TcpConnection */
-    protected void init(Socket conn_socket, int sotimeout, int bufferSize,
-            long inactivity_time, int minRxPacketLength, int maxRxPacketLength,
-            byte[] pattern, SearchType stype, TcpConnectionListener listener,
-            TcpConnectionListener defaultListener, boolean startOnInit) {
+    protected void init(
+            Socket conn_socket,
+            int sotimeout,
+            int bufferSize,
+            long inactivity_time,
+            int minRxPacketLength,
+            int maxRxPacketLength,
+            List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
+            listOfListeners,
+            TcpConnectionListener defaultListener,
+            boolean startOnInit) {
         setSocket(conn_socket);
         setLocalPortInternal(conn_socket.getLocalPort());
         setLocalAddressInternal(conn_socket.getLocalAddress());
@@ -387,8 +124,20 @@ public class TcpConnection
         setMaximumReceivePacketLength(maxRxPacketLength);
         setInactivityTime(inactivity_time);
         setDefaultListener(defaultListener);
-        if ((pattern != null) && (listener != null))
-            addListener(pattern, listener, stype);
+        if (listOfListeners != null) {
+            Iterator<GenericConnectionMap.ListenerInfo<TcpConnectionListener>> it =
+                    listOfListeners.iterator();
+            while (it.hasNext()) {
+                GenericConnectionMap.ListenerInfo<TcpConnectionListener> info =
+                        it.next();
+                if ((info.getPattern() != null) && (info.getListener() != null))
+                    addListener(
+                            info.getPattern(),
+                            info.getListener(),
+                            info.getType());
+            }
+        }
+
         try {
             setInputStream(new BufferedInputStream(getSocket().getInputStream()));
             setOutputStream(new BufferedOutputStream(getSocket()
@@ -406,12 +155,20 @@ public class TcpConnection
      * 
      * @throws IOException
      */
-    protected void init(int local_port, InetAddress local_addr,
-            int remote_port, InetAddress remote_addr, int sotimeout,
-            int bufferSize, long inactivity_time, int minRxPacketLength,
-            int maxRxPacketLength, byte[] pattern, SearchType stype,
-            TcpConnectionListener listener,
-            TcpConnectionListener defaultListener, boolean startOnInit)
+    protected void init(
+            int local_port,
+            InetAddress local_addr,
+            int remote_port,
+            InetAddress remote_addr,
+            int sotimeout,
+            int bufferSize,
+            long inactivity_time,
+            int minRxPacketLength,
+            int maxRxPacketLength,
+            List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
+            listOfListeners,
+            TcpConnectionListener defaultListener,
+            boolean startOnInit)
             throws IOException {
         Socket sock = new Socket(remote_addr, remote_port, local_addr,
                 local_port);
@@ -423,9 +180,7 @@ public class TcpConnection
                 inactivity_time,
                 minRxPacketLength,
                 maxRxPacketLength,
-                pattern,
-                stype,
-                listener,
+                listOfListeners,
                 defaultListener,
                 startOnInit);
     }
@@ -465,7 +220,6 @@ public class TcpConnection
     @Override
     public boolean setSocketAddress(InetSocketAddress local_sa,
             InetSocketAddress remote_sa) throws IOException {
-        boolean restart = false;
         Socket tmpSocket;
 
         if ((local_sa == null) && (remote_sa == null)) {
@@ -503,7 +257,6 @@ public class TcpConnection
                 }
             }
         }
-
         if ((local_sa == null) && (remote_sa == null)) {
             return true;
         }
@@ -515,8 +268,6 @@ public class TcpConnection
                     getSocket().getLocalPort());
             old_remote_sa = new InetSocketAddress(getSocket().getInetAddress(),
                     getSocket().getPort());
-            restart = true;
-
             stop();
         }
 
@@ -526,14 +277,6 @@ public class TcpConnection
                         remote_sa.getPort(), local_sa.getAddress(),
                         local_sa.getPort());
             } else if ((local_sa != null) && (remote_sa == null)) {
-                log
-                        .debug(String
-                                .format(
-                                        "remote_ip=%s, remote_port=%d, local_ip=%s, local_port=%d",
-                                        getRemoteAddressInternal().toString(),
-                                        getRemotePortInternal(),
-                                        local_sa.getAddress().toString(),
-                                        local_sa.getPort()));
                 tmpSocket = new Socket(getRemoteAddressInternal(),
                         getRemotePortInternal(), local_sa.getAddress(),
                         local_sa.getPort());
@@ -546,9 +289,6 @@ public class TcpConnection
             setInputStream(new BufferedInputStream(getSocket().getInputStream()));
             setOutputStream(new BufferedOutputStream(getSocket()
                     .getOutputStream()));
-            if (restart == true) {
-                start();
-            }
             if (local_sa != null) {
                 setLocalPortInternal(local_sa.getPort());
                 setLocalAddressInternal(local_sa.getAddress());
@@ -557,6 +297,7 @@ public class TcpConnection
                 setRemotePortInternal(remote_sa.getPort());
                 setRemoteAddressInternal(remote_sa.getAddress());
             }
+            start();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -569,9 +310,7 @@ public class TcpConnection
                         .getInputStream()));
                 setOutputStream(new BufferedOutputStream(getSocket()
                         .getOutputStream()));
-                if (restart == true) {
-                    start();
-                }
+                start();
             } else {
                 throw (IOException) e;
             }
@@ -607,7 +346,6 @@ public class TcpConnection
         }
 
         setIsRunningFlag();
-
         try {
             // loop
             while (isStarted()) {
@@ -667,7 +405,9 @@ public class TcpConnection
     /** Gets a String representation of the Object */
     @Override
     public String toString() {
-        return ("TCP Connection:" + getSocket().getLocalAddress().toString()
-                + ":" + getSocket().getLocalPort() + "\n" + super.toString());
+        return ("TCP Connection:"
+                + getSocket().getLocalSocketAddress().toString()
+                + ":" + getSocket().getRemoteSocketAddress().toString() + "\n" + super
+                    .toString());
     }
 }
