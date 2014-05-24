@@ -44,9 +44,9 @@ public class TcpConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
+            TcpConnectionListener defaultListener,
             List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
             listOfListeners,
-            TcpConnectionListener defaultListener,
             boolean startOnInit) {
         super(null, null);
         init(socket,
@@ -56,9 +56,10 @@ public class TcpConnection
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                listOfListeners,
                 defaultListener, // default listener in case no match or no
                                  // listener installed
+                listOfListeners,
+
                 startOnInit // immediately start server after initialization
         );
     }
@@ -78,8 +79,8 @@ public class TcpConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>> listOfListeners,
             TcpConnectionListener defaultListener,
+            List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>> listOfListeners,
             boolean startOnInit)
             throws IOException {
         super(null, null);
@@ -93,9 +94,9 @@ public class TcpConnection
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                listOfListeners,
                 defaultListener, // default listener in case no match or no
                                  // listener installed
+                listOfListeners,
                 startOnInit // immediately start server after initialization
         );
     }
@@ -108,9 +109,9 @@ public class TcpConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
+            TcpConnectionListener defaultListener,
             List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
             listOfListeners,
-            TcpConnectionListener defaultListener,
             boolean startOnInit) {
         setSocket(conn_socket);
         setLocalPortInternal(conn_socket.getLocalPort());
@@ -165,9 +166,10 @@ public class TcpConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
+            TcpConnectionListener defaultListener,
             List<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
             listOfListeners,
-            TcpConnectionListener defaultListener,
+
             boolean startOnInit)
             throws IOException {
         Socket sock = new Socket(remote_addr, remote_port, local_addr,
@@ -180,8 +182,8 @@ public class TcpConnection
                 inactivity_time,
                 minRxPacketLength,
                 maxRxPacketLength,
-                listOfListeners,
                 defaultListener,
+                listOfListeners,
                 startOnInit);
     }
 

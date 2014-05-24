@@ -1,7 +1,7 @@
 /**
- ** File: TcpConnectionFactory.java
+ ** File: TcpSSLConnectionFactory.java
  **
- ** Description : TcpConnectionFactory class - Tcp Connection Factory
+ ** Description : TcpSSLConnectionFactory class - Tcp SSL Connection Factory
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -10,52 +10,51 @@ package com.goffersoft.common.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
+
+import javax.net.ssl.SSLSocket;
 
 //@formatter:off
-public class TcpConnectionFactory
-        extends
-        GenericConnectionFactory<
-            Socket,
-            TcpConnectionListener,
-            TcpConnection,
-            TcpConnectionContext> {
+public class TcpSSLConnectionFactory
+      extends
+      GenericConnectionFactory<
+          SSLSocket,
+          TcpSSLConnectionListener,
+          TcpSSLConnection,
+          TcpSSLConnectionContext> {
 //@formatter:on
 
-    public TcpConnectionFactory() {
+    public TcpSSLConnectionFactory() {
         super(null);
     }
 
-    public TcpConnectionFactory(TcpConnectionContext socketContext) {
+    public TcpSSLConnectionFactory(TcpSSLConnectionContext socketContext) {
         super(socketContext);
     }
 
     @Override
-    public TcpConnection createConnection(int local_port)
-            throws SocketException {
+    public TcpSSLConnection createConnection(int local_port) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public TcpConnection
-            createConnection(int local_port,
-                    InetAddress local_addr)
-                    throws SocketException {
+    public TcpSSLConnection createConnection(
+            int local_port,
+            InetAddress local_addr) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public TcpConnection createConnection(
+    public TcpSSLConnection createConnection(
             int local_port,
             InetAddress local_addr,
             int remote_port,
             InetAddress remote_addr) throws IOException {
-        return new TcpConnection(
+        return new TcpSSLConnection(
                 remote_port,
                 remote_addr,
                 local_port,
                 local_addr,
+                getContext().getSSLFactory(),
                 getContext().getSocketTimeout(),
                 getContext().getRxBufferSize(),
                 getContext().getInactivityTimeout(),
@@ -67,8 +66,9 @@ public class TcpConnectionFactory
     }
 
     @Override
-    public TcpConnection createConnection(Socket socket) throws SocketException {
-        return new TcpConnection(socket,
+    public TcpSSLConnection createConnection(SSLSocket socket)
+            throws IOException {
+        return new TcpSSLConnection(socket,
                 getContext().getSocketTimeout(),
                 getContext().getRxBufferSize(),
                 getContext().getInactivityTimeout(),

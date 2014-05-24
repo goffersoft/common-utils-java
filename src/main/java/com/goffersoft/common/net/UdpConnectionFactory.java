@@ -1,3 +1,11 @@
+/**
+ ** File: UdpConnectionFactory.java
+ **
+ ** Description : TcpConnectionFactory class - Udp Connection Factory
+ **
+ ** Date           Author                          Comments
+ ** 08/31/2013     Prakash Easwar                  Created  
+ **/
 package com.goffersoft.common.net;
 
 import java.io.IOException;
@@ -18,6 +26,10 @@ public class UdpConnectionFactory
 
     private static final Logger log = Logger
             .getLogger(UdpConnectionFactory.class);
+
+    public UdpConnectionFactory() {
+        super(null);
+    }
 
     public UdpConnectionFactory(UdpConnectionContext socketContext) {
         super(socketContext);

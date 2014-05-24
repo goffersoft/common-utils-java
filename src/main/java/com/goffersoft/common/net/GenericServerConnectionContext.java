@@ -1,3 +1,11 @@
+/**
+ ** File: GenericServerConnectionContext.java
+ **
+ ** Description : Base Class for all Server and Connection Contexts
+ **
+ ** Date           Author                          Comments
+ ** 08/31/2013     Prakash Easwar                  Created  
+ **/
 package com.goffersoft.common.net;
 
 import org.apache.log4j.Logger;

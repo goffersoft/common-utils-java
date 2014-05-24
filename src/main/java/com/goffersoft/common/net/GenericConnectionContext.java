@@ -1,7 +1,7 @@
 /**
- ** File: SocketContext.java
+ ** File: GenericConnectionContext.java
  **
- ** Description : SocketContext used by the SocketFactory to instantiate new sockets
+ ** Description : Generic Context For all Connections
  **
  ** Date           Author                          Comments
  ** 08/30/2013     Prakash Easwar                  Created  

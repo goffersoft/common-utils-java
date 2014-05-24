@@ -1,10 +1,21 @@
+/**
+ ** File: TcpServerExample.java
+ ** 
+ ** Description : Tcp Server Example
+ ** 
+ ** Date           Author                          Comments
+ ** 08/30/2013     Prakash Easwar                  Created  
+ **/
 package com.goffersoft.common.net.example;
 
 import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 
+import com.goffersoft.common.net.GenericConnectionContext;
 import com.goffersoft.common.net.GenericServerContext;
+import com.goffersoft.common.net.GenericServerFactory;
+import com.goffersoft.common.net.TcpConnectionContext;
 import com.goffersoft.common.net.TcpServer;
 import com.goffersoft.common.net.TcpServerContext;
 import com.goffersoft.common.net.TcpServerFactory;
@@ -21,8 +32,19 @@ public class TcpServerExample {
                     (TcpServerContext) GenericServerContext
                             .getContext(TcpServerContext.class
                                     .getName());
+            TcpConnectionContext tcpcctxt =
+                    (TcpConnectionContext) GenericConnectionContext
+                            .getContext(TcpConnectionContext.class
+                                    .getName());
             tcpsctxt.setInactivityTimeout(60000);
-            TcpServerFactory tcpfactory = new TcpServerFactory(tcpsctxt, null);
+            tcpcctxt
+                    .setDefaultListener(new TcpServerConnectionExampleListenerImpl());
+            TcpServerFactory tcpfactory =
+                    (TcpServerFactory) GenericServerFactory
+                            .getFactory(TcpServerFactory.class
+                                    .getName());
+            tcpfactory.setServerContext(tcpsctxt);
+            tcpfactory.setConnectionContext(tcpcctxt);
             TcpServer tcp =
                     tcpfactory.createServer(
                             6666,
@@ -30,7 +52,7 @@ public class TcpServerExample {
             tcp.setInactivityTime(60000);
             tcp.start();
 
-            Thread.sleep(10000);
+            Thread.sleep(20000);
 
             log.info("changing port number to 9998");
 

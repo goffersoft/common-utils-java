@@ -29,7 +29,9 @@ abstract public class GenericTcpServer <
                                              TcpServerType, 
                                              TcpServerListenerType, 
                                              TcpConnectionType, 
-                                             TcpConnectionListenerType>, 
+                                             TcpConnectionListenerType,
+                                             TcpConnectionContextType,
+                                             TcpConnectionFactoryType>, 
                                    TcpServerListenerType 
                                        extends 
                                        GenericTcpServerListener<
@@ -44,7 +46,9 @@ abstract public class GenericTcpServer <
                                    TcpConnectionListenerType 
                                        extends 
                                        GenericTcpConnectionListener<
-                                             TcpConnectionType> >                                
+                                             TcpConnectionType>,
+                                   TcpConnectionContextType,
+                                   TcpConnectionFactoryType>
 // @formatter:on
         extends
         GenericConnection<TcpServerSocketType, TcpServerListenerType>
@@ -67,8 +71,8 @@ abstract public class GenericTcpServer <
     volatile private boolean force_update = false;
 
     /** TCP Connection properties */
-    private TcpConnectionContext connectionContext;
-    private TcpConnectionFactory connectionFactory;
+    private TcpConnectionContextType connectionContext;
+    private TcpConnectionFactoryType connectionFactory;
 
     protected GenericTcpServer() {
         super(null, null);
@@ -228,19 +232,21 @@ abstract public class GenericTcpServer <
         getDefaultListener().onIncomingConnection(tcp_server, tcp_conn);
     }
 
-    public TcpConnectionContext getConnectionContext() {
+    public TcpConnectionContextType getConnectionContext() {
         return connectionContext;
     }
 
-    public void setConnectionContext(TcpConnectionContext connectionContext) {
+    public void
+            setConnectionContext(TcpConnectionContextType connectionContext) {
         this.connectionContext = connectionContext;
     }
 
-    public TcpConnectionFactory getConnectionFactory() {
+    public TcpConnectionFactoryType getConnectionFactory() {
         return connectionFactory;
     }
 
-    public void setConnectionFactory(TcpConnectionFactory connectionFactory) {
+    public void setConnectionFactory(
+            TcpConnectionFactoryType connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 

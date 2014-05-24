@@ -1,16 +1,22 @@
+/**
+ ** File: TcpSSLConnectionExample.java
+ ** 
+ ** Description : Tcp SSL Connection Example
+ ** 
+ ** Date           Author                          Comments
+ ** 08/30/2013     Prakash Easwar                  Created  
+ **/
 package com.goffersoft.common.net.example;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
+
+import com.goffersoft.common.net.GenericConnectionContext;
+import com.goffersoft.common.net.GenericConnectionFactory;
+import com.goffersoft.common.net.TcpSSLConnection;
+import com.goffersoft.common.net.TcpSSLConnectionContext;
+import com.goffersoft.common.net.TcpSSLConnectionFactory;
 
 public class TcpSSLConnectionExample {
     private static final Logger log = Logger
@@ -18,36 +24,51 @@ public class TcpSSLConnectionExample {
 
     public static void main(String[] arstring) {
         try {
-            SSLSocketFactory sslsocketfactory =
-                    (SSLSocketFactory) SSLSocketFactory.getDefault();
-            log.debug("here- start");
-            SSLSocket sslsocket =
-                    (SSLSocket) sslsocketfactory
-                            .createSocket("localhost", 6666);
-            log.debug("here- start");
-            InputStream inputstream = System.in;
-            InputStreamReader inputstreamreader =
-                    new InputStreamReader(inputstream);
-            BufferedReader bufferedreader =
-                    new BufferedReader(inputstreamreader);
+            TcpSSLConnectionContext tcpctxt =
+                    (TcpSSLConnectionContext) GenericConnectionContext
+                            .getContext(TcpSSLConnectionContext.class
+                                    .getName());
+            tcpctxt.setInactivityTimeout(60000);
+            tcpctxt
+                    .setDefaultListener(new TcpSSLConnectionExampleListenerImpl());
+            TcpSSLConnectionFactory tcpfactory =
+                    (TcpSSLConnectionFactory) GenericConnectionFactory
+                            .getFactory(TcpSSLConnectionFactory.class
+                                    .getName());
+            tcpfactory.setContext(tcpctxt);
+            TcpSSLConnection tcp =
+                    tcpfactory.createConnection(
+                            0,
+                            null,
+                            6666,
+                            InetAddress.getByName("127.0.0.1"));
 
-            OutputStream outputstream = sslsocket.getOutputStream();
-            OutputStreamWriter outputstreamwriter =
-                    new OutputStreamWriter(outputstream);
-            BufferedWriter bufferedwriter =
-                    new BufferedWriter(outputstreamwriter);
-
-            String string = null;
-            log.debug("here");
             int i = 0;
-            while ((string = bufferedreader.readLine()) != null) {
-                // while ((string = arstring[i++]) != null) {
-                log.debug(string);
-                bufferedwriter.write(string + '\n');
-                bufferedwriter.flush();
+            while (i < 10) {
+                tcp
+                        .send(("Hello World : " + i)
+                                .getBytes());
+                Thread.sleep(1000);
+                i++;
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            Thread.sleep(20000);
+
+            log.info("changing port number to 9998");
+
+            // tcp.setLocalSocketAddress(InetAddress.getByName("127.0.0.1"),40000);
+            tcp.setRemoteSocketAddress(
+                    InetAddress.getByName("127.0.0.1"),
+                    9998);
+
+            while (i < 20) {
+                tcp
+                        .send(("Hello World : " + i)
+                                .getBytes());
+                Thread.sleep(1000);
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

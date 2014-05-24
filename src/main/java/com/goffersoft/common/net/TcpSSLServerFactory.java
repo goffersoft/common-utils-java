@@ -1,7 +1,7 @@
 /**
- ** File: TcpServerFactory.java
+ ** File: TcpSSLServerFactory.java
  **
- ** Description : TcpServerFactory class - Tcp Server Factory
+ ** Description : TcpSSLServerFactory class - Tcp SSL Server Factory
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -10,36 +10,38 @@ package com.goffersoft.common.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
+
+import javax.net.ssl.SSLServerSocket;
 
 //@formatter:off
-public class TcpServerFactory
-    extends
-    GenericServerFactory<
-        ServerSocket,
-        TcpServerListener,
-        TcpServer,
-        TcpServerContext,
-        TcpConnectionListener,
-        TcpConnectionContext> {
+public class TcpSSLServerFactory
+  extends
+  GenericServerFactory<
+      SSLServerSocket,
+      TcpSSLServerListener,
+      TcpSSLServer,
+      TcpSSLServerContext,
+      TcpSSLConnectionListener,
+      TcpSSLConnectionContext> {
 //@formatter:on
 
-    public TcpServerFactory() {
+    public TcpSSLServerFactory() {
         super(null, null);
     }
 
-    public TcpServerFactory(
-            TcpServerContext serverContext,
-            TcpConnectionContext connectionContext) {
+    public TcpSSLServerFactory(
+            TcpSSLServerContext serverContext,
+            TcpSSLConnectionContext connectionContext) {
         super(serverContext, connectionContext);
     }
 
     @Override
-    public TcpServer createServer(int local_port, InetAddress local_addr)
+    public TcpSSLServer createServer(int local_port, InetAddress local_addr)
             throws IOException {
-        return new TcpServer(
+        return new TcpSSLServer(
                 local_port,
                 local_addr,
+                getServerContext().getSSLFactory(),
                 getServerContext().getBacklog(),
                 getServerContext().getSocketTimeout(),
                 getServerContext().getInactivityTimeout(),
@@ -51,8 +53,8 @@ public class TcpServerFactory
     }
 
     @Override
-    public TcpServer createServer(ServerSocket socket) throws IOException {
-        return new TcpServer(
+    public TcpSSLServer createServer(SSLServerSocket socket) throws IOException {
+        return new TcpSSLServer(
                 socket,
                 getServerContext().getBacklog(),
                 getServerContext().getSocketTimeout(),

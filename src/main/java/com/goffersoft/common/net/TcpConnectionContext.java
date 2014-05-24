@@ -1,8 +1,8 @@
 /**
- ** File: TcpConnectionSocketContext.java
+ ** File: TcpConnectionContext.java
  **
- ** Description : TcpConnectionSocketContext used by the 
- ** SocketFactory to instantiate new sockets of type TcpConnection
+ ** Description : Context for all TCP Connections 
+ ** 
  **
  ** Date           Author                          Comments
  ** 08/30/2013     Prakash Easwar                  Created  

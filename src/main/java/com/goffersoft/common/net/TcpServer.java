@@ -20,6 +20,8 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
+import com.goffersoft.common.net.GenericConnectionMap.SearchType;
+
 /**
  * TcpServer implements a TCP server waiting for incoming connection.
  */
@@ -32,7 +34,9 @@ public class TcpServer
             TcpServer, 
             TcpServerListener, 
             TcpConnection, 
-            TcpConnectionListener>
+            TcpConnectionListener,
+            TcpConnectionContext,
+            TcpConnectionFactory>
          implements TcpConnectionListener {
 //@formatter:on
     private static final Logger log = Logger.getLogger(TcpServer.class);
@@ -194,7 +198,8 @@ public class TcpServer
         } else {
             setConnectionContext(connectionContext);
             TcpConnectionFactory connectionFactory =
-                    new TcpConnectionFactory(getConnectionContext());
+                    new TcpConnectionFactory(
+                            getConnectionContext());
             setConnectionFactory(connectionFactory);
             setSocket(sock);
 

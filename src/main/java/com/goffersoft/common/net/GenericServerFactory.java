@@ -1,3 +1,11 @@
+/**
+ ** File: GenericServerFactory.java
+ **
+ ** Description : GenericServerFactory class - Generic Server Factory
+ **
+ ** Date           Author                          Comments
+ ** 08/31/2013     Prakash Easwar                  Created  
+ **/
 package com.goffersoft.common.net;
 
 import java.io.IOException;
@@ -39,6 +47,8 @@ public abstract class GenericServerFactory<
         FACTORY_LIST_PROP_KEY =
                 "com.goffersoft.common.net.serverFactoryList";
         factoryProviderList = new LinkedList<String>();
+        factoryProviderList.add(TcpServerFactory.class.getName());
+        factoryProviderList.add(TcpSSLServerFactory.class.getName());
 
         String props;
         String[] propsList = null;

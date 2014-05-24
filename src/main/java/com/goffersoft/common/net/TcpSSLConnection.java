@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.HandshakeCompletedListener;
@@ -35,7 +37,7 @@ public class TcpSSLConnection
 //@formatter:on
 
     private static final Logger log = Logger.getLogger(TcpSSLConnection.class);
-
+    private SSLSocketFactory sslFactory;
     /**
      * if there are no listeners installed
      * send all new connections to this listener
@@ -47,322 +49,26 @@ public class TcpSSLConnection
     /** Costructs a new TcpSSLConnection */
     public TcpSSLConnection(
             SSLSocket socket,
-            TcpSSLConnectionListener defaultListener) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            long inactivity_time,
-            TcpSSLConnectionListener defaultListener) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            TcpSSLConnectionListener defaultListener,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            long inactivity_time,
-            TcpSSLConnectionListener defaultListener,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                null, // pattern associated with the listener
-                SearchType.NONE, // search type associated with this pattern
-                null, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    public TcpSSLConnection(
-            SSLSocket socket,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    public TcpSSLConnection(
-            SSLSocket socket,
-            long inactivity_time,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            long inactivity_time,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                null, // default listener in case no match or no listener
-                      // installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
-            TcpSSLConnectionListener defaultListener) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            long inactivity_time,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
-            TcpSSLConnectionListener defaultListener) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                false // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
-            TcpSSLConnectionListener defaultListener,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
-            long inactivity_time,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
-            TcpSSLConnectionListener defaultListener,
-            boolean startOnInit) {
-        super(null, null);
-        init(socket, DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                inactivity_time, // inactivity timeout value in milliseconds 0
-                                 // ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
-                defaultListener, // default listener in case no match or no
-                                 // listener installed
-                startOnInit // immediately start server after initialization
-        );
-    }
-
-    /** Costructs a new TcpSSLConnection */
-    public TcpSSLConnection(
-            SSLSocket socket,
             int sotimeout,
             int rxBufferSize,
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
             TcpSSLConnectionListener defaultListener,
+            List<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+            listOfListeners,
             boolean startOnInit) {
         super(null, null);
-        init(socket, sotimeout, // so timeout
+        init(socket,
+                sotimeout, // so timeout
                 rxBufferSize, // default rx buffer size
                 inactivity_time, // inactivity timeout value in milliseconds 0
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
                 defaultListener, // default listener in case no match or no
                                  // listener installed
+                listOfListeners,
                 startOnInit // immediately start server after initialization
         );
     }
@@ -377,29 +83,31 @@ public class TcpSSLConnection
             InetAddress remote_addr,
             int local_port,
             InetAddress local_addr,
+            SSLSocketFactory sslFactory,
             int sotimeout,
             int rxBufferSize,
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            byte[] pattern,
-            TcpSSLConnectionListener listener,
-            SearchType stype,
             TcpSSLConnectionListener defaultListener,
+            List<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+            listOfListeners,
             boolean startOnInit) throws IOException {
         super(null, null);
-        init(local_port, local_addr, remote_port, remote_addr, sotimeout, // so
-                                                                          // timeout
+        init(local_port,
+                local_addr,
+                remote_port,
+                remote_addr,
+                sslFactory,
+                sotimeout, // sotimeout
                 rxBufferSize, // default rx buffer size
                 inactivity_time, // inactivity timeout value in milliseconds 0
                                  // ==> disable
                 minRxPacketLength, // minimum receive packet length
                 maxRxPacketLength, // maximum receive packet length
-                pattern, // pattern associated with the listener
-                stype, // search type associated with this pattern
-                listener, // listener associated with pattern
                 defaultListener, // default listener in case no match or no
                                  // listener installed
+                listOfListeners,
                 startOnInit // immediately start server after initialization
         );
     }
@@ -412,10 +120,9 @@ public class TcpSSLConnection
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            byte[] pattern,
-            SearchType stype,
-            TcpSSLConnectionListener listener,
             TcpSSLConnectionListener defaultListener,
+            List<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+            listOfListeners,
             boolean startOnInit) {
         setSocket(conn_socket);
         setLocalPortInternal(conn_socket.getLocalPort());
@@ -429,8 +136,19 @@ public class TcpSSLConnection
         setMaximumReceivePacketLength(maxRxPacketLength);
         setInactivityTime(inactivity_time);
         setDefaultListener(defaultListener);
-        if ((pattern != null) && (listener != null))
-            addListener(pattern, listener, stype);
+        if (listOfListeners != null) {
+            Iterator<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>> it =
+                    listOfListeners.iterator();
+            while (it.hasNext()) {
+                GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener> info =
+                        it.next();
+                if ((info.getPattern() != null) && (info.getListener() != null))
+                    addListener(
+                            info.getPattern(),
+                            info.getListener(),
+                            info.getType());
+            }
+        }
         try {
             setInputStream(new BufferedInputStream(getSocket().getInputStream()));
             setOutputStream(new BufferedOutputStream(getSocket()
@@ -453,20 +171,24 @@ public class TcpSSLConnection
             InetAddress local_addr,
             int remote_port,
             InetAddress remote_addr,
+            SSLSocketFactory sslFactory,
             int sotimeout,
             int bufferSize,
             long inactivity_time,
             int minRxPacketLength,
             int maxRxPacketLength,
-            byte[] pattern,
-            SearchType stype,
-            TcpSSLConnectionListener listener,
             TcpSSLConnectionListener defaultListener,
+            List<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+            listOfListeners,
             boolean startOnInit) throws IOException {
-        SSLSocketFactory sslsocketfactory =
-                (SSLSocketFactory) SSLSocketFactory.getDefault();
+        if (sslFactory == null) {
+            setSSLFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
+        } else {
+            setSSLFactory(sslFactory);
+        }
+
         SSLSocket sock =
-                (SSLSocket) sslsocketfactory.createSocket(
+                (SSLSocket) getSSLFactory().createSocket(
                         remote_addr,
                         remote_port,
                         local_addr,
@@ -479,11 +201,17 @@ public class TcpSSLConnection
                 inactivity_time,
                 minRxPacketLength,
                 maxRxPacketLength,
-                pattern,
-                stype,
-                listener,
                 defaultListener,
+                listOfListeners,
                 startOnInit);
+    }
+
+    public SSLSocketFactory getSSLFactory() {
+        return sslFactory;
+    }
+
+    public void setSSLFactory(SSLSocketFactory sslFactory) {
+        this.sslFactory = sslFactory;
     }
 
     public void onHandshakeCompleted(

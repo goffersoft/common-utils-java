@@ -1,8 +1,8 @@
 /**
- ** File: TcpServerSocketContext.java
+ ** File: TcpServerContext.java
  **
- ** Description : TcpServerSocketContext used by the 
- ** SocketFactory to instantiate new sockets of type TcpServer
+ ** Description : Context for all TCP servers 
+ ** 
  **
  ** Date           Author                          Comments
  ** 08/30/2013     Prakash Easwar                  Created  

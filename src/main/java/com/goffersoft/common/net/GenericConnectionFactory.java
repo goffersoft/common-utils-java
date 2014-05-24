@@ -41,6 +41,8 @@ public abstract class GenericConnectionFactory <
                 "com.goffersoft.common.net.connectionFactoryList";
         factoryProviderList = new LinkedList<String>();
         factoryProviderList.add(UdpConnectionFactory.class.getName());
+        factoryProviderList.add(TcpConnectionFactory.class.getName());
+        factoryProviderList.add(TcpSSLConnectionFactory.class.getName());
 
         String props;
         String[] propsList = null;

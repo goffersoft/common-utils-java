@@ -14,11 +14,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.log4j.Logger;
 
@@ -31,12 +33,15 @@ public class TcpSSLServer
             TcpSSLServer, 
             TcpSSLServerListener, 
             TcpSSLConnection, 
-            TcpSSLConnectionListener>
+            TcpSSLConnectionListener,
+            TcpSSLConnectionContext,
+            TcpSSLConnectionFactory>
         implements
         TcpSSLServerListener,
         TcpSSLConnectionListener {
 //@formatter:on
     private static final Logger log = Logger.getLogger(TcpSSLServer.class);
+    private SSLServerSocketFactory sslServerFactory;
 
     /**
      * if there are no listeners installed
@@ -47,76 +52,6 @@ public class TcpSSLServer
     }
 
     /**
-     * Constructs a new TcpServer
-     * 
-     * @throws IOException
-     */
-    public TcpSSLServer(int local_port, // local port number 0 ==> system
-                                        // chooses
-                                        // from ephemeral port range
-            InetAddress local_addr,// local inte address null ==> INADDR_ANY
-            TcpSSLServerListener defaultServerListener,// default tcp server
-                                                       // listener
-            boolean startOnInit) throws IOException {
-        init(
-                local_port,
-                local_addr,
-                DEFAULT_SERVER_SOCKET_BACKLOG,
-                DEFAULT_SOCKET_TIMEOUT,
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE,
-                null,
-                defaultServerListener,
-                null,
-                DEFAULT_SOCKET_TIMEOUT, // so
-                                        // timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
-
-    /**
-     * Constructs a new TcpSSLServer
-     * 
-     * @throws IOException
-     */
-    public TcpSSLServer(int local_port, // local port number 0 ==> system
-                                        // chooses from ephemeral port range
-            InetAddress local_addr, // local inte address null ==> INADDR_ANY
-            int backlog, // server baclog ==> maximum quqe length for incoming
-                         // connections
-            int sotimeout, // server socket sotimeout value
-            long inactivity_time, // inactivity timeout value in milliseconds 0
-                                  // ==> disable
-            TcpSSLServerListener defaultServerListener, // default tcp server
-                                                        // listener
-            boolean startOnInit) throws IOException {
-        init(
-                local_port,
-                local_addr,
-                backlog,
-                sotimeout,
-                inactivity_time,
-                null,
-                defaultServerListener,
-                null,
-                DEFAULT_SOCKET_TIMEOUT, // so
-                                        // timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
-
-    /**
      * Constructs a new TcpSSLServer
      * 
      * @throws IOException
@@ -124,96 +59,133 @@ public class TcpSSLServer
     public TcpSSLServer(
             int local_port,
             InetAddress local_addr,
+            SSLServerSocketFactory sslServerFactory,
             int backlog,
             int sotimeout,
             long inactivity_time,
-            TcpSSLServerListener serverListener,
             TcpSSLServerListener defaultServerListener,
-            boolean startOnInit) throws IOException {
-        init(
-                local_port,
-                local_addr,
-                backlog,
-                sotimeout,
-                inactivity_time,
-                serverListener,
-                defaultServerListener,
-                null,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
-
-    /**
-     * Constructs a new TcpSSLServer
-     * 
-     * @throws IOException
-     */
-    public TcpSSLServer(
-            int local_port,
-            InetAddress local_addr,
-            int backlog,
-            int sotimeout,
-            long inactivity_time,
-            TcpSSLServerListener serverListener,
-            TcpSSLServerListener defaultServerListener,
-            TcpSSLConnectionListener defaultConnListener,
-            boolean startOnInit) throws IOException {
-        init(
-                local_port,
-                local_addr,
-                backlog,
-                sotimeout,
-                inactivity_time,
-                serverListener,
-                defaultServerListener,
-                defaultConnListener,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
-
-    /**
-     * Constructs a new TcpSSLServer
-     * 
-     * @throws IOException
-     */
-    public TcpSSLServer(
-            int local_port,
-            InetAddress local_addr,
-            int backlog,
-            int sotimeout,
-            long inactivity_time,
-            TcpSSLServerListener serverListener,
-            TcpSSLServerListener defaultServerListener,
-            TcpSSLConnectionListener defaultConnListener,
+            LinkedList<TcpSSLServerListener> listOfServerListeners,
+            TcpSSLConnectionListener defaultConnectionListener,
+            LinkedList<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+            listOfConnectionListeners,
+            SSLSocketFactory sslSocketFactory,
             int tcpConnDefault_sotimeout,
             int tcpConnDefault_rxBufferSize,
             long tcpConnDefault_inactivityTime,
             int tcpConnDefault_minRxPacketLength,
             int tcpConnDefault_maxRxPacketLength,
             boolean startOnInit) throws IOException {
-        init(
-                local_port,
-                local_addr,
+        if (sslServerFactory == null) {
+            setSSLServerFactory((SSLServerSocketFactory) SSLServerSocketFactory
+                    .getDefault());
+        } else {
+            setSSLServerFactory(sslServerFactory);
+        }
+        SSLServerSocket sock =
+                (SSLServerSocket) getSSLServerFactory().createServerSocket(
+                        local_port,
+                        backlog,
+                        local_addr);
+
+        init(sock,
                 backlog,
                 sotimeout,
                 inactivity_time,
-                serverListener,
                 defaultServerListener,
-                defaultConnListener,
+                listOfServerListeners,
+                defaultConnectionListener,
+                listOfConnectionListeners,
+                sslSocketFactory,
+                tcpConnDefault_sotimeout,
+                tcpConnDefault_rxBufferSize,
+                tcpConnDefault_inactivityTime,
+                tcpConnDefault_minRxPacketLength,
+                tcpConnDefault_maxRxPacketLength,
+                startOnInit);
+
+    }
+
+    /** Inits the Tcp Server Connection */
+    public TcpSSLServer(
+            int local_port,
+            InetAddress local_addr,
+            SSLServerSocketFactory sslServerFactory,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
+            TcpSSLServerListener defaultServerListener,
+            LinkedList<TcpSSLServerListener> listOfServerListeners,
+            TcpSSLConnectionContext connectionContext,
+            boolean startOnInit)
+            throws IOException {
+        if (sslServerFactory == null) {
+            setSSLServerFactory((SSLServerSocketFactory) SSLServerSocketFactory
+                    .getDefault());
+        } else {
+            setSSLServerFactory(sslServerFactory);
+        }
+        SSLServerSocket sock =
+                (SSLServerSocket) getSSLServerFactory().createServerSocket(
+                        local_port,
+                        backlog,
+                        local_addr);
+        init(sock,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                connectionContext,
+                startOnInit);
+    }
+
+    public TcpSSLServer(
+            SSLServerSocket socket,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
+            TcpSSLServerListener defaultServerListener,
+            LinkedList<TcpSSLServerListener> listOfServerListeners,
+            TcpSSLConnectionContext connectionContext,
+            boolean startOnInit)
+            throws IOException {
+        init(socket,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                connectionContext,
+                startOnInit);
+    }
+
+    public TcpSSLServer(
+            SSLServerSocket socket,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
+            TcpSSLServerListener defaultServerListener,
+            LinkedList<TcpSSLServerListener> listOfServerListeners,
+            TcpSSLConnectionListener defaultConnectionListener,
+            LinkedList<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+            listOfConnectionListeners,
+            SSLSocketFactory sslSocketFactory,
+            int tcpConnDefault_sotimeout,
+            int tcpConnDefault_rxBufferSize,
+            long tcpConnDefault_inactivityTime,
+            int tcpConnDefault_minRxPacketLength,
+            int tcpConnDefault_maxRxPacketLength,
+            boolean startOnInit)
+            throws IOException {
+        init(socket,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                defaultConnectionListener,
+                listOfConnectionListeners,
+                sslSocketFactory,
                 tcpConnDefault_sotimeout,
                 tcpConnDefault_rxBufferSize,
                 tcpConnDefault_inactivityTime,
@@ -224,53 +196,123 @@ public class TcpSSLServer
 
     /** Inits the Tcp Server Connection */
     protected void init(
-            int local_port,
-            InetAddress local_addr,
+            SSLServerSocket sock,
             int backlog,
             int sotimeout,
             long inactivity_time,
-            TcpSSLServerListener serverListener,
             TcpSSLServerListener defaultServerListener,
-            TcpSSLConnectionListener defaultConnListener,
-            int tcpConnDefault_sotimeout,
-            int tcpConnDefault_rxBufferSize,
-            long tcpConnDefault_inactivityTime,
-            int tcpConnDefault_minRxPacketLength,
-            int tcpConnDefault_maxRxPacketLength,
-            boolean startOnInit) throws IOException {
-        SSLServerSocketFactory sslserversocketfactory =
-                (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-        SSLServerSocket sock =
-                (SSLServerSocket) sslserversocketfactory.createServerSocket(
-                        local_port,
-                        backlog,
-                        local_addr);
-        setSocket(sock);
+            LinkedList<TcpSSLServerListener> listOfServerListeners,
+            TcpSSLConnectionContext connectionContext,
+            boolean startOnInit)
+            throws IOException {
+        if (connectionContext == null) {
+            init(sock,
+                    backlog,
+                    sotimeout,
+                    inactivity_time,
+                    defaultServerListener,
+                    listOfServerListeners,
+                    null,
+                    null,
+                    null,
+                    DEFAULT_SOCKET_TIMEOUT,
+                    DEFAULT_RX_BUFFER_SIZE,
+                    DEFAULT_INACTIVITY_TIMEOUT_VALUE,
+                    DEFAULT_MINIMUM_RX_PACKET_LENGTH,
+                    DEFAULT_MAXIMUM_RX_PACKET_LENGTH,
+                    startOnInit);
+        } else {
+            setConnectionContext(connectionContext);
+            TcpSSLConnectionFactory connectionFactory =
+                    new TcpSSLConnectionFactory(getConnectionContext());
+            setConnectionFactory(connectionFactory);
+            setSocket(sock);
 
-        setLocalPortInternal(sock.getLocalPort());
-        setLocalAddressInternal(local_addr = sock.getInetAddress());
+            setLocalPortInternal(sock.getLocalPort());
+            setLocalAddressInternal(sock.getInetAddress());
 
-        setSoTimeout(sotimeout);
-        setBacklogInternal(backlog);
-        setInactivityTime(inactivity_time);
+            setSoTimeout(sotimeout);
+            setBacklogInternal(backlog);
+            setInactivityTime(inactivity_time);
 
-        setDefaultListener(defaultServerListener);
+            setDefaultListener(defaultServerListener);
 
-        setDefaultTcpConnectionListener(defaultConnListener);
-        setDefaultTcpConnectionMinRxPacketLength(tcpConnDefault_minRxPacketLength);
-        setDefaultTcpConnectionMaxRxPacketLength(tcpConnDefault_maxRxPacketLength);
-        setDefaultTcpConnectionRxBufferSize(tcpConnDefault_rxBufferSize);
-        setDefaultTcpConnectionSoTimeout(tcpConnDefault_sotimeout);
-        setDefaultTcpConnectionInactivityTime(tcpConnDefault_inactivityTime);
-        if (serverListener != null)
-            addListener(
-                    serverListener.toString().getBytes(),
-                    serverListener,
-                    SearchType.NONE);
+            if (listOfServerListeners != null) {
+                Iterator<TcpSSLServerListener> it =
+                        listOfServerListeners.iterator();
+                while (it.hasNext()) {
+                    TcpSSLServerListener listener = it.next();
+                    addListener(
+                            Integer.toString(listener.hashCode()).getBytes(),
+                            listener,
+                            SearchType.NONE);
+                }
+            }
+        }
 
         if (startOnInit == true) {
             start();
         }
+    }
+
+    /** Inits the Tcp Server Connection */
+    protected
+            void
+            init(
+                    SSLServerSocket sock,
+                    int backlog,
+                    int sotimeout,
+                    long inactivity_time,
+                    TcpSSLServerListener defaultServerListener,
+                    LinkedList<TcpSSLServerListener> listOfServerListeners,
+                    TcpSSLConnectionListener defaultConnectionListener,
+                    LinkedList<GenericConnectionMap.ListenerInfo<TcpSSLConnectionListener>>
+                    listOfConnectionListeners,
+                    SSLSocketFactory sslSocketFactory,
+                    int tcpConnDefault_sotimeout,
+                    int tcpConnDefault_rxBufferSize,
+                    long tcpConnDefault_inactivityTime,
+                    int tcpConnDefault_minRxPacketLength,
+                    int tcpConnDefault_maxRxPacketLength,
+                    boolean startOnInit)
+                    throws IOException {
+        try {
+            TcpSSLConnectionContext connectionContext =
+                    new TcpSSLConnectionContext(sslSocketFactory);
+            connectionContext =
+                    (TcpSSLConnectionContext) GenericConnectionContext
+                            .getContext(TcpSSLConnectionContext.class
+                                    .getName());
+            connectionContext.clearAutoStart();
+            connectionContext.setDefaultListener(defaultConnectionListener);
+            connectionContext.setListOfListeners(listOfConnectionListeners);
+            connectionContext.setSocketTimeout(tcpConnDefault_sotimeout);
+            connectionContext.setRxBufferSize(tcpConnDefault_rxBufferSize);
+            connectionContext
+                    .setInactivityTimeout(tcpConnDefault_inactivityTime);
+            connectionContext
+                    .setMinRxPktLength(tcpConnDefault_minRxPacketLength);
+            connectionContext
+                    .setMaxRxPktLength(tcpConnDefault_maxRxPacketLength);
+            init(sock,
+                    backlog,
+                    sotimeout,
+                    inactivity_time,
+                    defaultServerListener,
+                    listOfServerListeners,
+                    connectionContext,
+                    startOnInit);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public SSLServerSocketFactory getSSLServerFactory() {
+        return sslServerFactory;
+    }
+
+    public void setSSLServerFactory(SSLServerSocketFactory sslServerFactory) {
+        this.sslServerFactory = sslServerFactory;
     }
 
     @Override
@@ -312,12 +354,11 @@ public class TcpSSLServer
                             getSocket().getLocalPort());
             stop();
         }
-        SSLServerSocketFactory sslserversocketfactory =
-                (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+
         try {
             tmpSocket =
-                    (SSLServerSocket) sslserversocketfactory
-                            .createServerSocket(
+                    (SSLServerSocket) getSSLServerFactory().
+                            createServerSocket(
                                     getLocalPortInternal(),
                                     getBacklog(),
                                     getLocalAddressInternal());
@@ -330,8 +371,8 @@ public class TcpSSLServer
         } catch (SocketException e) {
             if (old_sa != null) {
                 tmpSocket =
-                        (SSLServerSocket) sslserversocketfactory
-                                .createServerSocket(
+                        (SSLServerSocket) getSSLServerFactory().
+                                createServerSocket(
                                         old_sa.getPort(),
                                         getBacklog(),
                                         old_sa.getAddress());
@@ -360,12 +401,10 @@ public class TcpSSLServer
 
         if (getSocket() == null) {
             try {
-                SSLServerSocketFactory sslserversocketfactory =
-                        (SSLServerSocketFactory) SSLServerSocketFactory
-                                .getDefault();
+
                 SSLServerSocket sock =
-                        (SSLServerSocket) sslserversocketfactory
-                                .createServerSocket(
+                        (SSLServerSocket) getSSLServerFactory().
+                                createServerSocket(
                                         getLocalPortInternal(),
                                         getBacklog(),
                                         getLocalAddressInternal());
@@ -436,26 +475,18 @@ public class TcpSSLServer
     protected void onIncomingConnection(
             TcpSSLServer tcp_server,
             SSLSocket socket) {
-        TcpSSLConnection tcpConn =
-                new TcpSSLConnection(
-                        socket,
-                        getDefaultTcpConnectionSoTimeout(),
-                        getDefaultTcpConnectionRxBufferSize(),
-                        getDefaultTcpConnectionInactivityTime(),
-                        getDefaultTcpConnectionMinRxPacketLength(),
-                        getDefaultTcpConnectionMaxRxPacketLength(),
-                        null, // pattern
-                        null, // tcp connection listener
-                        SearchType.NONE,
-                        getDefaultTcpConnectionListener(),
-                        true // startOnInit
-                );
-        getTcpConnectionList().add(tcpConn);
-        tcpConn.addListener(
-                (new Integer(hashCode())).toString().getBytes(),
-                this,
-                SearchType.NONE);
-        onIncomingConnection(tcp_server, tcpConn);
+        try {
+            TcpSSLConnection tcpConn =
+                    getConnectionFactory().createConnection(socket);
+            getTcpConnectionList().add(tcpConn);
+            tcpConn.addListener(
+                    Integer.toString(hashCode()).getBytes(),
+                    this,
+                    SearchType.NONE);
+            onIncomingConnection(tcp_server, tcpConn);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean recurse_flag = false;

@@ -1,8 +1,8 @@
 /**
- ** File: UdpConnectionSocketContext.java
+ ** File: UdpConnectionContext.java
  **
- ** Description : UdpConnectionSocketContext used by the 
- ** SocketFactory to instantiate new sockets of type UdpConnection
+ ** Description : Context for all UDP Connections 
+ ** 
  **
  ** Date           Author                          Comments
  ** 08/30/2013     Prakash Easwar                  Created  
