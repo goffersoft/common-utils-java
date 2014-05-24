@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
@@ -35,9 +36,6 @@ public class TcpServer
          implements TcpConnectionListener {
 //@formatter:on
     private static final Logger log = Logger.getLogger(TcpServer.class);
-    private TcpConnectionContext connectionContext;
-    private TcpConnectionFactory connectionFactory;
-
     /**
      * if there are no listeners installed send all new connections to this
      * listener
@@ -51,188 +49,230 @@ public class TcpServer
      * 
      * @throws IOException
      */
-    public TcpServer(int local_port, // local port number 0 ==> system chooses
-                                     // from ephemeral port range
-            InetAddress local_addr,// local inte address null ==> INADDR_ANY
-            TcpServerListener defaultServerListener,// default tcp server
-                                                    // listener
-            boolean startOnInit) throws IOException {
-        init(local_port, local_addr, DEFAULT_SERVER_SOCKET_BACKLOG,
-                DEFAULT_SOCKET_TIMEOUT, DEFAULT_INACTIVITY_TIMEOUT_VALUE, null,
-                defaultServerListener, null, DEFAULT_SOCKET_TIMEOUT, // so
-                                                                     // timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
 
-    /**
-     * Constructs a new TcpServer
-     * 
-     * @throws IOException
-     */
-    public TcpServer(int local_port, // local port number 0 ==> system chooses
-                                     // from ephemeral port range
-            InetAddress local_addr, // local inte address null ==> INADDR_ANY
-            int backlog, // server baclog ==> maximum quqe length for incoming
-                         // connections
-            int sotimeout, // server socket sotimeout value
-            long inactivity_time, // inactivity timeout value in milliseconds 0
-                                  // ==> disable
-            TcpServerListener defaultServerListener, // default tcp server
-                                                     // listener
-            boolean startOnInit) throws IOException {
-        init(local_port, local_addr, backlog, sotimeout, inactivity_time, null,
-                defaultServerListener, null, DEFAULT_SOCKET_TIMEOUT, // so
-                                                                     // timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
-
-    /**
-     * Constructs a new TcpServer
-     * 
-     * @throws IOException
-     */
-    public TcpServer(int local_port, InetAddress local_addr, int backlog,
-            int sotimeout, long inactivity_time,
-            TcpServerListener serverListener,
-            TcpServerListener defaultServerListener, boolean startOnInit)
-            throws IOException {
-        init(local_port, local_addr, backlog, sotimeout, inactivity_time,
-                serverListener, defaultServerListener, null,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
-                startOnInit);
-    }
-
-    /**
-     * Constructs a new TcpServer
-     * 
-     * @throws IOException
-     */
-    public TcpServer(int local_port, InetAddress local_addr, int backlog,
-            int sotimeout, long inactivity_time,
-            TcpServerListener serverListener,
+    public TcpServer(
+            ServerSocket socket,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
             TcpServerListener defaultServerListener,
-            TcpConnectionListener defaultConnListener, boolean startOnInit)
+            LinkedList<TcpServerListener> listOfServerListeners,
+            TcpConnectionContext connectionContext,
+            boolean startOnInit)
             throws IOException {
-        init(local_port, local_addr, backlog, sotimeout, inactivity_time,
-                serverListener, defaultServerListener, defaultConnListener,
-                DEFAULT_SOCKET_TIMEOUT, // so timeout
-                DEFAULT_RX_BUFFER_SIZE, // default rx buffer size
-                DEFAULT_INACTIVITY_TIMEOUT_VALUE, // inactivity timeout value in
-                                                  // milliseconds 0 ==> disable
-                DEFAULT_MINIMUM_RX_PACKET_LENGTH, // minimum receive packet
-                                                  // length
-                DEFAULT_MAXIMUM_RX_PACKET_LENGTH, // maximum receive packet
-                                                  // length
+        init(socket,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                connectionContext,
                 startOnInit);
     }
 
-    /**
-     * Constructs a new TcpServer
-     * 
-     * @throws IOException
-     */
-    public TcpServer(int local_port, InetAddress local_addr, int backlog,
-            int sotimeout, long inactivity_time,
-            TcpServerListener serverListener,
+    public TcpServer(
+            int local_port,
+            InetAddress local_addr,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
             TcpServerListener defaultServerListener,
-            TcpConnectionListener defaultConnListener,
-            int tcpConnDefault_sotimeout, int tcpConnDefault_rxBufferSize,
+            LinkedList<TcpServerListener> listOfServerListeners,
+            TcpConnectionContext connectionContext,
+            boolean startOnInit)
+            throws IOException {
+        ServerSocket sock = new ServerSocket(local_port, backlog, local_addr);
+        init(sock,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                connectionContext,
+                startOnInit);
+    }
+
+    public TcpServer(
+            ServerSocket socket,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
+            TcpServerListener defaultServerListener,
+            LinkedList<TcpServerListener> listOfServerListeners,
+            TcpConnectionListener defaultConnectionListener,
+            LinkedList<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
+            listOfConnectionListeners,
+            int tcpConnDefault_sotimeout,
+            int tcpConnDefault_rxBufferSize,
             long tcpConnDefault_inactivityTime,
             int tcpConnDefault_minRxPacketLength,
-            int tcpConnDefault_maxRxPacketLength, boolean startOnInit)
+            int tcpConnDefault_maxRxPacketLength,
+            boolean startOnInit)
             throws IOException {
-        init(local_port, local_addr, backlog, sotimeout, inactivity_time,
-                serverListener, defaultServerListener, defaultConnListener,
-                tcpConnDefault_sotimeout, tcpConnDefault_rxBufferSize,
+        init(socket,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                defaultConnectionListener,
+                listOfConnectionListeners,
+                tcpConnDefault_sotimeout,
+                tcpConnDefault_rxBufferSize,
                 tcpConnDefault_inactivityTime,
                 tcpConnDefault_minRxPacketLength,
-                tcpConnDefault_maxRxPacketLength, startOnInit);
+                tcpConnDefault_maxRxPacketLength,
+                startOnInit);
+    }
+
+    /**
+     * Constructs a new TcpServer
+     * 
+     * @throws IOException
+     */
+    public TcpServer(
+            int local_port,
+            InetAddress local_addr,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
+            TcpServerListener defaultServerListener,
+            LinkedList<TcpServerListener> listOfServerListeners,
+            TcpConnectionListener defaultConnectionListener,
+            LinkedList<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
+            listOfConnectionListeners,
+            int tcpConnDefault_sotimeout,
+            int tcpConnDefault_rxBufferSize,
+            long tcpConnDefault_inactivityTime,
+            int tcpConnDefault_minRxPacketLength,
+            int tcpConnDefault_maxRxPacketLength,
+            boolean startOnInit)
+            throws IOException {
+        ServerSocket sock = new ServerSocket(local_port, backlog, local_addr);
+        init(sock,
+                backlog,
+                sotimeout,
+                inactivity_time,
+                defaultServerListener,
+                listOfServerListeners,
+                defaultConnectionListener,
+                listOfConnectionListeners,
+                tcpConnDefault_sotimeout,
+                tcpConnDefault_rxBufferSize,
+                tcpConnDefault_inactivityTime,
+                tcpConnDefault_minRxPacketLength,
+                tcpConnDefault_maxRxPacketLength,
+                startOnInit);
     }
 
     /** Inits the Tcp Server Connection */
-    protected void init(int local_port, InetAddress local_addr, int backlog,
-            int sotimeout, long inactivity_time,
-            TcpServerListener serverListener,
+    protected void init(
+            ServerSocket sock,
+            int backlog,
+            int sotimeout,
+            long inactivity_time,
             TcpServerListener defaultServerListener,
-            TcpConnectionListener defaultConnListener,
-            int tcpConnDefault_sotimeout, int tcpConnDefault_rxBufferSize,
-            long tcpConnDefault_inactivityTime,
-            int tcpConnDefault_minRxPacketLength,
-            int tcpConnDefault_maxRxPacketLength, boolean startOnInit)
+            LinkedList<TcpServerListener> listOfServerListeners,
+            TcpConnectionContext connectionContext,
+            boolean startOnInit)
             throws IOException {
-        try {
-            connectionContext =
-                    (TcpConnectionContext) GenericConnectionContext
-                            .getConnectionContext(TcpConnectionContext.class
-                                    .getName());
-            connectionContext.clearAutoStart();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (connectionContext == null) {
+            init(sock,
+                    backlog,
+                    sotimeout,
+                    inactivity_time,
+                    defaultServerListener,
+                    listOfServerListeners,
+                    null,
+                    null,
+                    DEFAULT_SOCKET_TIMEOUT,
+                    DEFAULT_RX_BUFFER_SIZE,
+                    DEFAULT_INACTIVITY_TIMEOUT_VALUE,
+                    DEFAULT_MINIMUM_RX_PACKET_LENGTH,
+                    DEFAULT_MAXIMUM_RX_PACKET_LENGTH,
+                    startOnInit);
+        } else {
+            setConnectionContext(connectionContext);
+            TcpConnectionFactory connectionFactory =
+                    new TcpConnectionFactory(getConnectionContext());
+            setConnectionFactory(connectionFactory);
+            setSocket(sock);
+
+            setLocalPortInternal(sock.getLocalPort());
+            setLocalAddressInternal(sock.getInetAddress());
+
+            setSoTimeout(sotimeout);
+            setBacklogInternal(backlog);
+            setInactivityTime(inactivity_time);
+
+            setDefaultListener(defaultServerListener);
+
+            if (listOfServerListeners != null) {
+                Iterator<TcpServerListener> it =
+                        listOfServerListeners.iterator();
+                while (it.hasNext()) {
+                    TcpServerListener listener = it.next();
+                    addListener(
+                            Integer.toString(listener.hashCode()).getBytes(),
+                            listener,
+                            SearchType.NONE);
+                }
+            }
         }
-        connectionFactory = new TcpConnectionFactory(connectionContext);
-
-        ServerSocket sock = new ServerSocket(local_port, backlog, local_addr);
-        setSocket(sock);
-
-        setLocalPortInternal(sock.getLocalPort());
-        setLocalAddressInternal(local_addr = sock.getInetAddress());
-
-        setSoTimeout(sotimeout);
-        setBacklogInternal(backlog);
-        setInactivityTime(inactivity_time);
-
-        setDefaultListener(defaultServerListener);
-
-        setDefaultTcpConnectionListener(defaultConnListener);
-        setDefaultTcpConnectionMinRxPacketLength(tcpConnDefault_minRxPacketLength);
-        setDefaultTcpConnectionMaxRxPacketLength(tcpConnDefault_maxRxPacketLength);
-        setDefaultTcpConnectionRxBufferSize(tcpConnDefault_rxBufferSize);
-        setDefaultTcpConnectionSoTimeout(tcpConnDefault_sotimeout);
-        setDefaultTcpConnectionInactivityTime(tcpConnDefault_inactivityTime);
-        if (serverListener != null)
-            addListener(serverListener.toString().getBytes(), serverListener,
-                    SearchType.NONE);
 
         if (startOnInit == true) {
             start();
         }
     }
 
-    public TcpConnectionContext getConnectionContext() {
-        return connectionContext;
-    }
-
-    public void setConnectionContext(TcpConnectionContext connectionContext) {
-        this.connectionContext = connectionContext;
-    }
-
-    public TcpConnectionFactory getConnectionFactory() {
-        return connectionFactory;
-    }
-
-    public void setConnectionFactory(TcpConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    /** Inits the Tcp Server Connection */
+    protected
+            void
+            init(
+                    ServerSocket sock,
+                    int backlog,
+                    int sotimeout,
+                    long inactivity_time,
+                    TcpServerListener defaultServerListener,
+                    LinkedList<TcpServerListener> listOfServerListeners,
+                    TcpConnectionListener defaultConnectionListener,
+                    LinkedList<GenericConnectionMap.ListenerInfo<TcpConnectionListener>>
+                    listOfConnectionListeners,
+                    int tcpConnDefault_sotimeout,
+                    int tcpConnDefault_rxBufferSize,
+                    long tcpConnDefault_inactivityTime,
+                    int tcpConnDefault_minRxPacketLength,
+                    int tcpConnDefault_maxRxPacketLength,
+                    boolean startOnInit)
+                    throws IOException {
+        try {
+            TcpConnectionContext connectionContext = new TcpConnectionContext();
+            connectionContext =
+                    (TcpConnectionContext) GenericConnectionContext
+                            .getContext(TcpConnectionContext.class
+                                    .getName());
+            connectionContext.clearAutoStart();
+            connectionContext.setDefaultListener(defaultConnectionListener);
+            connectionContext.setListOfListeners(listOfConnectionListeners);
+            connectionContext.setSocketTimeout(tcpConnDefault_sotimeout);
+            connectionContext.setRxBufferSize(tcpConnDefault_rxBufferSize);
+            connectionContext
+                    .setInactivityTimeout(tcpConnDefault_inactivityTime);
+            connectionContext
+                    .setMinRxPktLength(tcpConnDefault_minRxPacketLength);
+            connectionContext
+                    .setMaxRxPktLength(tcpConnDefault_maxRxPacketLength);
+            init(sock,
+                    backlog,
+                    sotimeout,
+                    inactivity_time,
+                    defaultServerListener,
+                    listOfServerListeners,
+                    connectionContext,
+                    startOnInit);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -392,10 +432,11 @@ public class TcpServer
     protected void onIncomingConnection(TcpServer tcp_server, Socket socket) {
         try {
             TcpConnection tcpConn =
-                    (TcpConnection) connectionFactory.createConnection(socket);
+                    (TcpConnection) getConnectionFactory().createConnection(
+                            socket);
             getTcpConnectionList().add(tcpConn);
             tcpConn.addListener(
-                    (new Integer(hashCode())).toString().getBytes(),
+                    Integer.toString(hashCode()).getBytes(),
                     this,
                     SearchType.NONE);
             tcpConn.start();

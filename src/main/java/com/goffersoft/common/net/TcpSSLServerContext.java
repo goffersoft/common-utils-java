@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 public class TcpSSLServerContext
         extends
-        GenericSSLServerContext<TcpSSLServerListener> {
+        GenericServerContext<TcpSSLServerListener> {
     private static final Logger log = Logger
             .getLogger(TcpSSLServerContext.class);
 

@@ -11,7 +11,7 @@ package com.goffersoft.common.net;
 
 public class TcpSSLConnectionContext
         extends
-        GenericSSLConnectionContext<TcpSSLConnectionListener> {
+        GenericConnectionContext<TcpSSLConnectionListener> {
     public TcpSSLConnectionContext() {
 
     }

@@ -57,8 +57,6 @@ abstract public class GenericTcpServer <
     static final public int DEFAULT_SERVER_SOCKET_BACKLOG = 50;
 
     volatile private List<TcpConnectionType> tcpConnectionList;
-    volatile private TcpConnectionListenerType defaultTcpConnectionListener;
-
     volatile private int local_port;
 
     volatile private InetAddress local_addr;
@@ -69,14 +67,8 @@ abstract public class GenericTcpServer <
     volatile private boolean force_update = false;
 
     /** TCP Connection properties */
-    volatile private int tcpconn_sotimeout = DEFAULT_SOCKET_TIMEOUT;
-    volatile private long tcpconn_inactivity_time =
-            DEFAULT_INACTIVITY_TIMEOUT_VALUE;
-    volatile private int tcpconn_rx_buffer_size = DEFAULT_RX_BUFFER_SIZE;
-    volatile private int tcpconn_min_rx_pkt_size =
-            DEFAULT_MINIMUM_RX_PACKET_LENGTH;
-    volatile private int tcpconn_max_rx_pkt_size =
-            DEFAULT_MAXIMUM_RX_PACKET_LENGTH;
+    private TcpConnectionContext connectionContext;
+    private TcpConnectionFactory connectionFactory;
 
     protected GenericTcpServer() {
         super(null, null);
@@ -137,56 +129,6 @@ abstract public class GenericTcpServer <
 
     protected void setLocalAddressInternal(InetAddress local_addr) {
         this.local_addr = local_addr;
-    }
-
-    public int getDefaultTcpConnectionSoTimeout() {
-        return tcpconn_sotimeout;
-    }
-
-    public int getDefaultTcpConnectionRxBufferSize() {
-        return tcpconn_rx_buffer_size;
-    }
-
-    public long getDefaultTcpConnectionInactivityTime() {
-        return tcpconn_inactivity_time;
-    }
-
-    public int getDefaultTcpConnectionMinRxPacketLength() {
-        return tcpconn_min_rx_pkt_size;
-    }
-
-    public int getDefaultTcpConnectionMaxRxPacketLength() {
-        return tcpconn_max_rx_pkt_size;
-    }
-
-    public void setDefaultTcpConnectionSoTimeout(int sotimeout_in_miliseconds) {
-        tcpconn_sotimeout = sotimeout_in_miliseconds;
-    }
-
-    public void setDefaultTcpConnectionRxBufferSize(int rxbuffersize) {
-        tcpconn_rx_buffer_size = rxbuffersize;
-    }
-
-    public void setDefaultTcpConnectionInactivityTime(
-            long inactivity_time_in_milliseconds) {
-        tcpconn_inactivity_time = inactivity_time_in_milliseconds;
-    }
-
-    public void setDefaultTcpConnectionMinRxPacketLength(int min_rx_pktlen) {
-        tcpconn_min_rx_pkt_size = min_rx_pktlen;
-    }
-
-    public void setDefaultTcpConnectionMaxRxPacketLength(int max_rx_pktlen) {
-        tcpconn_max_rx_pkt_size = max_rx_pktlen;
-    }
-
-    public TcpConnectionListenerType getDefaultTcpConnectionListener() {
-        return defaultTcpConnectionListener;
-    }
-
-    public void setDefaultTcpConnectionListener(
-            TcpConnectionListenerType tcpConnectionDefaultListener) {
-        this.defaultTcpConnectionListener = defaultTcpConnectionListener;
     }
 
     protected final void setBacklogInternal(int backlog) {
@@ -284,6 +226,22 @@ abstract public class GenericTcpServer <
             info.getListener().onIncomingConnection(tcp_server, tcp_conn);
         }
         getDefaultListener().onIncomingConnection(tcp_server, tcp_conn);
+    }
+
+    public TcpConnectionContext getConnectionContext() {
+        return connectionContext;
+    }
+
+    public void setConnectionContext(TcpConnectionContext connectionContext) {
+        this.connectionContext = connectionContext;
+    }
+
+    public TcpConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    public void setConnectionFactory(TcpConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     abstract public boolean setLocalSocketAddress(InetSocketAddress sa,

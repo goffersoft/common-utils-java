@@ -20,7 +20,7 @@ public class TcpConnectionExample {
         try {
             TcpConnectionContext tcpctxt =
                     (TcpConnectionContext) GenericConnectionContext
-                            .getConnectionContext(TcpConnectionContext.class
+                            .getContext(TcpConnectionContext.class
                                     .getName());
             tcpctxt.setInactivityTimeout(60000);
             TcpConnectionFactory tcpfactory = new TcpConnectionFactory(tcpctxt);

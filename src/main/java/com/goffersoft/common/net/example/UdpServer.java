@@ -25,7 +25,7 @@ public class UdpServer {
         try {
             UdpConnectionContext udpctxt =
                     (UdpConnectionContext) GenericConnectionContext
-                            .getConnectionContext(UdpConnectionContext.class
+                            .getContext(UdpConnectionContext.class
                                     .getName());
             udpctxt.setInactivityTimeout(60000);
             UdpConnectionFactory udpfactory = new UdpConnectionFactory(udpctxt);

@@ -251,6 +251,22 @@ abstract public class GenericConnection<
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
+
+        str.append(String.format(
+                "SocketTimeout(milliseconds)=%d, "
+                        + "InactivityTimeout(milliseconds)=%d \n"
+                        + "isStarted=%s, isRunning=%s \n"
+                        + "RxBufferSize=%d, MinRxPktLength=%d, "
+                        + "MaxRxPktLength=%d \n",
+                getSoTimeout(),
+                getInactivityTime(),
+                Boolean.toString(isStarted()),
+                Boolean.toString(isRunning()),
+                getReceiveBufferSize(),
+                getMinimumReceivePacketLength(),
+                getMaximumReceivePacketLength()
+                ));
+
         Iterator<ListenerInfo<ListenerType>> it =
                 getConnectionMapListIterator();
 
