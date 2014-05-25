@@ -23,7 +23,9 @@ import com.goffersoft.common.utils.ReadUtils;
 import com.goffersoft.common.utils.StringUtils;
 import com.goffersoft.common.utils.net.MacAddress;
 
-public class OfpPort implements OfpSerializable<OfpPort> {
+public class OfpPort
+        implements
+        OfpSerializable<OfpPort> {
 
     private static final Logger log = Logger.getLogger(OfpPort.class);
 
@@ -63,7 +65,7 @@ public class OfpPort implements OfpSerializable<OfpPort> {
 
         public void setValue(int psBitMask) {
             if (this == OFPPS_UNK) {
-                int psBitPos = BitUtils.getBitPos(psBitMask);
+                int psBitPos = BitUtils.getFirstBitPos(psBitMask);
                 if (psBitPos != -1) {
                     this.psBitPos = psBitPos;
                 }
@@ -147,7 +149,7 @@ public class OfpPort implements OfpSerializable<OfpPort> {
 
         public void setValue(int pcBitMask) {
             if (this == OFPPC_UNK) {
-                int pcBitPos = BitUtils.getBitPos(pcBitMask);
+                int pcBitPos = BitUtils.getFirstBitPos(pcBitMask);
                 if (pcBitPos != -1) {
                     this.pcBitPos = pcBitPos;
                 }
@@ -818,11 +820,13 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         int start = offset + OFP_PORT_PROPERTY_LIST_OFFSET;
         int end = start + pktlen - OFP_PORT_LEN;
         OfpPortDescGenericProp tmp;
-        LinkedList<OfpPortDescGenericProp> propList = new LinkedList<OfpPortDescGenericProp>();
+        LinkedList<OfpPortDescGenericProp> propList =
+                new LinkedList<OfpPortDescGenericProp>();
 
         while (start < end) {
-            OfpPortDescGenericProp.OfpPortDescPropType type = OfpPortDescGenericProp
-                    .readType(data, start);
+            OfpPortDescGenericProp.OfpPortDescPropType type =
+                    OfpPortDescGenericProp
+                            .readType(data, start);
 
             if (type == OfpPortDescGenericProp.OfpPortDescPropType.OFPPDPT_ETHERNET) {
                 tmp = new OfpPortDescEthernetProp(data, start);
@@ -845,7 +849,8 @@ public class OfpPort implements OfpSerializable<OfpPort> {
         int start = OFP_PORT_PROPERTY_LIST_OFFSET;
         int end = start + pktlen - OFP_PORT_LEN;
         OfpPortDescGenericProp tmp;
-        LinkedList<OfpPortDescGenericProp> propList = new LinkedList<OfpPortDescGenericProp>();
+        LinkedList<OfpPortDescGenericProp> propList =
+                new LinkedList<OfpPortDescGenericProp>();
 
         while (start < end) {
             tmp = new OfpPortDescGenericProp(is);
@@ -870,11 +875,16 @@ public class OfpPort implements OfpSerializable<OfpPort> {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append(String
-                .format("PortNum=%s : Length=%d(0x%04x) : MacAddress=%s : PortName=%s \n",
-                        getPortNum().toString().replace('\n', ' '),
-                        getLength(), getLength(), getHwAddr().toString()
-                                .replace('\n', ' '), getName()));
+        sb
+                .append(String
+                        .format(
+                                "PortNum=%s : Length=%d(0x%04x) : MacAddress=%s : PortName=%s \n",
+                                getPortNum().toString().replace('\n', ' '),
+                                getLength(),
+                                getLength(),
+                                getHwAddr().toString()
+                                        .replace('\n', ' '),
+                                getName()));
 
         sb.append(String.format("Port Config %s\n", getConfigBitmap()
                 .toString()));

@@ -49,7 +49,8 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
-        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+        public void
+                iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
             BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
         }
 
@@ -67,12 +68,44 @@ public class BitUtils {
             setBitmap(BitUtils.setBit(getBitmap(), bitpos));
         }
 
+        public void setAllBits() {
+            setBitmap(BitUtils.setAllBits(getBitmap()));
+        }
+
         public void clearBit(int bitpos) {
             setBitmap(BitUtils.clearBit(getBitmap(), bitpos));
         }
 
+        public void clearAllBits() {
+            setBitmap(BitUtils.clearAllBits(getBitmap()));
+        }
+
+        public void flipBit(int bitpos) {
+            setBitmap(BitUtils.flipBit(getBitmap(), bitpos));
+        }
+
+        public void flipAllBits() {
+            setBitmap(BitUtils.flipAllBits(getBitmap()));
+        }
+
         public int getNumBitsSet() {
             return BitUtils.getNumBitsSet(getBitmap());
+        }
+
+        public int getFirstBitPos() {
+            return BitUtils.getFirstBitPos(getBitmap());
+        }
+
+        public int getFirstBitPos(int maxbits) {
+            return BitUtils.getFirstBitPos(getBitmap(), maxbits);
+        }
+
+        public int getLastBitPos() {
+            return BitUtils.getLastBitPos(getBitmap());
+        }
+
+        public int getLastBitPos(int maxbits) {
+            return BitUtils.getLastBitPos(getBitmap(), maxbits);
         }
 
         public LongBitmap bitwiseAnd(LongBitmap bitmap) {
@@ -185,7 +218,8 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
-        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+        public void
+                iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
             BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
         }
 
@@ -203,12 +237,44 @@ public class BitUtils {
             setBitmap(BitUtils.setBit(getBitmap(), bitpos));
         }
 
+        public void setAllBits() {
+            setBitmap(BitUtils.setAllBits(getBitmap()));
+        }
+
         public void clearBit(int bitpos) {
             setBitmap(BitUtils.clearBit(getBitmap(), bitpos));
         }
 
+        public void clearAllBits() {
+            setBitmap(BitUtils.clearAllBits(getBitmap()));
+        }
+
+        public void flipBit(int bitpos) {
+            setBitmap(BitUtils.flipBit(getBitmap(), bitpos));
+        }
+
+        public void flipAllBits() {
+            setBitmap(BitUtils.flipAllBits(getBitmap()));
+        }
+
         public int getNumBitsSet() {
             return BitUtils.getNumBitsSet(getBitmap());
+        }
+
+        public int getFirstBitPos() {
+            return BitUtils.getFirstBitPos(getBitmap());
+        }
+
+        public int getFirstBitPos(int maxbits) {
+            return BitUtils.getFirstBitPos(getBitmap(), maxbits);
+        }
+
+        public int getLastBitPos() {
+            return BitUtils.getLastBitPos(getBitmap());
+        }
+
+        public int getLastBitPos(int maxbits) {
+            return BitUtils.getLastBitPos(getBitmap(), maxbits);
         }
 
         public IntBitmap bitwiseAnd(IntBitmap bitmap) {
@@ -321,7 +387,8 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
-        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+        public void
+                iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
             BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
         }
 
@@ -339,12 +406,44 @@ public class BitUtils {
             setBitmap(BitUtils.setBit(getBitmap(), bitpos));
         }
 
+        public void setAllBits() {
+            setBitmap(BitUtils.setAllBits(getBitmap()));
+        }
+
         public void clearBit(int bitpos) {
             setBitmap(BitUtils.clearBit(getBitmap(), bitpos));
         }
 
+        public void clearAllBits() {
+            setBitmap(BitUtils.clearAllBits(getBitmap()));
+        }
+
+        public void flipBit(int bitpos) {
+            setBitmap(BitUtils.flipBit(getBitmap(), bitpos));
+        }
+
+        public void flipAllBits() {
+            setBitmap(BitUtils.flipAllBits(getBitmap()));
+        }
+
         public int getNumBitsSet() {
             return BitUtils.getNumBitsSet(getBitmap());
+        }
+
+        public int getFirstBitPos() {
+            return BitUtils.getFirstBitPos(getBitmap());
+        }
+
+        public int getFirstBitPos(int maxbits) {
+            return BitUtils.getFirstBitPos(getBitmap(), maxbits);
+        }
+
+        public int getLastBitPos() {
+            return BitUtils.getLastBitPos(getBitmap());
+        }
+
+        public int getLastBitPos(int maxbits) {
+            return BitUtils.getLastBitPos(getBitmap(), maxbits);
         }
 
         public ShortBitmap bitwiseAnd(ShortBitmap bitmap) {
@@ -457,7 +556,8 @@ public class BitUtils {
             BitUtils.bitmapIterator(getBitmap(), it, var);
         }
 
-        public void iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
+        public void
+                iterate(int maxbits, BitUtils.BitmapIterator it, Object var) {
             BitUtils.bitmapIterator(getBitmap(), maxbits, it, var);
         }
 
@@ -475,12 +575,44 @@ public class BitUtils {
             setBitmap(BitUtils.setBit(getBitmap(), bitpos));
         }
 
+        public void setAllBits() {
+            setBitmap(BitUtils.setAllBits(getBitmap()));
+        }
+
         public void clearBit(int bitpos) {
             setBitmap(BitUtils.clearBit(getBitmap(), bitpos));
         }
 
+        public void clearAllBits() {
+            setBitmap(BitUtils.clearAllBits(getBitmap()));
+        }
+
+        public void flipBit(int bitpos) {
+            setBitmap(BitUtils.flipBit(getBitmap(), bitpos));
+        }
+
+        public void flipAllBits() {
+            setBitmap(BitUtils.flipAllBits(getBitmap()));
+        }
+
         public int getNumBitsSet() {
             return BitUtils.getNumBitsSet(getBitmap());
+        }
+
+        public int getFirstBitPos() {
+            return BitUtils.getFirstBitPos(getBitmap());
+        }
+
+        public int getFirstBitPos(int maxbits) {
+            return BitUtils.getFirstBitPos(getBitmap(), maxbits);
+        }
+
+        public int getLastBitPos() {
+            return BitUtils.getLastBitPos(getBitmap());
+        }
+
+        public int getLastBitPos(int maxbits) {
+            return BitUtils.getLastBitPos(getBitmap(), maxbits);
         }
 
         public ByteBitmap bitwiseAnd(ByteBitmap bitmap) {
@@ -808,7 +940,7 @@ public class BitUtils {
         return getNumBitsSetInternal(bitmap, BITUTILS_NUM_BITS_IN_BYTE);
     }
 
-    private static int getBitPosInternal(long bitmask, int maxbits) {
+    private static int getFirstBitPosInternal(long bitmask, int maxbits) {
         for (int i = 0; i < maxbits; i++) {
             if (isBitSetInternal(bitmask, i)) {
                 return i;
@@ -817,27 +949,119 @@ public class BitUtils {
         return -1;
     }
 
-    public static int getBitPos(long bitmask, int maxbits) {
+    private static int getLastBitPosInternal(long bitmask, int maxbits) {
+        for (int i = maxbits - 1; i >= 0; i--) {
+            if (isBitSetInternal(bitmask, i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static int getFirstBitPosInternal(int bitmask, int maxbits) {
+        for (int i = 0; i < maxbits; i++) {
+            if (isBitSetInternal(bitmask, i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static int getLastBitPosInternal(int bitmask, int maxbits) {
+        for (int i = maxbits - 1; i >= 0; i--) {
+            if (isBitSetInternal(bitmask, i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int getFirstBitPos(long bitmask, int maxbits) {
         if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
             maxbits = BITUTILS_NUM_BITS_IN_LONG;
         }
-        return getBitPosInternal(bitmask, maxbits);
+        return getFirstBitPosInternal(bitmask, maxbits);
     }
 
-    public static int getBitPos(long bitmask) {
-        return getBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_LONG);
+    public static int getLastBitPos(long bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_LONG) {
+            maxbits = BITUTILS_NUM_BITS_IN_LONG;
+        }
+        return getLastBitPosInternal(bitmask, maxbits);
     }
 
-    public static int getBitPos(int bitmask) {
-        return getBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_INT);
+    public static int getLastBitPos(long bitmask) {
+        return getLastBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_LONG);
     }
 
-    public static int getBitPos(short bitmask) {
-        return getBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_SHORT);
+    public static int getFirstBitPos(long bitmask) {
+        return getFirstBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_LONG);
     }
 
-    public static int getBitPos(byte bitmask) {
-        return getBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_BYTE);
+    public static int getFirstBitPos(int bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            maxbits = BITUTILS_NUM_BITS_IN_INT;
+        }
+        return getFirstBitPosInternal(bitmask, maxbits);
+    }
+
+    public static int getFirstBitPos(int bitmask) {
+        return getFirstBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_INT);
+    }
+
+    public static int getLastBitPos(int bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_INT) {
+            maxbits = BITUTILS_NUM_BITS_IN_INT;
+        }
+        return getLastBitPosInternal(bitmask, maxbits);
+    }
+
+    public static int getLastBitPos(int bitmask) {
+        return getLastBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_INT);
+    }
+
+    public static int getFirstBitPos(short bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            maxbits = BITUTILS_NUM_BITS_IN_SHORT;
+        }
+        return getFirstBitPosInternal(bitmask, maxbits);
+    }
+
+    public static int getFirstBitPos(short bitmask) {
+        return getFirstBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_SHORT);
+    }
+
+    public static int getLastBitPos(short bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_SHORT) {
+            maxbits = BITUTILS_NUM_BITS_IN_SHORT;
+        }
+        return getLastBitPosInternal(bitmask, maxbits);
+    }
+
+    public static int getLastBitPos(short bitmask) {
+        return getLastBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_SHORT);
+    }
+
+    public static int getFirstBitPos(byte bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            maxbits = BITUTILS_NUM_BITS_IN_BYTE;
+        }
+        return getFirstBitPosInternal(bitmask, maxbits);
+    }
+
+    public static int getFirstBitPos(byte bitmask) {
+        return getFirstBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_BYTE);
+    }
+
+    public static int getLastBitPos(byte bitmask, int maxbits) {
+        if (maxbits < 0 || maxbits > BITUTILS_NUM_BITS_IN_BYTE) {
+            maxbits = BITUTILS_NUM_BITS_IN_BYTE;
+        }
+        return getLastBitPosInternal(bitmask, maxbits);
+    }
+
+    public static int getLastBitPos(byte bitmask) {
+        return getLastBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_BYTE);
     }
 
     private static void bitmapIteratorInternal(long bitmap, int startbitpos,
@@ -878,7 +1102,8 @@ public class BitUtils {
                 endbitpos - startbitpos + 1, it, var);
     }
 
-    public static void bitmapIterator(long bitmap, BitmapIterator it, Object var) {
+    public static void
+            bitmapIterator(long bitmap, BitmapIterator it, Object var) {
         bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_LONG, it, var);
     }
 
@@ -909,7 +1134,8 @@ public class BitUtils {
                 endbitpos - startbitpos + 1, it, var);
     }
 
-    public static void bitmapIterator(int bitmap, BitmapIterator it, Object var) {
+    public static void
+            bitmapIterator(int bitmap, BitmapIterator it, Object var) {
         bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_INT, it, var);
     }
 
@@ -973,7 +1199,8 @@ public class BitUtils {
                 endbitpos - startbitpos + 1, it, var);
     }
 
-    public static void bitmapIterator(byte bitmap, BitmapIterator it, Object var) {
+    public static void
+            bitmapIterator(byte bitmap, BitmapIterator it, Object var) {
         bitmapIteratorInternal(bitmap, 0, BITUTILS_NUM_BITS_IN_BYTE, it, var);
     }
 
@@ -1140,7 +1367,8 @@ public class BitUtils {
         return (byte) ((bitmap1 & bitmap2) & 0xff);
     }
 
-    public static long bitwiseOrInternal(long bitmap1, long bitmap2, int maxbits) {
+    public static long
+            bitwiseOrInternal(long bitmap1, long bitmap2, int maxbits) {
         long mask = (1L << maxbits) - 1L;
         long bitmap = (bitmap1 | bitmap2) & mask;
 
@@ -1576,7 +1804,8 @@ public class BitUtils {
 
     }
 
-    public static short bitwiseNot(short bitmap, int startbitpos, int endbitpos) {
+    public static short
+            bitwiseNot(short bitmap, int startbitpos, int endbitpos) {
         if (startbitpos < 0 || startbitpos >= BITUTILS_NUM_BITS_IN_SHORT
                 || endbitpos < 0 || endbitpos >= BITUTILS_NUM_BITS_IN_SHORT
                 || startbitpos > endbitpos) {

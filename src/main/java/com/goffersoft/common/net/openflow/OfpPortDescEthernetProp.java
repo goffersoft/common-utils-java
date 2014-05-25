@@ -19,7 +19,9 @@ import com.goffersoft.common.utils.BitUtils;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpPortDescEthernetProp extends OfpPortDescGenericProp {
+public class OfpPortDescEthernetProp
+        extends
+        OfpPortDescGenericProp {
 
     private static final Logger log = Logger
             .getLogger(OfpPortDescEthernetProp.class);
@@ -103,7 +105,7 @@ public class OfpPortDescEthernetProp extends OfpPortDescGenericProp {
 
         public void setValue(int pfBitMask) {
             if (this == OFPPF_UNK) {
-                int bitpos = BitUtils.getBitPos(pfBitMask);
+                int bitpos = BitUtils.getFirstBitPos(pfBitMask);
                 if (bitpos != -1) {
                     this.pfBitPos = bitpos;
                 }
@@ -675,8 +677,10 @@ public class OfpPortDescEthernetProp extends OfpPortDescGenericProp {
         return readOfpPortDescEthernetProp(is, null, 0);
     }
 
-    public static byte[] readOfpPortDescEthernetProp(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpPortDescEthernetProp(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpPortDescEthernetProp(is, data, 0);
     }
 

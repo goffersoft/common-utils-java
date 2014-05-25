@@ -20,7 +20,9 @@ import com.goffersoft.common.utils.BitUtils;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpPortDescOpticalProp extends OfpPortDescGenericProp {
+public class OfpPortDescOpticalProp
+        extends
+        OfpPortDescGenericProp {
 
     private static final Logger log = Logger
             .getLogger(OfpPortDescOpticalProp.class);
@@ -68,7 +70,7 @@ public class OfpPortDescOpticalProp extends OfpPortDescGenericProp {
 
         public void setValue(int pfBitMask) {
             if (this == OFPOPF_UNK) {
-                int pfBitPos = BitUtils.getBitPos(pfBitMask);
+                int pfBitPos = BitUtils.getFirstBitPos(pfBitMask);
                 if (pfBitPos != -1) {
                     this.pfBitPos = pfBitPos;
                 }
@@ -590,8 +592,10 @@ public class OfpPortDescOpticalProp extends OfpPortDescGenericProp {
         return readOfpPortDescOpticalProp(is, null, 0);
     }
 
-    public static byte[] readOfpPortDescOpticalProp(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpPortDescOpticalProp(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpPortDescOpticalProp(is, data, 0);
     }
 
@@ -757,17 +761,27 @@ public class OfpPortDescOpticalProp extends OfpPortDescGenericProp {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append(String
-                .format("%s : TxMinFreqLmda=%d(0x%04x) : TxMaxFreqLmda=%d(0x%04x) : TxGridFreqLmda=%d(0x%04x)\n"
-                        + " : RxMinFreqLmda=%d(0x%04x) : RxMaxFreqLmda=%d(0x%04x) : RxGridFreqLmda=%d(0x%04x)\n"
-                        + " : TxPwrMin=%d(0x%04x) : TxPwrMax=%d(0x%04x)\n",
-                        super.toString(), getTxMinFreqLmda(),
-                        getTxMinFreqLmda(), getTxMaxFreqLmda(),
-                        getTxMaxFreqLmda(), getTxGridFreqLmda(),
-                        getTxGridFreqLmda(), getRxMinFreqLmda(),
-                        getRxMinFreqLmda(), getRxMaxFreqLmda(),
-                        getRxMaxFreqLmda(), getRxGridFreqLmda(),
-                        getRxGridFreqLmda(), getTxPwrMin(), getTxPwrMax()));
+        sb
+                .append(String
+                        .format(
+                                "%s : TxMinFreqLmda=%d(0x%04x) : TxMaxFreqLmda=%d(0x%04x) : TxGridFreqLmda=%d(0x%04x)\n"
+                                        + " : RxMinFreqLmda=%d(0x%04x) : RxMaxFreqLmda=%d(0x%04x) : RxGridFreqLmda=%d(0x%04x)\n"
+                                        + " : TxPwrMin=%d(0x%04x) : TxPwrMax=%d(0x%04x)\n",
+                                super.toString(),
+                                getTxMinFreqLmda(),
+                                getTxMinFreqLmda(),
+                                getTxMaxFreqLmda(),
+                                getTxMaxFreqLmda(),
+                                getTxGridFreqLmda(),
+                                getTxGridFreqLmda(),
+                                getRxMinFreqLmda(),
+                                getRxMinFreqLmda(),
+                                getRxMaxFreqLmda(),
+                                getRxMaxFreqLmda(),
+                                getRxGridFreqLmda(),
+                                getRxGridFreqLmda(),
+                                getTxPwrMin(),
+                                getTxPwrMax()));
 
         sb.append(String
                 .format("Supported %s", getSupportedBitmap().toString()));

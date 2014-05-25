@@ -374,29 +374,45 @@ public class BitUtilsTest {
     @Test
     public void testGetBitPosLongBitmap() {
         longBitmap = 0x8000000000000000L;
-        assertTrue(BitUtils.getBitPos(longBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_LONG - 1);
-        assertTrue(BitUtils.getBitPos(longBitmap, 40) == -1);
+        assertTrue(BitUtils.getFirstBitPos(longBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_LONG - 1);
+        assertTrue(BitUtils.getFirstBitPos(longBitmap, 40) == -1);
+
+        longBitmap = 0x0800000000000000L;
+        assertTrue(BitUtils.getLastBitPos(longBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_LONG - 5);
+        assertTrue(BitUtils.getLastBitPos(longBitmap, 40) == -1);
     }
 
     @Test
     public void testGetBitPosIntBitmap() {
         intBitmap = 0x80000000;
-        assertTrue(BitUtils.getBitPos(intBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_INT - 1);
-        assertTrue(BitUtils.getBitPos(intBitmap, 16) == -1);
+        assertTrue(BitUtils.getFirstBitPos(intBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_INT - 1);
+        assertTrue(BitUtils.getFirstBitPos(intBitmap, 16) == -1);
+
+        longBitmap = 0x08000000;
+        assertTrue(BitUtils.getLastBitPos(longBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_INT - 5);
+        assertTrue(BitUtils.getLastBitPos(longBitmap, 20) == -1);
     }
 
     @Test
     public void testGetBitPosShortBitmap() {
         shortBitmap = (short) 0x8000;
-        assertTrue(BitUtils.getBitPos(shortBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_SHORT - 1);
-        assertTrue(BitUtils.getBitPos(shortBitmap, 8) == -1);
+        assertTrue(BitUtils.getFirstBitPos(shortBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_SHORT - 1);
+        assertTrue(BitUtils.getFirstBitPos(shortBitmap, 8) == -1);
+
+        longBitmap = 0x0800;
+        assertTrue(BitUtils.getLastBitPos(longBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_SHORT - 5);
+        assertTrue(BitUtils.getLastBitPos(longBitmap, 7) == -1);
     }
 
     @Test
     public void testGetBitPosByteBitmap() {
         byteBitmap = (byte) 0x80;
-        assertTrue(BitUtils.getBitPos(byteBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_BYTE - 1);
-        assertTrue(BitUtils.getBitPos(byteBitmap, 4) == -1);
+        assertTrue(BitUtils.getFirstBitPos(byteBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_BYTE - 1);
+        assertTrue(BitUtils.getFirstBitPos(byteBitmap, 4) == -1);
+
+        longBitmap = 0x08;
+        assertTrue(BitUtils.getLastBitPos(longBitmap) == BitUtils.BITUTILS_NUM_BITS_IN_BYTE - 5);
+        assertTrue(BitUtils.getLastBitPos(longBitmap, 3) == -1);
     }
 
     @Test
