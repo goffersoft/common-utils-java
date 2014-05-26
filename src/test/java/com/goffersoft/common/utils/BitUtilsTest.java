@@ -416,6 +416,86 @@ public class BitUtilsTest {
     }
 
     @Test
+    public void testRotateLeftLongBitmap() {
+        longBitmap = 0xabcdefaaefcdabeeL;
+
+        assertTrue(BitUtils.rotateLeft(longBitmap, 8) == longBitmap);
+        assertTrue(BitUtils.rotateLeft(longBitmap, 2) == 0xefaaefcdabeeabcdL);
+        assertTrue(BitUtils.rotateLeft(longBitmap, 3, 3) == longBitmap);
+        assertTrue(BitUtils.rotateLeft(longBitmap, 3, 2) == 0xabcdefaaefeecdabL);
+    }
+
+    @Test
+    public void testRotateLeftIntBitmap() {
+        intBitmap = 0xabcdefaa;
+
+        assertTrue(BitUtils.rotateLeft(intBitmap, 4) == intBitmap);
+        assertTrue(BitUtils.rotateLeft(intBitmap, 2) == 0xefaaabcd);
+        assertTrue(BitUtils.rotateLeft(intBitmap, 3, 3) == intBitmap);
+        assertTrue(BitUtils.rotateLeft(intBitmap, 3, 2) == 0xabaacdef);
+    }
+
+    @Test
+    public void testRotateLeftShortBitmap() {
+        shortBitmap = (short) 0xabcd;
+
+        assertTrue(BitUtils.rotateLeft(shortBitmap, 2) == shortBitmap);
+        assertTrue(BitUtils.rotateLeft(shortBitmap, 1) == (short) 0xcdab);
+        assertTrue(BitUtils.rotateLeft(shortBitmap, 1, 1) == shortBitmap);
+        assertTrue(BitUtils.rotateLeft(shortBitmap, 2, 1) == (short) 0xcdab);
+    }
+
+    @Test
+    public void testRotateLeftByteBitmap() {
+        byteBitmap = (byte) 0xab;
+
+        assertTrue(BitUtils.rotateLeft(byteBitmap, 2) == byteBitmap);
+        assertTrue(BitUtils.rotateLeft(byteBitmap, 1) == byteBitmap);
+        assertTrue(BitUtils.rotateLeft(byteBitmap, 1, 1) == byteBitmap);
+        assertTrue(BitUtils.rotateLeft(byteBitmap, 2, 1) == byteBitmap);
+    }
+
+    @Test
+    public void testRotateRightLongBitmap() {
+        longBitmap = 0xabcdefaaefcdabeeL;
+
+        assertTrue(BitUtils.rotateRight(longBitmap, 8) == longBitmap);
+        assertTrue(BitUtils.rotateRight(longBitmap, 2) == 0xabeeabcdefaaefcdL);
+        assertTrue(BitUtils.rotateRight(longBitmap, 3, 3) == longBitmap);
+        assertTrue(BitUtils.rotateRight(longBitmap, 3, 2) == 0xabcdefaaefabeecdL);
+    }
+
+    @Test
+    public void testRotateRightIntBitmap() {
+        intBitmap = 0xabcdefaa;
+
+        assertTrue(BitUtils.rotateRight(intBitmap, 8) == intBitmap);
+        assertTrue(BitUtils.rotateRight(intBitmap, 2) == 0xefaaabcd);
+        assertTrue(BitUtils.rotateRight(intBitmap, 3, 3) == intBitmap);
+        assertTrue(BitUtils.rotateRight(intBitmap, 3, 2) == 0xabefaacd);
+    }
+
+    @Test
+    public void testRotateRightShortBitmap() {
+        shortBitmap = (short) 0xabcd;
+
+        assertTrue(BitUtils.rotateRight(shortBitmap, 2) == shortBitmap);
+        assertTrue(BitUtils.rotateRight(shortBitmap, 1) == (short) 0xcdab);
+        assertTrue(BitUtils.rotateRight(shortBitmap, 1, 1) == shortBitmap);
+        assertTrue(BitUtils.rotateRight(shortBitmap, 2, 1) == (short) 0xcdab);
+    }
+
+    @Test
+    public void testRotateRightByteBitmap() {
+        byteBitmap = (byte) 0xab;
+
+        assertTrue(BitUtils.rotateRight(byteBitmap, 2) == byteBitmap);
+        assertTrue(BitUtils.rotateRight(byteBitmap, 1) == byteBitmap);
+        assertTrue(BitUtils.rotateRight(byteBitmap, 1, 1) == byteBitmap);
+        assertTrue(BitUtils.rotateRight(byteBitmap, 2, 1) == byteBitmap);
+    }
+
+    @Test
     public void testBitmapIteratorLongBitmap() {
 
         int[] var = new int[2];

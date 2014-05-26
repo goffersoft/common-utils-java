@@ -108,6 +108,28 @@ public class BitUtils {
             return BitUtils.getLastBitPos(getBitmap(), maxbits);
         }
 
+        public void rotateLeft(int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateLeft(getBitmap(), num_bytes_to_rotate));
+        }
+
+        public void rotateLeft(int maxbytes, int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateLeft(
+                    getBitmap(),
+                    maxbytes,
+                    num_bytes_to_rotate));
+        }
+
+        public void rotateRight(int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateRight(getBitmap(), num_bytes_to_rotate));
+        }
+
+        public void rotateRight(int maxbytes, int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateRight(
+                    getBitmap(),
+                    maxbytes,
+                    num_bytes_to_rotate));
+        }
+
         public LongBitmap bitwiseAnd(LongBitmap bitmap) {
             return new LongBitmap(BitUtils.bitwiseAnd(this.bitmap,
                     bitmap.getBitmap()));
@@ -277,6 +299,28 @@ public class BitUtils {
             return BitUtils.getLastBitPos(getBitmap(), maxbits);
         }
 
+        public void rotateLeft(int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateLeft(getBitmap(), num_bytes_to_rotate));
+        }
+
+        public void rotateLeft(int maxbytes, int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateLeft(
+                    getBitmap(),
+                    maxbytes,
+                    num_bytes_to_rotate));
+        }
+
+        public void rotateRight(int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateRight(getBitmap(), num_bytes_to_rotate));
+        }
+
+        public void rotateRight(int maxbytes, int num_bytes_to_rotate) {
+            setBitmap(BitUtils.rotateRight(
+                    getBitmap(),
+                    maxbytes,
+                    num_bytes_to_rotate));
+        }
+
         public IntBitmap bitwiseAnd(IntBitmap bitmap) {
             return new IntBitmap(BitUtils.bitwiseAnd(this.bitmap,
                     bitmap.getBitmap()));
@@ -444,6 +488,14 @@ public class BitUtils {
 
         public int getLastBitPos(int maxbits) {
             return BitUtils.getLastBitPos(getBitmap(), maxbits);
+        }
+
+        public void rotateLeft() {
+            setBitmap(BitUtils.rotateLeft(getBitmap(), 1));
+        }
+
+        public void rotateRight() {
+            setBitmap(BitUtils.rotateRight(getBitmap(), 1));
         }
 
         public ShortBitmap bitwiseAnd(ShortBitmap bitmap) {
@@ -1062,6 +1114,309 @@ public class BitUtils {
 
     public static int getLastBitPos(byte bitmask) {
         return getLastBitPosInternal(bitmask, BITUTILS_NUM_BITS_IN_BYTE);
+    }
+
+    static private long rotateLeftInternal(
+            long bitmap,
+            int maxbits,
+            int num_bytes_to_rotate) {
+        int tmpMaxBits = maxbits + maxbits % BITUTILS_NUM_BITS_IN_BYTE;
+        long tmpBitmap = bitmap;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_BYTE) {
+            return bitmap;
+        }
+
+        if (num_bytes_to_rotate == (tmpMaxBits / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+
+        long bitmask;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_LONG) {
+            bitmask = 0xffffffffffffffffL;
+        } else {
+            bitmask = (long) Math.pow(2, tmpMaxBits) - 1L;
+        }
+
+        for (int i = 0; i < num_bytes_to_rotate; i++) {
+            tmpBitmap =
+                    ((tmpBitmap << BITUTILS_NUM_BITS_IN_BYTE) & bitmask)
+                            | ((tmpBitmap >> (tmpMaxBits - BITUTILS_NUM_BITS_IN_BYTE)) & (long) 0xFF);
+        }
+
+        return tmpBitmap | (bitmap & ~bitmask);
+    }
+
+    static private int rotateLeftInternal(
+            int bitmap,
+            int maxbits,
+            int num_bytes_to_rotate) {
+        int tmpMaxBits = maxbits + maxbits % BITUTILS_NUM_BITS_IN_BYTE;
+        int tmpBitmap = bitmap;
+
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_BYTE) {
+            return bitmap;
+        }
+
+        if (num_bytes_to_rotate % (tmpMaxBits / BITUTILS_NUM_BITS_IN_BYTE) == 0) {
+            return bitmap;
+        }
+
+        int bitmask;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_INT) {
+            bitmask = 0xffffffff;
+        } else {
+            bitmask = (int) Math.pow(2, tmpMaxBits) - 1;
+        }
+
+        for (int i = 0; i < num_bytes_to_rotate; i++) {
+            tmpBitmap =
+                    ((tmpBitmap << BITUTILS_NUM_BITS_IN_BYTE) & bitmask)
+                            | ((tmpBitmap >> (tmpMaxBits - BITUTILS_NUM_BITS_IN_BYTE)) & 0xFF);
+        }
+
+        return tmpBitmap | (bitmap & ~bitmask);
+    }
+
+    static private long rotateRightInternal(
+            long bitmap,
+            int maxbits,
+            int num_bytes_to_rotate) {
+        int tmpMaxBits = maxbits + maxbits % BITUTILS_NUM_BITS_IN_BYTE;
+        long tmpBitmap = bitmap;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_BYTE) {
+            return bitmap;
+        }
+
+        if (num_bytes_to_rotate % (tmpMaxBits / BITUTILS_NUM_BITS_IN_BYTE) == 0) {
+            return bitmap;
+        }
+
+        long bitmask;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_LONG) {
+            bitmask = 0xffffffffffffffffL;
+        } else {
+            bitmask = (long) Math.pow(2, tmpMaxBits) - 1L;
+        }
+
+        for (int i = 0; i < num_bytes_to_rotate; i++) {
+            tmpBitmap =
+                    (((tmpBitmap & bitmask) >>> BITUTILS_NUM_BITS_IN_BYTE))
+                            | ((tmpBitmap & 0xFF) << (tmpMaxBits - BITUTILS_NUM_BITS_IN_BYTE));
+        }
+
+        return tmpBitmap | (bitmap & ~bitmask);
+    }
+
+    static private int rotateRightInternal(
+            int bitmap,
+            int maxbits,
+            int num_bytes_to_rotate) {
+        int tmpMaxBits = maxbits + maxbits % BITUTILS_NUM_BITS_IN_BYTE;
+        int tmpBitmap = bitmap;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_BYTE) {
+            return bitmap;
+        }
+
+        if (num_bytes_to_rotate % (tmpMaxBits / BITUTILS_NUM_BITS_IN_BYTE) == 0) {
+            return bitmap;
+        }
+
+        int bitmask;
+        if (tmpMaxBits == BITUTILS_NUM_BITS_IN_INT) {
+            bitmask = 0xffffffff;
+        } else {
+            bitmask = (int) Math.pow(2, tmpMaxBits) - 1;
+        }
+
+        for (int i = 0; i < num_bytes_to_rotate; i++) {
+            tmpBitmap =
+                    (((tmpBitmap & bitmask) >>> BITUTILS_NUM_BITS_IN_BYTE))
+                            | ((tmpBitmap & 0xFF) << (tmpMaxBits - BITUTILS_NUM_BITS_IN_BYTE));
+        }
+
+        return tmpBitmap | (bitmap & ~bitmask);
+    }
+
+    static public long rotateLeft(long bitmap, int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        return rotateLeftInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_LONG,
+                num_bytes_to_rotate);
+    }
+
+    static public long rotateLeft(
+            long bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        if (maxbytes < 0
+                || maxbytes > (BITUTILS_NUM_BITS_IN_LONG / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+        return rotateLeftInternal(
+                bitmap,
+                maxbytes * BITUTILS_NUM_BITS_IN_BYTE,
+                num_bytes_to_rotate);
+    }
+
+    static public int rotateLeft(int bitmap, int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        return rotateLeftInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_INT,
+                num_bytes_to_rotate);
+    }
+
+    static public int rotateLeft(
+            int bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        if (maxbytes < 0
+                || maxbytes > (BITUTILS_NUM_BITS_IN_INT / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+        return rotateLeftInternal(
+                bitmap,
+                maxbytes * BITUTILS_NUM_BITS_IN_BYTE,
+                num_bytes_to_rotate);
+    }
+
+    static public short rotateLeft(short bitmap, int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        return (short) rotateLeftInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_SHORT,
+                num_bytes_to_rotate);
+    }
+
+    static public short rotateLeft(
+            short bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        if (maxbytes != (BITUTILS_NUM_BITS_IN_SHORT / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+        return (short) rotateLeftInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_SHORT,
+                num_bytes_to_rotate);
+    }
+
+    static public byte rotateLeft(byte bitmap, int num_bytes_to_rotate) {
+        return bitmap;
+    }
+
+    static public byte rotateLeft(
+            byte bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        return bitmap;
+    }
+
+    static public long rotateRight(long bitmap, int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        return rotateRightInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_LONG,
+                num_bytes_to_rotate);
+    }
+
+    static public long rotateRight(
+            long bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        if (maxbytes < 0
+                || maxbytes > (BITUTILS_NUM_BITS_IN_LONG / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+        return rotateRightInternal(
+                bitmap,
+                maxbytes * BITUTILS_NUM_BITS_IN_BYTE,
+                num_bytes_to_rotate);
+    }
+
+    static public int rotateRight(int bitmap, int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        return rotateRightInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_INT,
+                num_bytes_to_rotate);
+    }
+
+    static public int rotateRight(
+            int bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        if (maxbytes < 0
+                || maxbytes > (BITUTILS_NUM_BITS_IN_INT / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+        return rotateRightInternal(
+                bitmap,
+                maxbytes * BITUTILS_NUM_BITS_IN_BYTE,
+                num_bytes_to_rotate);
+    }
+
+    static public short rotateRight(short bitmap, int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        return (short) rotateRightInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_SHORT,
+                num_bytes_to_rotate);
+    }
+
+    static public short rotateRight(
+            short bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        if (num_bytes_to_rotate < 0) {
+            return bitmap;
+        }
+        if (maxbytes != (BITUTILS_NUM_BITS_IN_SHORT / BITUTILS_NUM_BITS_IN_BYTE)) {
+            return bitmap;
+        }
+        return (short) rotateRightInternal(
+                bitmap,
+                BITUTILS_NUM_BITS_IN_SHORT,
+                num_bytes_to_rotate);
+    }
+
+    static public byte rotateRight(byte bitmap, int num_bytes_to_rotate) {
+        return bitmap;
+    }
+
+    static public byte rotateRight(
+            byte bitmap,
+            int maxbytes,
+            int num_bytes_to_rotate) {
+        return bitmap;
     }
 
     private static void bitmapIteratorInternal(long bitmap, int startbitpos,
