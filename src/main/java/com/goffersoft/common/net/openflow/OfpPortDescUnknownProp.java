@@ -2,7 +2,7 @@
  ** File: OfpPortDescUnknownProp.java
  **
  ** Description : OpenFlow Port Properties class - handler for unknown properties
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -20,7 +20,9 @@ import com.goffersoft.common.utils.PrintUtils;
 import com.goffersoft.common.utils.ReadUtils;
 import com.goffersoft.common.utils.WriteUtils;
 
-public class OfpPortDescUnknownProp extends OfpPortDescGenericProp {
+public class OfpPortDescUnknownProp
+        extends
+        OfpPortDescGenericProp {
 
     private static final Logger log = Logger
             .getLogger(OfpPortDescUnknownProp.class);
@@ -132,8 +134,9 @@ public class OfpPortDescUnknownProp extends OfpPortDescGenericProp {
                 setLength((short) (OFP_PORT_DESC_PROP_BASE_LEN + OFP_PORT_DESC_UNKNOWN_HDR_LEN));
             }
         } else {
-            int len = ((offset + length) > data.length) ? (data.length - offset)
-                    : length;
+            int len =
+                    ((offset + length) > data.length) ? (data.length - offset)
+                            : length;
             this.data = new byte[len];
             System.arraycopy(data, offset, this.data, 0, len);
             if (adjustLength == true) {
@@ -222,8 +225,10 @@ public class OfpPortDescUnknownProp extends OfpPortDescGenericProp {
         return readOfpPortDescUnknownProp(is, null, 0);
     }
 
-    public static byte[] readOfpPortDescUnknownProp(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpPortDescUnknownProp(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpPortDescUnknownProp(is, data, 0);
     }
 

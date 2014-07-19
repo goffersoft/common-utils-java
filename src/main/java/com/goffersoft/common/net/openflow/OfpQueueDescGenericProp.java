@@ -2,7 +2,7 @@
  ** File: OfpQueueDescGenericProp.java
  **
  ** Description : Open Packet Queue Generic Properties
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -19,7 +19,8 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpQueueDescGenericProp implements
+public class OfpQueueDescGenericProp
+        implements
         OfpSerializable<OfpQueueDescGenericProp> {
 
     private static final Logger log = Logger
@@ -257,8 +258,10 @@ public class OfpQueueDescGenericProp implements
         return readOfpQueueDescGenericProp(is, null, 0);
     }
 
-    public static byte[] readOfpQueueDescGenericProp(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpQueueDescGenericProp(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpQueueDescGenericProp(is, data, 0);
     }
 
@@ -276,7 +279,9 @@ public class OfpQueueDescGenericProp implements
         return readType(queuedescprop, 0);
     }
 
-    public static OfpQueueDescPropType readType(byte[] queuedescprop, int offset) {
+    public static
+            OfpQueueDescPropType
+            readType(byte[] queuedescprop, int offset) {
         return OfpQueueDescPropType.getEnum(EndianConversion
                 .byteArrayToShortBE(queuedescprop, offset
                         + OFP_QUEUE_DESC_PROP_TYPE_OFFSET));

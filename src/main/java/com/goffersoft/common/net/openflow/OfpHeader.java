@@ -2,7 +2,7 @@
  ** File: OfpHeader.java
  **
  ** Description : OpenFlow Header class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -18,7 +18,9 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpHeader implements OfpSerializable<OfpHeader> {
+public class OfpHeader
+        implements
+        OfpSerializable<OfpHeader> {
 
     private static final Logger log = Logger.getLogger(OfpHeader.class);
 

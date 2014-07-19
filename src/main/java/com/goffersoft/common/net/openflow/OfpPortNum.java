@@ -2,7 +2,7 @@
  ** File: OfpPortNum.java
  **
  ** Description : OpenFlow Ethernet Port Number Enumeration class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -43,18 +43,19 @@ public enum OfpPortNum {
             OFPP_MAX,
     };
 
-    public static final String portName[] = {
-            "Switch Port (Port Range : 1 - 0xFFFFFF00)",
-            "Reserved OpenFlow Port(fake output port) - IN_PORT    - 0xfffffff8",
-            "Reserved OpenFlow Port(fake output port) - TABLE      - 0xfffffff9",
-            "Reserved OpenFlow Port(fake output port) - NORMAL     - 0xfffffffa",
-            "Reserved OpenFlow Port(fake output port) - FLOOD      - 0xfffffffb",
-            "Reserved OpenFlow Port(fake output port) - ALL        - 0xfffffffc",
-            "Reserved OpenFlow Port(fake output port) - CONTROLLER - 0xfffffffd",
-            "Reserved OpenFlow Port(fake output port) - LOCAL      - 0xfffffffe",
-            "Reserved OpenFlow Port(fake output port) - ANY        - 0xffffffff",
-            "Maximum Port Number"
-    };
+    public static final String portName[] =
+            {
+                    "Switch Port (Port Range : 1 - 0xFFFFFF00)",
+                    "Reserved OpenFlow Port(fake output port) - IN_PORT    - 0xfffffff8",
+                    "Reserved OpenFlow Port(fake output port) - TABLE      - 0xfffffff9",
+                    "Reserved OpenFlow Port(fake output port) - NORMAL     - 0xfffffffa",
+                    "Reserved OpenFlow Port(fake output port) - FLOOD      - 0xfffffffb",
+                    "Reserved OpenFlow Port(fake output port) - ALL        - 0xfffffffc",
+                    "Reserved OpenFlow Port(fake output port) - CONTROLLER - 0xfffffffd",
+                    "Reserved OpenFlow Port(fake output port) - LOCAL      - 0xfffffffe",
+                    "Reserved OpenFlow Port(fake output port) - ANY        - 0xffffffff",
+                    "Maximum Port Number"
+            };
 
     private static final int portId[] = {
             0,

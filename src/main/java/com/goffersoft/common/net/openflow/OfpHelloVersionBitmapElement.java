@@ -2,7 +2,7 @@
  ** File: OfpHelloVersionBitmapElement.java
  **
  ** Description : OfpHelloVersionBitmap Header class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -20,7 +20,9 @@ import com.goffersoft.common.utils.PrintUtils;
 import com.goffersoft.common.utils.ReadUtils;
 import com.goffersoft.common.utils.WriteUtils;
 
-public class OfpHelloVersionBitmapElement extends OfpHelloGenericElement {
+public class OfpHelloVersionBitmapElement
+        extends
+        OfpHelloGenericElement {
     private static final Logger log = Logger
             .getLogger(OfpHelloGenericElement.class);
     private byte[] data;

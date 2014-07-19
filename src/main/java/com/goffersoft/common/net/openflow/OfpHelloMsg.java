@@ -2,7 +2,7 @@
  ** File: OfpHelloMsg.java
  **
  ** Description : OfpHelloMsg Header class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -19,7 +19,9 @@ import org.apache.log4j.Logger;
 
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpHelloMsg extends OfpHeader {
+public class OfpHelloMsg
+        extends
+        OfpHeader {
 
     private static final Logger log = Logger.getLogger(OfpHelloMsg.class);
 
@@ -109,7 +111,9 @@ public class OfpHelloMsg extends OfpHeader {
         addElements(elemHdrs);
     }
 
-    private void addElement(OfpHelloGenericElement elemHdr, boolean adjustLength) {
+    private
+            void
+            addElement(OfpHelloGenericElement elemHdr, boolean adjustLength) {
         if (elemHdr == null) {
             return;
         }
@@ -211,8 +215,10 @@ public class OfpHelloMsg extends OfpHeader {
         return readOfpHelloMsg(is, data, 0);
     }
 
-    public static byte[] readOfpHelloMsg(InputStream is, byte[] data, int offset)
-            throws IOException {
+    public static
+            byte[]
+            readOfpHelloMsg(InputStream is, byte[] data, int offset)
+                    throws IOException {
         byte[] tmpData = OfpHeader.readOfpHeader(is, data, offset);
         int tmpOffset = ((tmpData != data) ? 0 : offset);
         OfpType type = readType(tmpData, tmpOffset);
@@ -234,7 +240,9 @@ public class OfpHelloMsg extends OfpHeader {
         return tmpData;
     }
 
-    public static LinkedList<OfpHelloGenericElement> readElementList(byte[] data) {
+    public static
+            LinkedList<OfpHelloGenericElement>
+            readElementList(byte[] data) {
         return readElementList(data, 0);
     }
 
@@ -255,11 +263,13 @@ public class OfpHelloMsg extends OfpHeader {
         int start = offset + OFP_HDR_LEN;
         int end = start + pktlen - OFP_HDR_LEN;
         OfpHelloGenericElement tmp;
-        LinkedList<OfpHelloGenericElement> elemList = new LinkedList<OfpHelloGenericElement>();
+        LinkedList<OfpHelloGenericElement> elemList =
+                new LinkedList<OfpHelloGenericElement>();
 
         while (start < end) {
-            OfpHelloGenericElement.OfpHelloElementType type = OfpHelloGenericElement
-                    .readType(data, start);
+            OfpHelloGenericElement.OfpHelloElementType type =
+                    OfpHelloGenericElement
+                            .readType(data, start);
 
             if (type == OfpHelloGenericElement.OfpHelloElementType.OFPHET_VERSIONBITMAP) {
                 tmp = new OfpHelloVersionBitmapElement(data, start);
@@ -278,7 +288,8 @@ public class OfpHelloMsg extends OfpHeader {
         int start = 0;
         int end = start + pktlen - OFP_HDR_LEN;
         OfpHelloGenericElement tmp;
-        LinkedList<OfpHelloGenericElement> elemList = new LinkedList<OfpHelloGenericElement>();
+        LinkedList<OfpHelloGenericElement> elemList =
+                new LinkedList<OfpHelloGenericElement>();
 
         while (start < end) {
             tmp = new OfpHelloGenericElement(is);

@@ -33,7 +33,7 @@ public class BitUtils {
             this(0x0);
         }
 
-        LongBitmap(long bmap) {
+        public LongBitmap(long bmap) {
             setBitmap(bmap);
         }
 
@@ -415,7 +415,7 @@ public class BitUtils {
             this((short) 0x0);
         }
 
-        ShortBitmap(short bmap) {
+        public ShortBitmap(short bmap) {
             bitmap = bmap;
         }
 
@@ -592,7 +592,7 @@ public class BitUtils {
             this((byte) 0x0);
         }
 
-        ByteBitmap(byte bmap) {
+        public ByteBitmap(byte bmap) {
             bitmap = bmap;
         }
 

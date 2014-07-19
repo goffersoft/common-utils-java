@@ -3,7 +3,7 @@
  ** File: OfpQueueDescMinRateProp.java
  **
  ** Description : Open Packet Queue Min Rate Properties
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -19,7 +19,9 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpQueueDescMinRateProp extends OfpQueueDescGenericProp {
+public class OfpQueueDescMinRateProp
+        extends
+        OfpQueueDescGenericProp {
     private static final Logger log = Logger
             .getLogger(OfpQueueDescMinRateProp.class);
 
@@ -166,8 +168,10 @@ public class OfpQueueDescMinRateProp extends OfpQueueDescGenericProp {
         return readOfpQueueDescMinRateProp(is, null, 0);
     }
 
-    public static byte[] readOfpQueueDescMinRateProp(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpQueueDescMinRateProp(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpQueueDescMinRateProp(is, data, 0);
     }
 

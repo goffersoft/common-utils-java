@@ -2,7 +2,7 @@
  ** File: OfpPort.java
  **
  ** Description : OpenFlow Port class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -35,14 +35,16 @@ public class OfpPort
         OFPPS_LIVE(2),
         OFPPS_UNK(0), ;
 
-        static final OfpPortState psBit[] = {
+        public static final int OFPPS_MASK = 0x07;
+
+        public static final OfpPortState psBit[] = {
                 OFPPS_LINK_DOWN,
                 OFPPS_BLOCKED,
                 OFPPS_LIVE,
                 OFPPS_UNK,
         };
 
-        static final String psDescr[] = {
+        public static final String psDescr[] = {
                 "No physical link present",
                 "Port is blocked",
                 "Live for Fast Failover Group",
@@ -91,8 +93,18 @@ public class OfpPort
             }
 
             OfpPortState unk = OFPPS_UNK;
-            unk.setValue(psBitPos);
+            if (psBitPos < BitUtils.BITUTILS_NUM_BITS_IN_INT) {
+                unk.setValue(psBitPos);
+            }
             return unk;
+        }
+
+        public static int setAllBits() {
+            return OFPPS_MASK;
+        }
+
+        public static void setAllBits(BitUtils.IntBitmap bitmap) {
+            bitmap.setBitmap(OFPPS_MASK);
         }
 
         public String getDescr() {
@@ -117,7 +129,9 @@ public class OfpPort
         OFPPC_NO_PACKET_IN(3),
         OFPPC_UNK(0), ;
 
-        static final OfpPortConfig pcBit[] = {
+        public static final int OFPPC_MASK = 0x0f;
+
+        public static final OfpPortConfig pcBit[] = {
                 OFPPC_PORT_DOWN,
                 OFPPC_NO_RECV,
                 OFPPC_NO_FWD,
@@ -125,7 +139,7 @@ public class OfpPort
                 OFPPC_UNK,
         };
 
-        static final String pcDescr[] = {
+        public static final String pcDescr[] = {
                 "Port is administratively down",
                 "Drop all packets received by the port",
                 "Drop packets forwarded to port",
@@ -175,8 +189,18 @@ public class OfpPort
             }
 
             OfpPortConfig unk = OFPPC_UNK;
-            unk.setValue(pcBitPos);
+            if (pcBitPos < BitUtils.BITUTILS_NUM_BITS_IN_INT) {
+                unk.setValue(pcBitPos);
+            }
             return unk;
+        }
+
+        public static int setAllBits() {
+            return OFPPC_MASK;
+        }
+
+        public static void setAllBits(BitUtils.IntBitmap bitmap) {
+            bitmap.setBitmap(OFPPC_MASK);
         }
 
         public String getDescr() {
@@ -396,20 +420,21 @@ public class OfpPort
 
     public void setConfigBitmap(int bmap) {
         if (configBitmap == null) {
-            configBitmap = new BitUtils.IntBitmap(bmap);
+            configBitmap =
+                    new BitUtils.IntBitmap(bmap & OfpPortConfig.OFPPC_MASK);
         } else {
-            configBitmap.setBitmap(bmap);
+            configBitmap.setBitmap(bmap & OfpPortConfig.OFPPC_MASK);
         }
     }
 
     public void setConfigBitmap(BitUtils.IntBitmap bmap) {
+        if (configBitmap == null) {
+            configBitmap = new BitUtils.IntBitmap(0x0);
+        }
         if (bmap == null) {
-            if (configBitmap == null) {
-                configBitmap = new BitUtils.IntBitmap(0x0);
-            }
             return;
         }
-        configBitmap = bmap;
+        configBitmap.setBitmap(bmap.getBitmap() & OfpPortConfig.OFPPC_MASK);
     }
 
     public OfpPortConfig[] getConfigBitSet() {
@@ -437,6 +462,30 @@ public class OfpPort
         return tmp;
     }
 
+    public void setConfigBitSet(OfpPortConfig[] bitset) {
+        if (bitset == null) {
+            setConfigBitmap(OfpPortConfig.setAllBits());
+        }
+
+        for (int i = 0; i < bitset.length; i++) {
+            if (bitset[i] != null) {
+                configBitmapSetBit(bitset[i]);
+            }
+        }
+    }
+
+    public void clearConfigBitSet(OfpPortConfig[] bitset) {
+        if (bitset == null) {
+            setConfigBitmap(0x0);
+        }
+
+        for (int i = 0; i < bitset.length; i++) {
+            if (bitset[i] != null) {
+                configBitmapClearBit(bitset[i]);
+            }
+        }
+    }
+
     public boolean configBitmapIsBitSet(OfpPortConfig pfbit) {
         return getConfigBitmap().isBitSet(pfbit.getBitPos());
     }
@@ -455,20 +504,23 @@ public class OfpPort
 
     public void setStateBitmap(int bmap) {
         if (stateBitmap == null) {
-            stateBitmap = new BitUtils.IntBitmap(bmap);
+            stateBitmap =
+                    new BitUtils.IntBitmap(bmap & OfpPortState.OFPPS_MASK);
         } else {
-            stateBitmap.setBitmap(bmap);
+            stateBitmap.setBitmap(bmap & OfpPortState.OFPPS_MASK);
         }
     }
 
     public void setStateBitmap(BitUtils.IntBitmap bmap) {
         if (bmap == null) {
-            if (stateBitmap == null) {
-                stateBitmap = new BitUtils.IntBitmap(0x0);
-            }
+            stateBitmap = new BitUtils.IntBitmap(0x0);
+        }
+
+        if (stateBitmap == null) {
             return;
         }
-        stateBitmap = bmap;
+
+        stateBitmap.setBitmap(bmap.getBitmap() & OfpPortState.OFPPS_MASK);
     }
 
     public OfpPortState[] getStateBitSet() {
@@ -496,15 +548,39 @@ public class OfpPort
         return tmp;
     }
 
+    public void setStateBitSet(OfpPortState[] bitset) {
+        if (bitset == null) {
+            setStateBitmap(OfpPortState.setAllBits());
+        }
+
+        for (int i = 0; i < bitset.length; i++) {
+            if (bitset[i] != null) {
+                stateBitmapSetBit(bitset[i]);
+            }
+        }
+    }
+
+    public void clearStateBitSet(OfpPortState[] bitset) {
+        if (bitset == null) {
+            setStateBitmap(0x0);
+        }
+
+        for (int i = 0; i < bitset.length; i++) {
+            if (bitset[i] != null) {
+                stateBitmapClearBit(bitset[i]);
+            }
+        }
+    }
+
     public boolean stateBitmapIsBitSet(OfpPortState pfbit) {
         return getStateBitmap().isBitSet(pfbit.getBitPos());
     }
 
-    public void stateBitmapSetBit(OfpPortConfig pfbit) {
+    public void stateBitmapSetBit(OfpPortState pfbit) {
         getStateBitmap().setBit(pfbit.getBitPos());
     }
 
-    public void stateBitmapClearBit(OfpPortConfig pfbit) {
+    public void stateBitmapClearBit(OfpPortState pfbit) {
         getStateBitmap().clearBit(pfbit.getBitPos());
     }
 
@@ -710,6 +786,7 @@ public class OfpPort
 
     public static byte[] readOfpPort(InputStream is, byte[] data, int offset)
             throws IOException {
+        data = ReadUtils.readInput(is, data, offset, OFP_PORT_LEN);
         short len = readLength(data, offset + OFP_PORT_LENGTH_OFFSET);
 
         if (len > OFP_PORT_LEN) {

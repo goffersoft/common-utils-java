@@ -2,7 +2,7 @@
  ** File: OfpPortDescExperimenterProp.java
  **
  ** Description : OpenFlow Experimental Properties class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -21,7 +21,9 @@ import com.goffersoft.common.utils.PrintUtils;
 import com.goffersoft.common.utils.ReadUtils;
 import com.goffersoft.common.utils.WriteUtils;
 
-public class OfpPortDescExperimenterProp extends OfpPortDescGenericProp {
+public class OfpPortDescExperimenterProp
+        extends
+        OfpPortDescGenericProp {
 
     private static final Logger log = Logger
             .getLogger(OfpPortDescExperimenterProp.class);
@@ -172,8 +174,9 @@ public class OfpPortDescExperimenterProp extends OfpPortDescGenericProp {
                 setLength((short) (OFP_PORT_DESC_PROP_BASE_LEN + OFP_PORT_DESC_EXP_HDR_LEN));
             }
         } else {
-            int len = ((offset + length) > data.length) ? (data.length - offset)
-                    : length;
+            int len =
+                    ((offset + length) > data.length) ? (data.length - offset)
+                            : length;
             this.data = new byte[len];
             System.arraycopy(data, offset, this.data, 0, len);
             if (adjustLength == true) {
@@ -332,8 +335,10 @@ public class OfpPortDescExperimenterProp extends OfpPortDescGenericProp {
         return tmpData;
     }
 
-    public static OfpPortDescExperimenterProp readFromInputStream(InputStream is)
-            throws IOException {
+    public static
+            OfpPortDescExperimenterProp
+            readFromInputStream(InputStream is)
+                    throws IOException {
         return new OfpPortDescExperimenterProp(is);
     }
 

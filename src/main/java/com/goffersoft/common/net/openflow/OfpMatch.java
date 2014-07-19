@@ -2,7 +2,7 @@
  ** File: OfpMatch.java
  **
  ** Description : OpenFlow Match class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -15,7 +15,9 @@ import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
 
-public class OfpMatch implements OfpSerializable<OfpMatch> {
+public class OfpMatch
+        implements
+        OfpSerializable<OfpMatch> {
 
     private static final Logger log = Logger.getLogger(OfpMatch.class);
 

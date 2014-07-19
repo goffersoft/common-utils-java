@@ -2,7 +2,7 @@
  ** File: OfpHelloUnknownElement.java
  **
  ** Description : OfpHelloUnknownElement Header class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -20,7 +20,9 @@ import com.goffersoft.common.utils.PrintUtils;
 import com.goffersoft.common.utils.ReadUtils;
 import com.goffersoft.common.utils.WriteUtils;
 
-public class OfpHelloUnknownElement extends OfpHelloGenericElement {
+public class OfpHelloUnknownElement
+        extends
+        OfpHelloGenericElement {
     private static final Logger log = Logger
             .getLogger(OfpHelloUnknownElement.class);
 
@@ -128,8 +130,9 @@ public class OfpHelloUnknownElement extends OfpHelloGenericElement {
                 setLength((short) (OFP_HELLO_ELEMENT_BASE_LEN + OFP_HELLO_UNKNOWN_HDR_LEN));
             }
         } else {
-            int len = ((offset + length) > data.length) ? (data.length - offset)
-                    : length;
+            int len =
+                    ((offset + length) > data.length) ? (data.length - offset)
+                            : length;
             this.data = new byte[len];
             System.arraycopy(data, offset, this.data, 0, len);
             if (adjustLength == true) {
@@ -215,8 +218,10 @@ public class OfpHelloUnknownElement extends OfpHelloGenericElement {
         return readOfpHelloUnknownElement(is, null, 0);
     }
 
-    public static byte[] readOfpHelloUnknownElement(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpHelloUnknownElement(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpHelloUnknownElement(is, data, 0);
     }
 

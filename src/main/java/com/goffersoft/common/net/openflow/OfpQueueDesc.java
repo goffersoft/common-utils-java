@@ -2,7 +2,7 @@
  ** File: OfpQueueDesc.java
  **
  ** Description : Open Packet Queue class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -20,7 +20,9 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
+public class OfpQueueDesc
+        implements
+        OfpSerializable<OfpQueueDesc> {
     private OfpPortNum portNum;
     private int queueId;
     private short len;
@@ -160,7 +162,9 @@ public class OfpQueueDesc implements OfpSerializable<OfpQueueDesc> {
         addProps(props);
     }
 
-    private void addProperty(OfpQueueDescGenericProp prop, boolean adjustLength) {
+    private
+            void
+            addProperty(OfpQueueDescGenericProp prop, boolean adjustLength) {
         if (prop == null) {
             return;
         }

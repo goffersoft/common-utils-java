@@ -2,7 +2,7 @@
  ** File: OfpType.java
  **
  ** Description : OpenFlow Type Enumeration class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -86,42 +86,43 @@ public enum OfpType {
             OFPT_UNK_MESSAGE,
     };
 
-    public static final String typeDescr[] = {
-            "Hello - Immutable - symmetric message",
-            "Error - Immutable - symmetric message",
-            "Echo Request - Immutable - symmetric message",
-            "Echo Reply - Immutable - symmetric message",
-            "Experimenter - Immutable - symmetric message",
-            "Feature Request - Switch Config - Controller/switch message",
-            "Feature Reply - Switch Config - Controller/switch message",
-            "Get Config Request - Switch Config - Controller/switch message",
-            "Get Config Reply - Switch Config - Controller/switch message",
-            "Set Config - Switch Config - Controller/switch message",
-            "Packet In - Async message",
-            "Flow Removed - Async message",
-            "Port Status - Async message",
-            "Packet Out - Controller command message - Controller/switch message",
-            "Flow Mod - Controller command message - Controller/switch message",
-            "Group Mod - Controller command message - Controller/switch message",
-            "Port Mod - Controller command message - Controller/switch message",
-            "Table Mod - Controller command message - Controller/switch message",
-            "Multipart Request - multipart message - Controller/switch message",
-            "Multipart Reply - multipart message - Controller/switch message",
-            "Barrier Request - Barrier message - Controller/switch message",
-            "Barrier Reply - Barrier message - Controller/switch message",
-            "Role Request - Controller role change request message - Controller/switch message",
-            "Role Reply - Controller role change request message - Controller/switch message",
-            "Get Async Request - Async message config - Controller/switch message",
-            "Get Async Reply - Async message config - Controller/switch message",
-            "Set Async - Async message config - Controller/switch message",
-            "Meter Mod - Meter and rate limiters config message - Controller/switch message",
-            "Role Status - Controller role change event messages",
-            "Table Status - Async Message",
-            "Request Forward - Request forwarding by switch",
-            "Bundle Control - Bundle operations (multiple messages as a single operation)",
-            "Bundle Add Message - Bundle operations (multiple messages as a single operation)",
-            "Unknown Message Id - This message id has not been defined!"
-    };
+    public static final String typeDescr[] =
+            {
+                    "Hello - Immutable - symmetric message",
+                    "Error - Immutable - symmetric message",
+                    "Echo Request - Immutable - symmetric message",
+                    "Echo Reply - Immutable - symmetric message",
+                    "Experimenter - Immutable - symmetric message",
+                    "Feature Request - Switch Config - Controller/switch message",
+                    "Feature Reply - Switch Config - Controller/switch message",
+                    "Get Config Request - Switch Config - Controller/switch message",
+                    "Get Config Reply - Switch Config - Controller/switch message",
+                    "Set Config - Switch Config - Controller/switch message",
+                    "Packet In - Async message",
+                    "Flow Removed - Async message",
+                    "Port Status - Async message",
+                    "Packet Out - Controller command message - Controller/switch message",
+                    "Flow Mod - Controller command message - Controller/switch message",
+                    "Group Mod - Controller command message - Controller/switch message",
+                    "Port Mod - Controller command message - Controller/switch message",
+                    "Table Mod - Controller command message - Controller/switch message",
+                    "Multipart Request - multipart message - Controller/switch message",
+                    "Multipart Reply - multipart message - Controller/switch message",
+                    "Barrier Request - Barrier message - Controller/switch message",
+                    "Barrier Reply - Barrier message - Controller/switch message",
+                    "Role Request - Controller role change request message - Controller/switch message",
+                    "Role Reply - Controller role change request message - Controller/switch message",
+                    "Get Async Request - Async message config - Controller/switch message",
+                    "Get Async Reply - Async message config - Controller/switch message",
+                    "Set Async - Async message config - Controller/switch message",
+                    "Meter Mod - Meter and rate limiters config message - Controller/switch message",
+                    "Role Status - Controller role change event messages",
+                    "Table Status - Async Message",
+                    "Request Forward - Request forwarding by switch",
+                    "Bundle Control - Bundle operations (multiple messages as a single operation)",
+                    "Bundle Add Message - Bundle operations (multiple messages as a single operation)",
+                    "Unknown Message Id - This message id has not been defined!"
+            };
 
     private byte reqid;
 
@@ -169,7 +170,7 @@ public enum OfpType {
         }
     }
 
-    public boolean isBunbleMsg() {
+    public boolean isBundleMsg() {
         switch (this) {
             case OFPT_BUNDLE_CONTROL:
             case OFPT_BUNDLE_ADD_MESSAGE:

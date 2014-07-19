@@ -2,7 +2,7 @@
  ** File: OfpPortDescEthernetProp.java
  **
  ** Description : OpenFlow Ethernet Port Properties class
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -677,8 +677,7 @@ public class OfpPortDescEthernetProp
         return readOfpPortDescEthernetProp(is, null, 0);
     }
 
-    public static
-            byte[]
+    public static byte[]
             readOfpPortDescEthernetProp(InputStream is, byte[] data)
                     throws IOException {
         return readOfpPortDescEthernetProp(is, data, 0);

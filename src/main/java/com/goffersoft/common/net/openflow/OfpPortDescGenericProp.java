@@ -3,7 +3,7 @@
  **
  ** Description : OpenFlow Generic Port Properties class
  **               (base class for all port properties classes)
- **               -- OpenFlow Switch Specification Version 1.1.0 - February 28th, 2011
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
  **
  ** Date           Author                          Comments
  ** 08/31/2013     Prakash Easwar                  Created  
@@ -19,7 +19,8 @@ import org.apache.log4j.Logger;
 import com.goffersoft.common.utils.EndianConversion;
 import com.goffersoft.common.utils.ReadUtils;
 
-public class OfpPortDescGenericProp implements
+public class OfpPortDescGenericProp
+        implements
         OfpSerializable<OfpPortDescGenericProp> {
 
     private static final Logger log = Logger
@@ -266,8 +267,10 @@ public class OfpPortDescGenericProp implements
         return readOfpPortDescGenericProp(is, null, 0);
     }
 
-    public static byte[] readOfpPortDescGenericProp(InputStream is, byte[] data)
-            throws IOException {
+    public static
+            byte[]
+            readOfpPortDescGenericProp(InputStream is, byte[] data)
+                    throws IOException {
         return readOfpPortDescGenericProp(is, data, 0);
     }
 
