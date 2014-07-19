@@ -1,0 +1,183 @@
+/**
+ ** File: OfpSwitchConfigRequestMsg.java
+ **
+ ** Description : OpenFlow OfpSwitchConfigRequestMsg class
+ **               -- OpenFlow Switch Specification Version 1.4.0 - October 14th, 2013
+ **
+ ** Date           Author                          Comments
+ ** 08/31/2013     Prakash Easwar                  Created  
+ **/
+package com.goffersoft.common.net.openflow;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.apache.log4j.Logger;
+
+public class OfpSwitchConfigRequestMsg
+        extends
+        OfpHeader {
+    private static final Logger log = Logger
+            .getLogger(OfpSwitchConfigRequestMsg.class);
+
+    private OfpSwitchConfig swCfg;
+
+    OfpSwitchConfigRequestMsg(int xid) {
+        super(OfpType.OFPT_GET_CONFIG_REQUEST, xid);
+        setSwitchConfig(new OfpSwitchConfig());
+        setLength((short) (getLength() + OfpSwitchConfig.OFP_SWITCH_CONFIG_LEN));
+    }
+
+    OfpSwitchConfigRequestMsg(byte version, int xid) {
+        super(version, OfpType.OFPT_GET_CONFIG_REQUEST, xid);
+        setSwitchConfig(new OfpSwitchConfig());
+        setLength((short) (getLength() + OfpSwitchConfig.OFP_SWITCH_CONFIG_LEN));
+    }
+
+    OfpSwitchConfigRequestMsg(int xid, OfpSwitchConfig swcfg) {
+        super(OfpType.OFPT_GET_CONFIG_REQUEST, xid);
+        setSwitchConfig(swcfg);
+        setLength((short) (getLength() + OfpSwitchConfig.OFP_SWITCH_CONFIG_LEN));
+    }
+
+    OfpSwitchConfigRequestMsg(byte version, int xid,
+            OfpSwitchConfig swcfg) {
+        super(version, OfpType.OFPT_GET_CONFIG_REQUEST, xid);
+        setSwitchConfig(swcfg);
+        setLength((short) (getLength() + OfpSwitchConfig.OFP_SWITCH_CONFIG_LEN));
+    }
+
+    OfpSwitchConfigRequestMsg(byte[] data) {
+        this(data, 0);
+    }
+
+    OfpSwitchConfigRequestMsg(byte[] data, int offset) {
+        super(data, offset);
+
+        if (getType() != OfpType.OFPT_GET_CONFIG_REQUEST) {
+            throw new IllegalArgumentException("Bad Data : Expected  : 0x"
+                    + Integer.toHexString(OfpType.OFPT_GET_CONFIG_REQUEST
+                            .getValue())
+                    + " Got : 0x" + Integer.toHexString(getType().getValue()));
+        }
+
+        setSwitchConfig(new OfpSwitchConfig(data, offset + OFP_HDR_LEN));
+    }
+
+    OfpSwitchConfigRequestMsg(InputStream is) throws IOException {
+        super(is);
+
+        if (getType() != OfpType.OFPT_GET_CONFIG_REQUEST) {
+            throw new IOException("Bad Data : Expected  : 0x"
+                    + Integer.toHexString(OfpType.OFPT_GET_CONFIG_REQUEST
+                            .getValue())
+                    + " Got : 0x" + Integer.toHexString(getType().getValue()));
+        }
+
+        setSwitchConfig(new OfpSwitchConfig(is));
+    }
+
+    public OfpSwitchConfig getSwitchConfig() {
+        return swCfg;
+    }
+
+    public void setSwitchConfig(OfpSwitchConfig swCfg) {
+        this.swCfg = swCfg;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        byte[] data = new byte[getLength()];
+        return toByteArray(data, 0);
+    }
+
+    @Override
+    public byte[] toByteArray(byte[] data) {
+        return toByteArray(data, 0);
+    }
+
+    @Override
+    public byte[] toByteArray(byte[] data, int offset) {
+        super.toByteArray(data, offset);
+        return getSwitchConfig().toByteArray(data, offset + OFP_HDR_LEN);
+    }
+
+    @Override
+    public OutputStream toOutputStream(OutputStream os) throws IOException {
+        super.toOutputStream(os);
+        getSwitchConfig().toOutputStream(os);
+        return os;
+    }
+
+    @Override
+    public OfpSwitchConfigRequestMsg fromInputStream(InputStream is)
+            throws IOException {
+        return readFromInputStream(is);
+    }
+
+    @Override
+    public OfpSwitchConfigRequestMsg fromByteArray(byte[] data) {
+        return fromByteArray(data, 0);
+    }
+
+    @Override
+    public OfpSwitchConfigRequestMsg fromByteArray(byte[] data, int offset) {
+        return new OfpSwitchConfigRequestMsg(data, offset);
+    }
+
+    public static OfpSwitchConfigRequestMsg readFromInputStream(InputStream is)
+            throws IOException {
+        return new OfpSwitchConfigRequestMsg(is);
+    }
+
+    public static byte[] readOfpSwitchConfigRequestMsg(InputStream is)
+            throws IOException {
+        return readOfpSwitchConfigRequestMsg(is, null, 0);
+    }
+
+    public static byte[]
+            readOfpSwitchConfigRequestMsg(InputStream is, byte[] data)
+                    throws IOException {
+        return readOfpSwitchConfigRequestMsg(is, data, 0);
+    }
+
+    public static byte[] readOfpSwitchConfigRequestMsg(
+            InputStream is,
+            byte[] data,
+            int offset)
+            throws IOException {
+        data = readOfpHeader(is, data, offset);
+        data =
+                OfpSwitchConfig.readOfpSwitchConfig(is, data, offset
+                        + OFP_HDR_LEN);
+        return data;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "OfpHeader->%s : SwitchConfig->%s\n",
+                super.toString(), getSwitchConfig().toString());
+    }
+
+    public boolean equals(OfpSwitchConfigRequestMsg hdr) {
+        if (super.equals(hdr) &&
+                (getSwitchConfig() == hdr.getSwitchConfig()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof OfpSwitchConfigRequestMsg) {
+            return equals((OfpSwitchConfigRequestMsg) o);
+        }
+        return false;
+    }
+}
